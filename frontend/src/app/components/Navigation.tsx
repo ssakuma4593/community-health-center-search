@@ -15,13 +15,7 @@ export default function Navigation() {
               href="/" 
               className="text-gray-600 hover:text-gray-900 transition duration-200"
             >
-              Home
-            </Link>
-            <Link 
-              href="/map" 
-              className="text-gray-600 hover:text-gray-900 transition duration-200"
-            >
-              Health Centers Map
+              Health Centers
             </Link>
           </div>
         </div>
