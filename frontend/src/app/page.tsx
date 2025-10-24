@@ -25,6 +25,14 @@ export default function Home() {
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
             Find and book appointments with healthcare providers who speak your native language
           </p>
+          <div className="mt-6">
+            <a 
+              href="/map" 
+              className="inline-block bg-green-600 text-white py-3 px-6 rounded-md hover:bg-green-700 transition duration-200 font-medium"
+            >
+              View Health Centers Map
+            </a>
+          </div>
         </header>
 
         {/* Main Content */}
