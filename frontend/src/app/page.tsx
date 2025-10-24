@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import HealthCentersMap from "./components/HealthCentersMap";
 
 interface HealthCenter {
   name: string;
@@ -94,44 +93,38 @@ export default function Home() {
 
         {/* Results */}
         {healthCenters.length > 0 && (
-          <>
-            {/* Map View */}
-            <HealthCentersMap healthCenters={healthCenters} zipcode={zipcode} />
-            
-            {/* List View */}
-            <div className="bg-white rounded-lg shadow-lg p-6">
-              <h2 className="text-2xl font-semibold text-gray-800 mb-4">
-                Health Centers in {zipcode} ({healthCenters.length} found)
-              </h2>
-              <div className="grid gap-4">
-                {healthCenters.map((center, index) => (
-                  <div key={index} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                      {center.name}
-                    </h3>
-                    <div className="space-y-1 text-sm text-gray-600">
-                      <p><strong>Address:</strong> {center.address}</p>
-                      <p><strong>Phone:</strong> {center.phone}</p>
-                      <p><strong>Services:</strong> {center.types}</p>
-                      {center.website && (
-                        <p>
-                          <strong>Website:</strong>{" "}
-                          <a 
-                            href={center.website} 
-                            target="_blank" 
-                            rel="noopener noreferrer"
-                            className="text-blue-600 hover:text-blue-800 underline"
-                          >
-                            {center.website}
-                          </a>
-                        </p>
-                      )}
-                    </div>
+          <div className="bg-white rounded-lg shadow-lg p-6">
+            <h2 className="text-2xl font-semibold text-gray-800 mb-4">
+              Health Centers in {zipcode} ({healthCenters.length} found)
+            </h2>
+            <div className="grid gap-4">
+              {healthCenters.map((center, index) => (
+                <div key={index} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                    {center.name}
+                  </h3>
+                  <div className="space-y-1 text-sm text-gray-600">
+                    <p><strong>Address:</strong> {center.address}</p>
+                    <p><strong>Phone:</strong> {center.phone}</p>
+                    <p><strong>Services:</strong> {center.types}</p>
+                    {center.website && (
+                      <p>
+                        <strong>Website:</strong>{" "}
+                        <a 
+                          href={center.website} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="text-blue-600 hover:text-blue-800 underline"
+                        >
+                          {center.website}
+                        </a>
+                      </p>
+                    )}
                   </div>
-                ))}
-              </div>
+                </div>
+              ))}
             </div>
-          </>
+          </div>
         )}
 
         {/* No Results */}
