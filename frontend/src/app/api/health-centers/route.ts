@@ -7,7 +7,7 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const zipcode = searchParams.get('zipcode');
     
-    const csvPath = path.join(process.cwd(), '..', 'community_health_centers_final.csv');
+    const csvPath = path.join(process.cwd(), '..', 'community_health_centers_parsed.csv');
     const csvContent = fs.readFileSync(csvPath, 'utf-8');
     const lines = csvContent.split('\n');
     const headers = lines[0].split(',');
@@ -22,20 +22,31 @@ export async function GET(request: Request) {
           data[header.trim()] = values[index]?.trim() || '';
         });
         
-        // Extract zipcode from address
-        const address = data.address || '';
-        const zipcodeMatch = address.match(/\b(\d{5})\b/);
-        const centerZipcode = zipcodeMatch ? zipcodeMatch[1] : '';
+        // Get zipcode from the dedicated zipcode column
+        const centerZipcode = data.zipcode || '';
         
         // If no zipcode filter or if zipcode matches
         if (!zipcode || centerZipcode === zipcode) {
+          // Reconstruct full address from components
+          const fullAddress = [
+            data.street_address_1,
+            data.street_address_2,
+            data.city_town,
+            data.state,
+            data.zipcode
+          ].filter(Boolean).join(', ');
+          
           results.push({
             name: data.name,
-            address: data.address,
+            address: fullAddress,
             phone: data.phone,
             types: data.types,
             website: data.website,
-            zipcode: centerZipcode
+            zipcode: centerZipcode,
+            street_address_1: data.street_address_1,
+            street_address_2: data.street_address_2,
+            city_town: data.city_town,
+            state: data.state
           });
         }
       }
