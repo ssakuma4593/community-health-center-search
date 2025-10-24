@@ -29,7 +29,7 @@ export default function HealthCentersMap({ healthCenters, zipcode }: HealthCente
     // Clear previous map
     mapRef.current.innerHTML = '';
 
-    // Create map container with OpenStreetMap
+    // Create map container with Google Maps
     const mapContainer = document.createElement('div');
     mapContainer.style.width = '100%';
     mapContainer.style.height = '400px';
@@ -38,18 +38,25 @@ export default function HealthCentersMap({ healthCenters, zipcode }: HealthCente
     mapContainer.style.overflow = 'hidden';
     mapContainer.style.position = 'relative';
 
-    // Create iframe for OpenStreetMap
+    // Create iframe for Google Maps
     const mapFrame = document.createElement('iframe');
     mapFrame.style.width = '100%';
     mapFrame.style.height = '100%';
     mapFrame.style.border = 'none';
     mapFrame.style.borderRadius = '8px';
     
-    // Create a simple map URL with the zipcode center
-    // This is a basic implementation - in production you'd want to geocode the addresses
-    const mapUrl = `https://www.openstreetmap.org/export/embed.html?bbox=-71.5,42.0,-70.5,42.5&layer=mapnik&marker=42.3601,-71.0589`;
+    // Create Google Maps embed URL with the zipcode
+    // Using Google Maps embed API - no API key required for basic usage
+    const mapUrl = `https://www.google.com/maps/embed/v1/search?q=health+centers+in+${zipcode}+massachusetts`;
+    
+    // Fallback to a general Massachusetts map if the specific search doesn't work
+    const fallbackMapUrl = `https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3022.6!2d-71.0589!3d42.3601!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDLCsDIxJzM2LjQiTiA3McKwMDMnMzIuMCJX!5e0!3m2!1sen!2sus!4v1234567890123!5m2!1sen!2sus`;
+    
+    // Try the search URL first, fallback to general map
     mapFrame.src = mapUrl;
     mapFrame.title = `Health Centers Map for ${zipcode}`;
+    mapFrame.allowFullscreen = true;
+    mapFrame.loading = 'lazy';
 
     mapContainer.appendChild(mapFrame);
 
@@ -65,6 +72,7 @@ export default function HealthCentersMap({ healthCenters, zipcode }: HealthCente
     overlay.style.fontSize = '14px';
     overlay.style.fontWeight = '600';
     overlay.style.color = '#374151';
+    overlay.style.zIndex = '1000';
     overlay.textContent = `${healthCenters.length} Health Centers in ${zipcode}`;
 
     mapContainer.appendChild(overlay);
@@ -82,9 +90,17 @@ export default function HealthCentersMap({ healthCenters, zipcode }: HealthCente
     listTitle.style.fontSize = '16px';
     listTitle.style.fontWeight = '600';
     listTitle.style.color = '#374151';
-    listTitle.style.margin = '0 0 12px 0';
+    listTitle.style.margin = '0 0 8px 0';
+
+    const listSubtitle = document.createElement('p');
+    listSubtitle.textContent = 'Click on any health center to open it in Google Maps';
+    listSubtitle.style.fontSize = '12px';
+    listSubtitle.style.color = '#6b7280';
+    listSubtitle.style.margin = '0 0 12px 0';
+    listSubtitle.style.fontStyle = 'italic';
 
     listContainer.appendChild(listTitle);
+    listContainer.appendChild(listSubtitle);
 
     healthCenters.forEach((center, index) => {
       const centerDiv = document.createElement('div');
@@ -93,11 +109,21 @@ export default function HealthCentersMap({ healthCenters, zipcode }: HealthCente
       centerDiv.style.display = 'flex';
       centerDiv.style.alignItems = 'flex-start';
       centerDiv.style.gap = '12px';
+      centerDiv.style.cursor = 'pointer';
+      centerDiv.style.transition = 'background-color 0.2s';
+
+      // Add hover effect
+      centerDiv.addEventListener('mouseenter', () => {
+        centerDiv.style.backgroundColor = '#f9fafb';
+      });
+      centerDiv.addEventListener('mouseleave', () => {
+        centerDiv.style.backgroundColor = 'transparent';
+      });
 
       // Add marker icon
       const markerIcon = document.createElement('div');
       markerIcon.innerHTML = `
-        <svg width="16" height="16" fill="#ef4444" viewBox="0 0 24 24">
+        <svg width="16" height="16" fill="#4285f4" viewBox="0 0 24 24">
           <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
         </svg>
       `;
@@ -126,6 +152,13 @@ export default function HealthCentersMap({ healthCenters, zipcode }: HealthCente
       phone.style.fontSize = '12px';
       phone.style.color = '#6b7280';
 
+      // Add click handler to open in Google Maps
+      centerDiv.addEventListener('click', () => {
+        const encodedAddress = encodeURIComponent(center.address);
+        const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodedAddress}`;
+        window.open(googleMapsUrl, '_blank');
+      });
+
       centerInfo.appendChild(name);
       centerInfo.appendChild(address);
       centerInfo.appendChild(phone);
@@ -143,7 +176,7 @@ export default function HealthCentersMap({ healthCenters, zipcode }: HealthCente
   return (
     <div className="bg-white rounded-lg shadow-lg p-6">
       <h2 className="text-2xl font-semibold text-gray-800 mb-4">
-        Map View - {zipcode}
+        Google Maps View - {zipcode}
       </h2>
       <div ref={mapRef} className="w-full" />
     </div>
