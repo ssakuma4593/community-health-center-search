@@ -1,0 +1,32 @@
+# Example Health Center Document
+# This is a sample document showing the format the parser expects
+
+Community Health Center of Boston
+123 Main Street, Boston, MA 02101
+(617) 555-0123
+Primary Care, Dental Care
+https://bostonhealthcenter.org
+
+Neighborhood Health Center
+456 Oak Avenue, Cambridge, MA 02139
+(617) 555-0456
+Primary Care, Mental Health
+https://neighborhoodhealth.org
+
+Family Health Center
+789 Pine Street, Somerville, MA 02144
+(617) 555-0789
+Pediatric Care, Dental Care
+https://familyhealth.org
+
+Community Medical Center
+321 Elm Street, Newton, MA 02458
+(617) 555-0321
+Primary Care, Eye Care
+https://communitymedical.org
+
+Health First Center
+654 Maple Drive, Waltham, MA 02453
+(617) 555-0654
+Primary Care, Mental Health, Dental Care
+https://healthfirst.org
