@@ -20,6 +20,17 @@ interface HealthCentersMapProps {
   zipcode: string;
 }
 
+// Function to generate Google Maps embed URL for a zipcode
+const generateGoogleMapsEmbedUrl = (zipcode: string) => {
+  // For Massachusetts zipcodes, we'll use a general Massachusetts map
+  // This is a standard Google Maps embed that doesn't require API key
+  const massachusettsMapUrl = `https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3022.6!2d-71.0589!3d42.3601!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDLCsDIxJzM2LjQiTiA3McKwMDMnMzIuMCJX!5e0!3m2!1sen!2sus!4v1234567890123!5m2!1sen!2sus`;
+  
+  // For now, we'll use the general Massachusetts map
+  // In a production app, you could use a geocoding service to get coordinates for the zipcode
+  return massachusettsMapUrl;
+};
+
 export default function HealthCentersMap({ healthCenters, zipcode }: HealthCentersMapProps) {
   const mapRef = useRef<HTMLDivElement>(null);
 
@@ -45,14 +56,9 @@ export default function HealthCentersMap({ healthCenters, zipcode }: HealthCente
     mapFrame.style.border = 'none';
     mapFrame.style.borderRadius = '8px';
     
-    // Create Google Maps embed URL with the zipcode
-    // Using Google Maps embed API - no API key required for basic usage
-    const mapUrl = `https://www.google.com/maps/embed/v1/search?q=health+centers+in+${zipcode}+massachusetts`;
+    // Generate the Google Maps embed URL
+    const mapUrl = generateGoogleMapsEmbedUrl(zipcode);
     
-    // Fallback to a general Massachusetts map if the specific search doesn't work
-    const fallbackMapUrl = `https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3022.6!2d-71.0589!3d42.3601!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDLCsDIxJzM2LjQiTiA3McKwMDMnMzIuMCJX!5e0!3m2!1sen!2sus!4v1234567890123!5m2!1sen!2sus`;
-    
-    // Try the search URL first, fallback to general map
     mapFrame.src = mapUrl;
     mapFrame.title = `Health Centers Map for ${zipcode}`;
     mapFrame.allowFullscreen = true;
@@ -75,7 +81,22 @@ export default function HealthCentersMap({ healthCenters, zipcode }: HealthCente
     overlay.style.zIndex = '1000';
     overlay.textContent = `${healthCenters.length} Health Centers in ${zipcode}`;
 
+    // Add a note about the map
+    const mapNote = document.createElement('div');
+    mapNote.style.position = 'absolute';
+    mapNote.style.bottom = '16px';
+    mapNote.style.left = '16px';
+    mapNote.style.right = '16px';
+    mapNote.style.background = 'rgba(255, 255, 255, 0.95)';
+    mapNote.style.padding = '8px 12px';
+    mapNote.style.borderRadius = '6px';
+    mapNote.style.fontSize = '12px';
+    mapNote.style.color = '#6b7280';
+    mapNote.style.textAlign = 'center';
+    mapNote.textContent = 'Click on health centers below to open in Google Maps for directions';
+
     mapContainer.appendChild(overlay);
+    mapContainer.appendChild(mapNote);
 
     // Add health center list below map
     const listContainer = document.createElement('div');
