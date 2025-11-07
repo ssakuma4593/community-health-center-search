@@ -82,13 +82,30 @@ export default function Home() {
       const data = await response.json();
       setFilteredHealthCenters(data);
       
-      // Zoom map to the first result's location
+      // Zoom map to the first result's location, or geocode the zipcode itself
       if (data.length > 0 && data[0].latitude && data[0].longitude) {
         const newCenter = { lat: data[0].latitude, lng: data[0].longitude };
         console.log('Setting map center to:', newCenter);
         setMapCenter(newCenter);
       } else {
-        console.log('No valid coordinates in search results');
+        // No results, but try to geocode the zipcode itself to zoom there
+        console.log('No results, geocoding zipcode:', zipcode);
+        try {
+          const geocodeResponse = await fetch(
+            `https://maps.googleapis.com/maps/api/geocode/json?address=${zipcode},MA,USA&key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`
+          );
+          const geocodeData = await geocodeResponse.json();
+          if (geocodeData.status === 'OK' && geocodeData.results.length > 0) {
+            const location = geocodeData.results[0].geometry.location;
+            const newCenter = { lat: location.lat, lng: location.lng };
+            console.log('Zooming to zipcode location:', newCenter);
+            setMapCenter(newCenter);
+          } else {
+            console.log('Could not geocode zipcode');
+          }
+        } catch (geocodeErr) {
+          console.error('Geocoding error:', geocodeErr);
+        }
       }
     } catch (err) {
       setError("Failed to load health centers. Please try again.");
@@ -272,13 +289,13 @@ export default function Home() {
             {(viewMode === 'map' || viewMode === 'both') && (
               <div className="bg-white rounded-lg shadow-lg p-6">
                 <h3 className="text-xl font-semibold text-gray-800 mb-4">
-                  Explore Nearby Health Centers
+                  Map - Showing {zipcode} area
                 </h3>
                 <HealthCenterMap 
                   healthCenters={allHealthCenters} 
                   highlightedCenters={[]}
-                  center={null}
-                  zoom={8}
+                  center={mapCenter}
+                  zoom={mapCenter ? 13 : 8}
                 />
               </div>
             )}
