@@ -123,19 +123,22 @@ export default function HealthCenterMap({
         >
           {centersWithCoordinates.map((healthCenter, index) => {
             const highlighted = isHighlighted(healthCenter);
+            // Create custom SVG marker
+            const markerIcon = {
+              path: 'M 0,0 C -2,-20 -10,-22 -10,-30 A 10,10 0 1,1 10,-30 C 10,-22 2,-20 0,0 z',
+              fillColor: highlighted ? "#dc2626" : "#2563eb",
+              fillOpacity: 1,
+              strokeColor: "#ffffff",
+              strokeWeight: 2,
+              scale: highlighted ? 1.2 : 1,
+            };
+            
             return (
               <Marker
                 key={index}
                 position={{ lat: healthCenter.latitude!, lng: healthCenter.longitude! }}
                 onClick={() => setSelectedCenter(healthCenter)}
-                icon={{
-                  path: google.maps.SymbolPath.CIRCLE,
-                  scale: highlighted ? 10 : 8,
-                  fillColor: highlighted ? "#dc2626" : "#2563eb",
-                  fillOpacity: 1,
-                  strokeColor: "#ffffff",
-                  strokeWeight: 2,
-                }}
+                icon={markerIcon}
               />
             );
           })}
