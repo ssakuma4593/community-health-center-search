@@ -1,6 +1,6 @@
 "use client";
 
-import { APIProvider, Map, AdvancedMarker, InfoWindow, Pin } from '@vis.gl/react-google-maps';
+import { APIProvider, Map, Marker, InfoWindow } from '@vis.gl/react-google-maps';
 import { useState, useEffect } from 'react';
 
 interface HealthCenter {
@@ -124,18 +124,19 @@ export default function HealthCenterMap({
           {centersWithCoordinates.map((healthCenter, index) => {
             const highlighted = isHighlighted(healthCenter);
             return (
-              <AdvancedMarker
+              <Marker
                 key={index}
                 position={{ lat: healthCenter.latitude!, lng: healthCenter.longitude! }}
                 onClick={() => setSelectedCenter(healthCenter)}
-              >
-                <Pin
-                  background={highlighted ? "#dc2626" : "#2563eb"}
-                  borderColor={highlighted ? "#991b1b" : "#1e40af"}
-                  glyphColor="#ffffff"
-                  scale={highlighted ? 1.2 : 1}
-                />
-              </AdvancedMarker>
+                icon={{
+                  path: google.maps.SymbolPath.CIRCLE,
+                  scale: highlighted ? 10 : 8,
+                  fillColor: highlighted ? "#dc2626" : "#2563eb",
+                  fillOpacity: 1,
+                  strokeColor: "#ffffff",
+                  strokeWeight: 2,
+                }}
+              />
             );
           })}
 
