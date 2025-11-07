@@ -31,19 +31,8 @@ export default function HealthCenterMap({
   zoom = 8
 }: HealthCenterMapProps) {
   const [selectedCenter, setSelectedCenter] = useState<HealthCenter | null>(null);
-  const [currentCenter, setCurrentCenter] = useState<{ lat: number; lng: number } | null>(null);
-  const [currentZoom, setCurrentZoom] = useState<number>(8);
   const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || '';
   const [mapError, setMapError] = useState<string>('');
-  
-  // Update map when center/zoom props change
-  useEffect(() => {
-    if (center) {
-      console.log('Map component received new center:', center, 'zoom:', zoom);
-      setCurrentCenter(center);
-      setCurrentZoom(zoom);
-    }
-  }, [center, zoom]);
 
   if (!apiKey) {
     return (
@@ -94,8 +83,8 @@ export default function HealthCenterMap({
       }
     : massachusettsCenter;
   
-  const displayCenter = currentCenter || defaultCenter;
-  const displayZoom = currentCenter ? currentZoom : 8;
+  const displayCenter = center || defaultCenter;
+  const displayZoom = center ? zoom : 8;
   
   // Check if a health center is highlighted
   const isHighlighted = (healthCenter: HealthCenter) => {
@@ -105,6 +94,10 @@ export default function HealthCenterMap({
       hc.street_address_1 === healthCenter.street_address_1
     );
   };
+
+  // Create unique key to force map re-render only when search happens
+  // This allows the map to zoom to new location, then user can pan freely
+  const mapKey = center ? `${center.lat}-${center.lng}` : 'default';
 
   return (
     <div className="w-full h-[600px] rounded-lg overflow-hidden shadow-lg">
@@ -117,8 +110,9 @@ export default function HealthCenterMap({
         }}
       >
         <Map
-          center={displayCenter}
-          zoom={displayZoom}
+          key={mapKey}
+          defaultCenter={displayCenter}
+          defaultZoom={displayZoom}
           gestureHandling="greedy"
           disableDefaultUI={false}
           mapTypeId="roadmap"
