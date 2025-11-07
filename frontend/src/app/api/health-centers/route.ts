@@ -14,13 +14,36 @@ export async function GET(request: Request) {
     }
     
     const csvContent = fs.readFileSync(csvPath, 'utf-8');
+    
+    // Helper function to parse CSV line properly (handles quoted fields)
+    const parseCSVLine = (line: string): string[] => {
+      const result: string[] = [];
+      let current = '';
+      let inQuotes = false;
+      
+      for (let i = 0; i < line.length; i++) {
+        const char = line[i];
+        
+        if (char === '"') {
+          inQuotes = !inQuotes;
+        } else if (char === ',' && !inQuotes) {
+          result.push(current.trim());
+          current = '';
+        } else {
+          current += char;
+        }
+      }
+      result.push(current.trim());
+      return result;
+    };
+    
     const lines = csvContent.split('\n');
-    const headers = lines[0].split(',');
+    const headers = parseCSVLine(lines[0]);
     const results: any[] = [];
     
     for (let i = 1; i < lines.length; i++) {
       if (lines[i].trim()) {
-        const values = lines[i].split(',');
+        const values = parseCSVLine(lines[i]);
         const data: any = {};
         
         headers.forEach((header, index) => {
