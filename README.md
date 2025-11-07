@@ -71,7 +71,6 @@ sphere-ai/
 ├── docs/                                  # All documentation
 │   ├── MAPS_SETUP.md                     # Google Maps setup
 │   ├── DATA_ONBOARDING.md                # Add/update health centers
-│   ├── SCRAPER_README.md                 # Web scraping docs
 │   └── ROADMAP.md                        # Development roadmap
 ├── community_health_centers_final.csv     # Scraped data
 ├── community_health_centers_with_coords.csv  # Geocoded data (used by app)
@@ -207,8 +206,7 @@ curl "http://localhost:3000/api/health-centers?zipcode=02118"
 All documentation is in the [`docs/`](docs/) folder:
 
 - **[docs/MAPS_SETUP.md](docs/MAPS_SETUP.md)** - Complete Google Maps setup guide
-- **[docs/DATA_ONBOARDING.md](docs/DATA_ONBOARDING.md)** - How to add/update health centers
-- **[docs/SCRAPER_README.md](docs/SCRAPER_README.md)** - Web scraping documentation
+- **[docs/DATA_ONBOARDING.md](docs/DATA_ONBOARDING.md)** - How to add/update health centers (includes scraper workflow)
 - **[docs/ROADMAP.md](docs/ROADMAP.md)** - Development roadmap
 
 ## Features in Detail
