@@ -252,18 +252,36 @@ export default function Home() {
           </div>
         )}
 
-        {/* No Results */}
-        {filteredHealthCenters.length === 0 && !loading && zipcode && allHealthCenters.length > 0 && (
-          <div className="bg-white rounded-lg shadow-lg p-6 text-center">
-            <div className="text-gray-500">
-              <div className="mb-4">
-                <svg className="mx-auto h-16 w-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 16.172a4 4 0 015.656 0M9 12h6m-6-4h6m2 5.291A7.962 7.962 0 0112 15c-2.34 0-4.29-1.009-5.824-2.709M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                </svg>
+        {/* No Results - Show message but keep map visible */}
+        {filteredHealthCenters.length === 0 && !loading && zipcode && !loadingAll && allHealthCenters.length > 0 && (
+          <div className="space-y-6">
+            {/* No Results Message */}
+            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6 text-center">
+              <div className="text-yellow-800">
+                <div className="mb-2">
+                  <svg className="mx-auto h-12 w-12 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                  </svg>
+                </div>
+                <p className="text-lg font-semibold">No health centers found in zipcode {zipcode}</p>
+                <p className="text-sm mt-2">But you can still explore the map to see nearby health centers!</p>
               </div>
-              <p className="text-lg">No health centers found in zipcode {zipcode}</p>
-              <p className="text-sm mt-2">Try a different zipcode or explore the map to see nearby centers</p>
             </div>
+
+            {/* Show map anyway */}
+            {(viewMode === 'map' || viewMode === 'both') && (
+              <div className="bg-white rounded-lg shadow-lg p-6">
+                <h3 className="text-xl font-semibold text-gray-800 mb-4">
+                  Explore Nearby Health Centers
+                </h3>
+                <HealthCenterMap 
+                  healthCenters={allHealthCenters} 
+                  highlightedCenters={[]}
+                  center={null}
+                  zoom={8}
+                />
+              </div>
+            )}
           </div>
         )}
       </div>
