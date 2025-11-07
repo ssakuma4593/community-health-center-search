@@ -1,6 +1,18 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import dynamic from 'next/dynamic';
+import HealthCenterList from './components/HealthCenterList';
+
+// Dynamically import the map component to avoid SSR issues
+const HealthCenterMap = dynamic(() => import('./components/HealthCenterMap'), {
+  ssr: false,
+  loading: () => (
+    <div className="w-full h-[600px] bg-gray-100 rounded-lg flex items-center justify-center">
+      <p className="text-gray-600">Loading map...</p>
+    </div>
+  ),
+});
 
 interface HealthCenter {
   name: string;
@@ -9,6 +21,12 @@ interface HealthCenter {
   types: string;
   website: string;
   zipcode: string;
+  street_address_1: string;
+  street_address_2?: string;
+  city_town: string;
+  state: string;
+  latitude?: number;
+  longitude?: number;
 }
 
 export default function Home() {
@@ -16,6 +34,8 @@ export default function Home() {
   const [healthCenters, setHealthCenters] = useState<HealthCenter[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [viewMode, setViewMode] = useState<'list' | 'map' | 'both'>('both');
+  const [selectedCenter, setSelectedCenter] = useState<HealthCenter | null>(null);
 
   const searchByZipcode = async () => {
     if (!zipcode.trim()) {
@@ -93,37 +113,66 @@ export default function Home() {
 
         {/* Results */}
         {healthCenters.length > 0 && (
-          <div className="bg-white rounded-lg shadow-lg p-6">
-            <h2 className="text-2xl font-semibold text-gray-800 mb-4">
-              Health Centers in {zipcode} ({healthCenters.length} found)
-            </h2>
-            <div className="grid gap-4">
-              {healthCenters.map((center, index) => (
-                <div key={index} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                    {center.name}
-                  </h3>
-                  <div className="space-y-1 text-sm text-gray-600">
-                    <p><strong>Address:</strong> {center.address}</p>
-                    <p><strong>Phone:</strong> {center.phone}</p>
-                    <p><strong>Services:</strong> {center.types}</p>
-                    {center.website && (
-                      <p>
-                        <strong>Website:</strong>{" "}
-                        <a 
-                          href={center.website} 
-                          target="_blank" 
-                          rel="noopener noreferrer"
-                          className="text-blue-600 hover:text-blue-800 underline"
-                        >
-                          {center.website}
-                        </a>
-                      </p>
-                    )}
-                  </div>
+          <div className="space-y-6">
+            {/* View Mode Toggle */}
+            <div className="bg-white rounded-lg shadow-lg p-4">
+              <div className="flex justify-between items-center">
+                <h2 className="text-2xl font-semibold text-gray-800">
+                  Health Centers in {zipcode} ({healthCenters.length} found)
+                </h2>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => setViewMode('list')}
+                    className={`px-4 py-2 rounded-md transition-colors ${
+                      viewMode === 'list'
+                        ? 'bg-blue-600 text-white'
+                        : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                    }`}
+                  >
+                    📋 List
+                  </button>
+                  <button
+                    onClick={() => setViewMode('map')}
+                    className={`px-4 py-2 rounded-md transition-colors ${
+                      viewMode === 'map'
+                        ? 'bg-blue-600 text-white'
+                        : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                    }`}
+                  >
+                    🗺️ Map
+                  </button>
+                  <button
+                    onClick={() => setViewMode('both')}
+                    className={`px-4 py-2 rounded-md transition-colors ${
+                      viewMode === 'both'
+                        ? 'bg-blue-600 text-white'
+                        : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                    }`}
+                  >
+                    📍 Both
+                  </button>
                 </div>
-              ))}
+              </div>
             </div>
+
+            {/* Map View */}
+            {(viewMode === 'map' || viewMode === 'both') && (
+              <div className="bg-white rounded-lg shadow-lg p-6">
+                <h3 className="text-xl font-semibold text-gray-800 mb-4">Map View</h3>
+                <HealthCenterMap healthCenters={healthCenters} />
+              </div>
+            )}
+
+            {/* List View */}
+            {(viewMode === 'list' || viewMode === 'both') && (
+              <div className="bg-white rounded-lg shadow-lg p-6">
+                <h3 className="text-xl font-semibold text-gray-800 mb-4">List View</h3>
+                <HealthCenterList 
+                  healthCenters={healthCenters}
+                  onCenterClick={(center) => setSelectedCenter(center)}
+                />
+              </div>
+            )}
           </div>
         )}
 

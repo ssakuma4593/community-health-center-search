@@ -1,122 +1,371 @@
-# Sphere AI
+# Sphere AI - Community Health Centers Finder
 
-**Find and book appointments with healthcare providers who speak your native language**
+**Find community health centers in Massachusetts with interactive maps**
 
-Sphere AI is a comprehensive healthcare platform that connects patients with medical providers based on language preferences, specialties, and location. Our AI-powered system makes it easy to find, communicate with, and book appointments with healthcare professionals who can serve you in your preferred language.
+Sphere AI is a comprehensive healthcare platform that helps patients locate community health centers by zipcode. The application features an interactive Google Maps integration, showing health centers with detailed information including services offered, contact details, and locations.
 
 ![Sphere AI Interface](https://github.com/user-attachments/assets/d9f4fe37-3eb2-4937-ae07-cec0ccafa356)
 
 ## Features
 
-- **Language-First Search**: Find providers who speak your native language
-- **Specialty Matching**: Search by medical specialty (Primary Care, Cardiology, etc.)
-- **Location-Based**: Find providers in your area
-- **AI-Powered Recommendations**: Get personalized provider suggestions
-- **Easy Booking**: Streamlined appointment scheduling process
+### 🗺️ Interactive Map
+- **Google Maps Integration**: View health centers on an interactive map
+- **Custom Markers**: Click markers to see detailed information
+- **Auto-Centering**: Map automatically centers on search results
+- **Info Windows**: Detailed health center information in popups
+
+### 📋 Multiple View Modes
+- **List View**: Traditional card-based list with full details
+- **Map View**: Full-screen interactive map
+- **Both View**: Split view showing both list and map (default)
+
+### 🔍 Search & Filter
+- **Zipcode Search**: Find health centers in specific zipcodes
+- **Service Types**: View available services (Primary Care, Dental, Eye Care)
+- **Contact Information**: Phone numbers and website links
+- **Address Details**: Complete address with coordinates
+
+### 📊 Data Coverage
+- **276+ Health Centers** in Massachusetts
+- **Geocoded Addresses**: Latitude/longitude for accurate mapping
+- **Service Categories**: Primary Care, Dental Care, Eye Care, and more
+- **Regular Updates**: Data sourced from official health center listings
 
 ## Tech Stack
 
-- **Frontend**: Next.js 15 with TypeScript and Tailwind CSS
-- **Backend**: FastAPI with Python
-- **Data**: JSON-based provider database (expanding to full database solution)
-- **AI**: Coming soon - intelligent chat interface for natural language booking
+### Frontend
+- **Framework**: Next.js 15 with App Router
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS
+- **Maps**: @vis.gl/react-google-maps
+- **UI**: React 19 with modern hooks
+
+### Backend
+- **API**: FastAPI (Python)
+- **Data Source**: CSV files with geocoded addresses
+- **Geocoding**: Google Maps Geocoding API
+
+### Data Processing
+- **Web Scraping**: Python with Selenium, BeautifulSoup
+- **Data Parsing**: pandas for CSV processing
+- **Geocoding Script**: Automated address-to-coordinate conversion
 
 ## Project Structure
 
 ```
 sphere-ai/
-├── frontend/          # Next.js React application
-├── backend/           # FastAPI Python application
-├── data/             # Provider data and mock files
-├── docs/             # Documentation and project roadmap
-└── README.md         # This file
+├── frontend/                              # Next.js application
+│   ├── src/app/
+│   │   ├── components/
+│   │   │   ├── HealthCenterMap.tsx       # Interactive map component
+│   │   │   ├── HealthCenterList.tsx      # List view component
+│   │   │   └── Navigation.tsx            # Navigation bar
+│   │   ├── api/health-centers/
+│   │   │   └── route.ts                  # API endpoint for health centers
+│   │   └── page.tsx                      # Main search page
+│   ├── package.json
+│   └── .env.local                         # Google Maps API key (create this)
+├── backend/                               # FastAPI backend
+│   └── app/main.py
+├── data/                                  # Source documents and data
+├── docs/                                  # Project documentation
+├── community_health_centers_parsed.csv    # Original data
+├── community_health_centers_with_coords.csv  # Geocoded data
+├── add_geocoding.py                       # Geocoding script
+├── MAPS_SETUP.md                          # Google Maps setup guide
+└── README.md                              # This file
 ```
 
 ## Quick Start
 
 ### Prerequisites
 
-- Node.js 18+ and npm
-- Python 3.8+ and pip
+- **Node.js 18+** and npm
+- **Python 3.8+** and pip
+- **Google Maps API Key** (see setup guide below)
 
-### Running the Backend
+### Setup (First Time)
 
-1. Navigate to the backend directory:
-   ```bash
-   cd backend
-   ```
+#### 1. Get Google Maps API Key
 
-2. Install Python dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
+1. Go to [Google Cloud Console](https://console.cloud.google.com/)
+2. Create a project and enable:
+   - Maps JavaScript API
+   - Geocoding API
+3. Create an API key under Credentials
 
-3. Start the FastAPI server:
-   ```bash
-   uvicorn app.main:app --reload
-   ```
+#### 2. Configure Environment
 
-The backend will be available at `http://localhost:8000`
+```bash
+cd frontend
+echo "NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=your_api_key_here" > .env.local
+```
 
-- Health check: `GET http://localhost:8000/`
-- Provider search: `POST http://localhost:8000/providers/search`
+Replace `your_api_key_here` with your actual API key.
 
-### Running the Frontend
+#### 3. Add Geocoding (One-Time)
 
-1. Navigate to the frontend directory:
-   ```bash
-   cd frontend
-   ```
+If `community_health_centers_with_coords.csv` doesn't exist:
 
-2. Install Node.js dependencies:
-   ```bash
-   npm install
-   ```
+```bash
+# Install dependencies
+pip install requests pandas
 
-3. Start the Next.js development server:
-   ```bash
-   npm run dev
-   ```
+# Run geocoding script
+python add_geocoding.py YOUR_GOOGLE_MAPS_API_KEY
+```
 
-The frontend will be available at `http://localhost:3000`
+This converts addresses to coordinates for map display.
 
-- Main application: `http://localhost:3000`
-- Health check: `GET http://localhost:3000/api/health`
+### Running the Application
+
+#### Option 1: Frontend Only (Recommended)
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000)
+
+#### Option 2: Full Stack
+
+**Terminal 1 - Backend:**
+```bash
+cd backend
+pip install -r requirements.txt
+uvicorn app.main:app --reload
+```
+
+**Terminal 2 - Frontend:**
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+### Usage
+
+1. Enter a zipcode (e.g., `02138` for Cambridge, MA)
+2. Click **Search Health Centers**
+3. Toggle between views:
+   - **📋 List** - Card-based list view
+   - **🗺️ Map** - Interactive map view
+   - **📍 Both** - Split view (default)
+4. Click markers or list items for details
 
 ## API Endpoints
 
-### Backend (FastAPI)
+### Frontend API Routes
+
+- `GET /api/health` - Health check endpoint
+- `GET /api/health-centers?zipcode=XXXXX` - Search health centers by zipcode
+  - Returns: Array of health centers with coordinates
+  - Example response:
+    ```json
+    [
+      {
+        "name": "Community Health Center",
+        "street_address_1": "123 Main St",
+        "city_town": "Boston",
+        "state": "MA",
+        "zipcode": "02118",
+        "phone": "(617) 555-0100",
+        "types": "Primary Care, Dental Care",
+        "website": "https://example.com",
+        "latitude": 42.3601,
+        "longitude": -71.0589
+      }
+    ]
+    ```
+
+### Backend (FastAPI) - Optional
 
 - `GET /` - Health check endpoint
-- `POST /providers/search` - Search for providers
-  - Body: `{ "language": "Korean", "specialty": "Primary Care", "location": "Boston" }`
 
-### Frontend (Next.js)
+## Example API Usage
 
-- `GET /api/health` - Frontend health check
-
-## Example Usage
-
-Search for a Korean-speaking primary care provider in Boston:
+Search for health centers in Cambridge:
 
 ```bash
-curl -X POST http://localhost:8000/providers/search \
-  -H "Content-Type: application/json" \
-  -d '{"language": "Korean", "specialty": "Primary Care", "location": "Boston"}'
+curl "http://localhost:3000/api/health-centers?zipcode=02138"
 ```
 
-## Development Roadmap
+Search for health centers in Boston:
 
-See [docs/ROADMAP.md](docs/ROADMAP.md) for detailed sprint planning and feature development timeline.
+```bash
+curl "http://localhost:3000/api/health-centers?zipcode=02118"
+```
+
+## Documentation
+
+- **[MAPS_SETUP.md](MAPS_SETUP.md)** - Complete Google Maps setup guide
+- **[docs/ROADMAP.md](docs/ROADMAP.md)** - Development roadmap  
+- **[SCRAPER_README.md](SCRAPER_README.md)** - Web scraping documentation
+
+## Features in Detail
+
+### Google Maps Integration
+
+The app uses `@vis.gl/react-google-maps` for a modern, React-friendly maps experience:
+
+- **Dynamic Loading**: Map loads only when needed (performance optimization)
+- **Custom Markers**: Blue pins with white icons for health centers
+- **Info Windows**: Click markers to see detailed information
+- **Responsive**: Works on mobile, tablet, and desktop
+- **Auto-Fit Bounds**: Map automatically adjusts to show all results
+
+### View Modes
+
+**List View**
+- Card-based layout with hover effects
+- Full address and contact information
+- Clickable website links
+- Shows coordinates when available
+
+**Map View**
+- Full-screen interactive Google Map
+- Zoom, pan, and explore
+- Marker clustering for better performance (coming soon)
+- Street view integration (planned)
+
+**Both View (Default)**
+- Map displayed at the top
+- List shown below
+- Synchronized data between views
+- Best of both worlds
+
+### Data Processing
+
+The project includes tools for data collection and processing:
+
+1. **Web Scraper** (`community_health_scraper.py`)
+   - Scrapes health center data from official sources
+   - Extracts addresses, phone numbers, services, websites
+
+2. **Document Parser** (`final_document_parser.py`)
+   - Parses official Word documents
+   - Extracts structured data from listings
+
+3. **Geocoding Script** (`add_geocoding.py`)
+   - Converts addresses to coordinates
+   - Validates addresses before API calls
+   - Shows progress and statistics
+   - Saves API quota by skipping invalid addresses
+
+## Development
+
+### Current Branch: `feature/google-maps-integration`
+
+All Google Maps features are in this branch. Key changes:
+- Added interactive map component
+- Created list view component
+- Implemented view mode toggle
+- Added geocoding script
+- Comprehensive documentation
+
+### Local Development
+
+```bash
+# Install dependencies
+cd frontend
+npm install
+
+# Run in development mode
+npm run dev
+
+# Build for production
+npm run build
+
+# Run linting
+npm run lint
+```
+
+### Environment Variables
+
+Create `frontend/.env.local`:
+```env
+NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=your_api_key_here
+```
+
+**Important**: Never commit `.env.local` to version control.
+
+## Cost Information
+
+### Google Maps API Pricing
+
+- **Free Tier**: $200/month credit
+- **Geocoding**: $5 per 1,000 requests (one-time: 276 requests = FREE)
+- **Map Loads**: $7 per 1,000 loads
+- **Break-even**: ~28,000 map loads/month
+
+For typical usage, the app stays within the free tier.
+
+### Monitoring Usage
+
+1. Go to [Google Cloud Console](https://console.cloud.google.com/)
+2. Navigate to **APIs & Services** → **Dashboard**
+3. View usage statistics
+4. Set up billing alerts
+
+## Troubleshooting
+
+### Map Not Showing
+- Verify `.env.local` exists with correct API key
+- Restart dev server after adding environment variable
+- Check browser console for errors
+
+### No Markers on Map
+- Run geocoding script: `python add_geocoding.py YOUR_API_KEY`
+- Verify `community_health_centers_with_coords.csv` exists
+- Check that CSV has latitude/longitude columns
+
+### Geocoding Script Issues
+- Install dependencies: `pip install requests pandas`
+- Verify Geocoding API is enabled in Google Cloud
+- Check API key permissions
+
+See [MAPS_SETUP.md](MAPS_SETUP.md) for detailed troubleshooting.
 
 ## Contributing
 
 1. Fork the repository
-2. Create a feature branch
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
 3. Make your changes
-4. Test both frontend and backend
-5. Submit a pull request
+4. Test thoroughly (both desktop and mobile)
+5. Update documentation if needed
+6. Commit your changes (`git commit -m 'Add amazing feature'`)
+7. Push to the branch (`git push origin feature/amazing-feature`)
+8. Open a Pull Request
+
+### Development Guidelines
+
+- Write TypeScript for type safety
+- Use Tailwind CSS for styling
+- Follow React best practices
+- Add tests for new features
+- Update documentation
+- Keep commits focused and descriptive
 
 ## License
 
 MIT License - see [LICENSE](LICENSE) file for details.
+
+## Acknowledgments
+
+- Health center data sourced from official Massachusetts health department listings
+- Google Maps Platform for mapping services
+- @vis.gl/react-google-maps for React integration
+- Next.js and React teams for excellent frameworks
+
+## Support
+
+For issues, questions, or contributions:
+- Open an issue on GitHub
+- Check documentation files for common solutions
+- Review troubleshooting sections in guides
+
+---
+
+**Need help getting started?** See [MAPS_SETUP.md](MAPS_SETUP.md) for the complete setup guide!

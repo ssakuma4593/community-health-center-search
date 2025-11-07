@@ -7,7 +7,12 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const zipcode = searchParams.get('zipcode');
     
-    const csvPath = path.join(process.cwd(), '..', 'community_health_centers_parsed.csv');
+    // Try to use the geocoded CSV first, fall back to parsed CSV
+    let csvPath = path.join(process.cwd(), '..', 'community_health_centers_with_coords.csv');
+    if (!fs.existsSync(csvPath)) {
+      csvPath = path.join(process.cwd(), '..', 'community_health_centers_parsed.csv');
+    }
+    
     const csvContent = fs.readFileSync(csvPath, 'utf-8');
     const lines = csvContent.split('\n');
     const headers = lines[0].split(',');
@@ -46,7 +51,9 @@ export async function GET(request: Request) {
             street_address_1: data.street_address_1,
             street_address_2: data.street_address_2,
             city_town: data.city_town,
-            state: data.state
+            state: data.state,
+            latitude: data.latitude ? parseFloat(data.latitude) : undefined,
+            longitude: data.longitude ? parseFloat(data.longitude) : undefined
           });
         }
       }
