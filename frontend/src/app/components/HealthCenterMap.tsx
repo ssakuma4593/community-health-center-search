@@ -31,8 +31,18 @@ export default function HealthCenterMap({
   zoom = 8
 }: HealthCenterMapProps) {
   const [selectedCenter, setSelectedCenter] = useState<HealthCenter | null>(null);
+  const [currentCenter, setCurrentCenter] = useState<{ lat: number; lng: number } | null>(null);
+  const [currentZoom, setCurrentZoom] = useState<number>(8);
   const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || '';
   const [mapError, setMapError] = useState<string>('');
+  
+  // Update map when center/zoom props change
+  useEffect(() => {
+    if (center) {
+      setCurrentCenter(center);
+      setCurrentZoom(zoom);
+    }
+  }, [center, zoom]);
 
   if (!apiKey) {
     return (
@@ -83,8 +93,8 @@ export default function HealthCenterMap({
       }
     : massachusettsCenter;
   
-  const displayCenter = center || defaultCenter;
-  const displayZoom = center ? zoom : 8; // Use prop zoom if center is provided, otherwise default to 8
+  const displayCenter = currentCenter || defaultCenter;
+  const displayZoom = currentCenter ? currentZoom : 8;
   
   // Check if a health center is highlighted
   const isHighlighted = (healthCenter: HealthCenter) => {
@@ -95,11 +105,8 @@ export default function HealthCenterMap({
     );
   };
 
-  // Create unique key for entire map to force re-render
-  const mapKey = center ? `${center.lat}-${center.lng}-${zoom}` : 'default';
-
   return (
-    <div className="w-full h-[600px] rounded-lg overflow-hidden shadow-lg" key={mapKey}>
+    <div className="w-full h-[600px] rounded-lg overflow-hidden shadow-lg">
       <APIProvider 
         apiKey={apiKey}
         onLoad={() => console.log('Maps API loaded successfully')}
@@ -109,8 +116,8 @@ export default function HealthCenterMap({
         }}
       >
         <Map
-          defaultCenter={displayCenter}
-          defaultZoom={displayZoom}
+          center={displayCenter}
+          zoom={displayZoom}
           gestureHandling="greedy"
           disableDefaultUI={false}
           mapTypeId="roadmap"
