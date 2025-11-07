@@ -34,6 +34,7 @@ export default function HealthCenterMap({
   const [mapCenter, setMapCenter] = useState<{ lat: number; lng: number } | null>(center);
   const [mapZoom, setMapZoom] = useState(zoom);
   const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || '';
+  const [mapError, setMapError] = useState<string>('');
   
   // Update map when center prop changes
   useEffect(() => {
@@ -51,6 +52,26 @@ export default function HealthCenterMap({
           <p className="text-gray-600 text-sm">
             Please add NEXT_PUBLIC_GOOGLE_MAPS_API_KEY to your .env.local file
           </p>
+        </div>
+      </div>
+    );
+  }
+  
+  if (mapError) {
+    return (
+      <div className="w-full h-[600px] bg-gray-100 rounded-lg flex items-center justify-center">
+        <div className="text-center p-6">
+          <p className="text-red-600 font-semibold mb-2">Map Loading Error</p>
+          <p className="text-gray-600 text-sm">{mapError}</p>
+          <div className="mt-4 text-xs text-gray-500 text-left max-w-md">
+            <p className="font-semibold mb-2">Common fixes:</p>
+            <ul className="list-disc pl-5 space-y-1">
+              <li>Enable "Maps JavaScript API" in Google Cloud Console</li>
+              <li>Wait 2-3 minutes after enabling billing</li>
+              <li>Check API key restrictions (allow localhost:3000)</li>
+              <li>Verify billing is enabled on your project</li>
+            </ul>
+          </div>
         </div>
       </div>
     );
@@ -85,7 +106,14 @@ export default function HealthCenterMap({
 
   return (
     <div className="w-full h-[600px] rounded-lg overflow-hidden shadow-lg">
-      <APIProvider apiKey={apiKey}>
+      <APIProvider 
+        apiKey={apiKey}
+        onLoad={() => console.log('Maps API loaded successfully')}
+        onError={(error) => {
+          console.error('Maps API error:', error);
+          setMapError(error.message || 'Failed to load Google Maps');
+        }}
+      >
         <Map
           center={displayCenter}
           zoom={mapZoom}
