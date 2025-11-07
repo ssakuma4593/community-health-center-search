@@ -31,18 +31,8 @@ export default function HealthCenterMap({
   zoom = 8
 }: HealthCenterMapProps) {
   const [selectedCenter, setSelectedCenter] = useState<HealthCenter | null>(null);
-  const [mapCenter, setMapCenter] = useState<{ lat: number; lng: number } | null>(center);
-  const [mapZoom, setMapZoom] = useState(zoom);
   const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || '';
   const [mapError, setMapError] = useState<string>('');
-  
-  // Update map when center prop changes
-  useEffect(() => {
-    if (center) {
-      setMapCenter(center);
-      setMapZoom(zoom);
-    }
-  }, [center, zoom]);
 
   if (!apiKey) {
     return (
@@ -93,7 +83,8 @@ export default function HealthCenterMap({
       }
     : massachusettsCenter;
   
-  const displayCenter = mapCenter || defaultCenter;
+  const displayCenter = center || defaultCenter;
+  const displayZoom = center ? zoom : 8; // Use prop zoom if center is provided, otherwise default to 8
   
   // Check if a health center is highlighted
   const isHighlighted = (healthCenter: HealthCenter) => {
@@ -116,10 +107,11 @@ export default function HealthCenterMap({
       >
         <Map
           center={displayCenter}
-          zoom={mapZoom}
+          zoom={displayZoom}
           gestureHandling="greedy"
           disableDefaultUI={false}
           mapTypeId="roadmap"
+          key={`map-${center?.lat}-${center?.lng}-${displayZoom}`}
         >
           {centersWithCoordinates.map((healthCenter, index) => {
             const highlighted = isHighlighted(healthCenter);
