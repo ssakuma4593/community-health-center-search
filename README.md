@@ -69,9 +69,11 @@ sphere-ai/
 │   └── app/main.py
 ├── data/                                  # Source documents and data
 ├── docs/                                  # Project documentation
-├── community_health_centers_parsed.csv    # Original data
-├── community_health_centers_with_coords.csv  # Geocoded data
+├── community_health_centers_final.csv     # Scraped data
+├── community_health_centers_with_coords.csv  # Geocoded data (used by app)
+├── community_health_scraper.py            # Web scraper
 ├── add_geocoding.py                       # Geocoding script
+├── DATA_ONBOARDING.md                     # How to add/update data
 ├── MAPS_SETUP.md                          # Google Maps setup guide
 └── README.md                              # This file
 ```
@@ -201,6 +203,7 @@ curl "http://localhost:3000/api/health-centers?zipcode=02118"
 ## Documentation
 
 - **[MAPS_SETUP.md](MAPS_SETUP.md)** - Complete Google Maps setup guide
+- **[DATA_ONBOARDING.md](DATA_ONBOARDING.md)** - How to add/update health centers
 - **[docs/ROADMAP.md](docs/ROADMAP.md)** - Development roadmap  
 - **[SCRAPER_README.md](SCRAPER_README.md)** - Web scraping documentation
 
@@ -238,21 +241,34 @@ The app uses `@vis.gl/react-google-maps` for a modern, React-friendly maps exper
 
 ### Data Processing
 
-The project includes tools for data collection and processing:
+The project uses a simple two-step pipeline to onboard health centers:
+
+**Pipeline:** `Scraper → Geocoding → Application`
 
 1. **Web Scraper** (`community_health_scraper.py`)
-   - Scrapes health center data from official sources
-   - Extracts addresses, phone numbers, services, websites
+   - Scrapes health center data from official Massachusetts sources
+   - Extracts: name, address, phone, services, websites
+   - Output: `community_health_centers_final.csv`
 
-2. **Document Parser** (`final_document_parser.py`)
-   - Parses official Word documents
-   - Extracts structured data from listings
-
-3. **Geocoding Script** (`add_geocoding.py`)
-   - Converts addresses to coordinates
-   - Validates addresses before API calls
+2. **Geocoding Script** (`add_geocoding.py`)
+   - Converts addresses to latitude/longitude coordinates
+   - Validates addresses before making API calls (saves quota!)
    - Shows progress and statistics
-   - Saves API quota by skipping invalid addresses
+   - Output: `community_health_centers_with_coords.csv` (used by app)
+
+**To add new health centers:**
+```bash
+# 1. Run scraper
+python community_health_scraper.py
+
+# 2. Add coordinates
+python add_geocoding.py YOUR_GOOGLE_MAPS_API_KEY
+
+# 3. Test
+cd frontend && npm run dev
+```
+
+See [DATA_ONBOARDING.md](DATA_ONBOARDING.md) for complete details.
 
 ## Development
 
