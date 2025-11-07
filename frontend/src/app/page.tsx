@@ -31,11 +31,30 @@ interface HealthCenter {
 
 export default function Home() {
   const [zipcode, setZipcode] = useState("");
-  const [healthCenters, setHealthCenters] = useState<HealthCenter[]>([]);
+  const [allHealthCenters, setAllHealthCenters] = useState<HealthCenter[]>([]);
+  const [filteredHealthCenters, setFilteredHealthCenters] = useState<HealthCenter[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [viewMode, setViewMode] = useState<'list' | 'map' | 'both'>('both');
   const [selectedCenter, setSelectedCenter] = useState<HealthCenter | null>(null);
+  const [mapCenter, setMapCenter] = useState<{ lat: number; lng: number } | null>(null);
+
+  // Load all health centers on mount
+  useEffect(() => {
+    const loadAllCenters = async () => {
+      try {
+        const response = await fetch('/api/health-centers');
+        if (!response.ok) {
+          throw new Error("Failed to fetch health centers");
+        }
+        const data = await response.json();
+        setAllHealthCenters(data);
+      } catch (err) {
+        console.error("Failed to load health centers:", err);
+      }
+    };
+    loadAllCenters();
+  }, []);
 
   const searchByZipcode = async () => {
     if (!zipcode.trim()) {
@@ -52,7 +71,12 @@ export default function Home() {
         throw new Error("Failed to fetch health centers");
       }
       const data = await response.json();
-      setHealthCenters(data);
+      setFilteredHealthCenters(data);
+      
+      // Zoom map to the first result's location
+      if (data.length > 0 && data[0].latitude && data[0].longitude) {
+        setMapCenter({ lat: data[0].latitude, lng: data[0].longitude });
+      }
     } catch (err) {
       setError("Failed to load health centers. Please try again.");
       console.error(err);
@@ -111,14 +135,16 @@ export default function Home() {
           )}
         </div>
 
-        {/* Results */}
-        {healthCenters.length > 0 && (
+        {/* Map View - Always Visible */}
+        {allHealthCenters.length > 0 && (
           <div className="space-y-6">
             {/* View Mode Toggle */}
             <div className="bg-white rounded-lg shadow-lg p-4">
               <div className="flex justify-between items-center">
                 <h2 className="text-2xl font-semibold text-gray-800">
-                  Health Centers in {zipcode} ({healthCenters.length} found)
+                  {zipcode && filteredHealthCenters.length > 0
+                    ? `Health Centers in ${zipcode} (${filteredHealthCenters.length} found)`
+                    : `All Health Centers (${allHealthCenters.length} total)`}
                 </h2>
                 <div className="flex gap-2">
                   <button
@@ -158,8 +184,15 @@ export default function Home() {
             {/* Map View */}
             {(viewMode === 'map' || viewMode === 'both') && (
               <div className="bg-white rounded-lg shadow-lg p-6">
-                <h3 className="text-xl font-semibold text-gray-800 mb-4">Map View</h3>
-                <HealthCenterMap healthCenters={healthCenters} />
+                <h3 className="text-xl font-semibold text-gray-800 mb-4">
+                  {zipcode ? `Map - Showing ${zipcode} area` : 'Map - All Health Centers'}
+                </h3>
+                <HealthCenterMap 
+                  healthCenters={allHealthCenters} 
+                  highlightedCenters={filteredHealthCenters}
+                  center={mapCenter}
+                  zoom={mapCenter ? 13 : 8}
+                />
               </div>
             )}
 
@@ -168,7 +201,7 @@ export default function Home() {
               <div className="bg-white rounded-lg shadow-lg p-6">
                 <h3 className="text-xl font-semibold text-gray-800 mb-4">List View</h3>
                 <HealthCenterList 
-                  healthCenters={healthCenters}
+                  healthCenters={zipcode && filteredHealthCenters.length > 0 ? filteredHealthCenters : allHealthCenters}
                   onCenterClick={(center) => setSelectedCenter(center)}
                 />
               </div>
@@ -177,7 +210,7 @@ export default function Home() {
         )}
 
         {/* No Results */}
-        {healthCenters.length === 0 && !loading && zipcode && (
+        {filteredHealthCenters.length === 0 && !loading && zipcode && allHealthCenters.length > 0 && (
           <div className="bg-white rounded-lg shadow-lg p-6 text-center">
             <div className="text-gray-500">
               <div className="mb-4">
@@ -186,23 +219,7 @@ export default function Home() {
                 </svg>
               </div>
               <p className="text-lg">No health centers found in zipcode {zipcode}</p>
-              <p className="text-sm mt-2">Try a different zipcode or check nearby areas</p>
-            </div>
-          </div>
-        )}
-
-        {/* Instructions */}
-        {!zipcode && (
-          <div className="bg-white rounded-lg shadow-lg p-6 text-center">
-            <div className="text-gray-500">
-              <div className="mb-4">
-                <svg className="mx-auto h-16 w-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                </svg>
-              </div>
-              <p className="text-lg">Enter a zipcode to find nearby health centers</p>
-              <p className="text-sm mt-2">Search for community health centers in your area</p>
+              <p className="text-sm mt-2">Try a different zipcode or explore the map to see nearby centers</p>
             </div>
           </div>
         )}
