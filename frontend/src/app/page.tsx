@@ -34,6 +34,7 @@ export default function Home() {
   const [allHealthCenters, setAllHealthCenters] = useState<HealthCenter[]>([]);
   const [filteredHealthCenters, setFilteredHealthCenters] = useState<HealthCenter[]>([]);
   const [loading, setLoading] = useState(false);
+  const [loadingAll, setLoadingAll] = useState(true);
   const [error, setError] = useState("");
   const [viewMode, setViewMode] = useState<'list' | 'map' | 'both'>('both');
   const [selectedCenter, setSelectedCenter] = useState<HealthCenter | null>(null);
@@ -51,6 +52,8 @@ export default function Home() {
         setAllHealthCenters(data);
       } catch (err) {
         console.error("Failed to load health centers:", err);
+      } finally {
+        setLoadingAll(false);
       }
     };
     loadAllCenters();
@@ -139,8 +142,15 @@ export default function Home() {
           )}
         </div>
 
+        {/* Loading State */}
+        {loadingAll && (
+          <div className="bg-white rounded-lg shadow-lg p-6 text-center">
+            <p className="text-gray-600">Loading health centers...</p>
+          </div>
+        )}
+
         {/* Map View - Always Visible */}
-        {allHealthCenters.length > 0 && (
+        {!loadingAll && allHealthCenters.length > 0 && (
           <div className="space-y-6">
             {/* View Mode Toggle */}
             <div className="bg-white rounded-lg shadow-lg p-4">
