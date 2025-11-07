@@ -95,8 +95,11 @@ export default function HealthCenterMap({
     );
   };
 
+  // Create unique key for entire map to force re-render
+  const mapKey = center ? `${center.lat}-${center.lng}-${zoom}` : 'default';
+
   return (
-    <div className="w-full h-[600px] rounded-lg overflow-hidden shadow-lg">
+    <div className="w-full h-[600px] rounded-lg overflow-hidden shadow-lg" key={mapKey}>
       <APIProvider 
         apiKey={apiKey}
         onLoad={() => console.log('Maps API loaded successfully')}
@@ -106,12 +109,11 @@ export default function HealthCenterMap({
         }}
       >
         <Map
-          center={displayCenter}
-          zoom={displayZoom}
+          defaultCenter={displayCenter}
+          defaultZoom={displayZoom}
           gestureHandling="greedy"
           disableDefaultUI={false}
           mapTypeId="roadmap"
-          key={`map-${center?.lat}-${center?.lng}-${displayZoom}`}
         >
           {centersWithCoordinates.map((healthCenter, index) => {
             const highlighted = isHighlighted(healthCenter);
