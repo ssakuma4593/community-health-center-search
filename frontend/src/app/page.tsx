@@ -39,6 +39,12 @@ export default function Home() {
   const [viewMode, setViewMode] = useState<'list' | 'map' | 'both'>('both');
   const [selectedCenter, setSelectedCenter] = useState<HealthCenter | null>(null);
   const [mapCenter, setMapCenter] = useState<{ lat: number; lng: number } | null>(null);
+  const [mounted, setMounted] = useState(false);
+
+  // Ensure client-side only rendering
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Load all health centers on mount
   useEffect(() => {
@@ -96,6 +102,27 @@ export default function Home() {
     e.preventDefault();
     searchByZipcode();
   };
+
+  // Prevent hydration mismatch by not rendering until mounted
+  if (!mounted) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
+        <div className="container mx-auto px-4 py-8">
+          <header className="text-center mb-8">
+            <h1 className="text-4xl font-bold text-gray-900 mb-4">
+              Community Health Centers
+            </h1>
+            <p className="text-lg text-gray-600">
+              Find health centers by zipcode
+            </p>
+          </header>
+          <div className="bg-white rounded-lg shadow-lg p-6 text-center">
+            <p className="text-gray-600">Loading...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
