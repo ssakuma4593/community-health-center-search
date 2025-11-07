@@ -30,8 +30,19 @@ export async function GET(request: Request) {
         // Get zipcode from the dedicated zipcode column
         const centerZipcode = data.zipcode || '';
         
+        // Normalize zipcodes for comparison (remove .0 and pad with leading zeros)
+        const normalizeZip = (zip: string) => {
+          if (!zip) return '';
+          // Remove .0 if present and convert to number, then pad to 5 digits
+          const numZip = parseInt(zip.replace('.0', ''));
+          return isNaN(numZip) ? '' : numZip.toString().padStart(5, '0');
+        };
+        
+        const normalizedCenterZip = normalizeZip(centerZipcode);
+        const normalizedSearchZip = zipcode ? normalizeZip(zipcode) : '';
+        
         // If no zipcode filter or if zipcode matches
-        if (!zipcode || centerZipcode === zipcode) {
+        if (!zipcode || normalizedCenterZip === normalizedSearchZip) {
           // Reconstruct full address from components
           const fullAddress = [
             data.street_address_1,
@@ -47,7 +58,7 @@ export async function GET(request: Request) {
             phone: data.phone,
             types: data.types,
             website: data.website,
-            zipcode: centerZipcode,
+            zipcode: normalizedCenterZip, // Use normalized zipcode with leading zeros
             street_address_1: data.street_address_1,
             street_address_2: data.street_address_2,
             city_town: data.city_town,
