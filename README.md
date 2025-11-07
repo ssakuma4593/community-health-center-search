@@ -68,13 +68,15 @@ sphere-ai/
 ├── backend/                               # FastAPI backend
 │   └── app/main.py
 ├── data/                                  # Source documents and data
-├── docs/                                  # Project documentation
+├── docs/                                  # All documentation
+│   ├── MAPS_SETUP.md                     # Google Maps setup
+│   ├── DATA_ONBOARDING.md                # Add/update health centers
+│   ├── SCRAPER_README.md                 # Web scraping docs
+│   └── ROADMAP.md                        # Development roadmap
 ├── community_health_centers_final.csv     # Scraped data
 ├── community_health_centers_with_coords.csv  # Geocoded data (used by app)
 ├── community_health_scraper.py            # Web scraper
 ├── add_geocoding.py                       # Geocoding script
-├── DATA_ONBOARDING.md                     # How to add/update data
-├── MAPS_SETUP.md                          # Google Maps setup guide
 └── README.md                              # This file
 ```
 
@@ -202,10 +204,12 @@ curl "http://localhost:3000/api/health-centers?zipcode=02118"
 
 ## Documentation
 
-- **[MAPS_SETUP.md](MAPS_SETUP.md)** - Complete Google Maps setup guide
-- **[DATA_ONBOARDING.md](DATA_ONBOARDING.md)** - How to add/update health centers
-- **[docs/ROADMAP.md](docs/ROADMAP.md)** - Development roadmap  
-- **[SCRAPER_README.md](SCRAPER_README.md)** - Web scraping documentation
+All documentation is in the [`docs/`](docs/) folder:
+
+- **[docs/MAPS_SETUP.md](docs/MAPS_SETUP.md)** - Complete Google Maps setup guide
+- **[docs/DATA_ONBOARDING.md](docs/DATA_ONBOARDING.md)** - How to add/update health centers
+- **[docs/SCRAPER_README.md](docs/SCRAPER_README.md)** - Web scraping documentation
+- **[docs/ROADMAP.md](docs/ROADMAP.md)** - Development roadmap
 
 ## Features in Detail
 
@@ -268,7 +272,7 @@ python add_geocoding.py YOUR_GOOGLE_MAPS_API_KEY
 cd frontend && npm run dev
 ```
 
-See [DATA_ONBOARDING.md](DATA_ONBOARDING.md) for complete details.
+See [docs/DATA_ONBOARDING.md](docs/DATA_ONBOARDING.md) for complete details.
 
 ## Development
 
@@ -342,7 +346,7 @@ For typical usage, the app stays within the free tier.
 - Verify Geocoding API is enabled in Google Cloud
 - Check API key permissions
 
-See [MAPS_SETUP.md](MAPS_SETUP.md) for detailed troubleshooting.
+See [docs/MAPS_SETUP.md](docs/MAPS_SETUP.md) for detailed troubleshooting.
 
 ## Contributing
 
@@ -384,4 +388,4 @@ For issues, questions, or contributions:
 
 ---
 
-**Need help getting started?** See [MAPS_SETUP.md](MAPS_SETUP.md) for the complete setup guide!
+**Need help getting started?** See [docs/MAPS_SETUP.md](docs/MAPS_SETUP.md) for the complete setup guide!
