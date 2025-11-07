@@ -192,7 +192,6 @@ export default function Home() {
                   highlightedCenters={filteredHealthCenters}
                   center={mapCenter}
                   zoom={mapCenter ? 13 : 8}
-                  key={`map-${allHealthCenters.length}`}
                 />
               </div>
             )}
