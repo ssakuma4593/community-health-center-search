@@ -61,13 +61,16 @@ export default function HealthCenterMap({
     center => center.latitude && center.longitude
   );
 
-  // Calculate default map center based on health centers if no center is set
+  // Calculate default map center - use Massachusetts center
+  // Massachusetts center coordinates for initial view
+  const massachusettsCenter = { lat: 42.4072, lng: -71.3824 };
+  
   const defaultCenter = centersWithCoordinates.length > 0
     ? {
         lat: centersWithCoordinates.reduce((sum, c) => sum + (c.latitude || 0), 0) / centersWithCoordinates.length,
         lng: centersWithCoordinates.reduce((sum, c) => sum + (c.longitude || 0), 0) / centersWithCoordinates.length,
       }
-    : { lat: 42.3601, lng: -71.0589 }; // Default to Boston
+    : massachusettsCenter;
   
   const displayCenter = mapCenter || defaultCenter;
   
