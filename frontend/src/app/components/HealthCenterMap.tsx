@@ -39,6 +39,7 @@ export default function HealthCenterMap({
   // Update map when center/zoom props change
   useEffect(() => {
     if (center) {
+      console.log('Map component received new center:', center, 'zoom:', zoom);
       setCurrentCenter(center);
       setCurrentZoom(zoom);
     }

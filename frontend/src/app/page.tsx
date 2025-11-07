@@ -75,7 +75,11 @@ export default function Home() {
       
       // Zoom map to the first result's location
       if (data.length > 0 && data[0].latitude && data[0].longitude) {
-        setMapCenter({ lat: data[0].latitude, lng: data[0].longitude });
+        const newCenter = { lat: data[0].latitude, lng: data[0].longitude };
+        console.log('Setting map center to:', newCenter);
+        setMapCenter(newCenter);
+      } else {
+        console.log('No valid coordinates in search results');
       }
     } catch (err) {
       setError("Failed to load health centers. Please try again.");
