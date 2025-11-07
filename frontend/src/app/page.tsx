@@ -182,7 +182,7 @@ export default function Home() {
             </div>
 
             {/* Map View */}
-            {(viewMode === 'map' || viewMode === 'both') && (
+            {(viewMode === 'map' || viewMode === 'both') && allHealthCenters.length > 0 && (
               <div className="bg-white rounded-lg shadow-lg p-6">
                 <h3 className="text-xl font-semibold text-gray-800 mb-4">
                   {zipcode ? `Map - Showing ${zipcode} area` : 'Map - All Health Centers'}
@@ -192,6 +192,7 @@ export default function Home() {
                   highlightedCenters={filteredHealthCenters}
                   center={mapCenter}
                   zoom={mapCenter ? 13 : 8}
+                  key={`map-${allHealthCenters.length}`}
                 />
               </div>
             )}
