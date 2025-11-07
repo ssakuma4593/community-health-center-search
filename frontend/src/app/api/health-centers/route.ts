@@ -7,15 +7,43 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const zipcode = searchParams.get('zipcode');
     
-    const csvPath = path.join(process.cwd(), '..', 'community_health_centers_parsed.csv');
+    // Try to use the geocoded CSV first, fall back to parsed CSV
+    let csvPath = path.join(process.cwd(), '..', 'community_health_centers_with_coords.csv');
+    if (!fs.existsSync(csvPath)) {
+      csvPath = path.join(process.cwd(), '..', 'community_health_centers_parsed.csv');
+    }
+    
     const csvContent = fs.readFileSync(csvPath, 'utf-8');
+    
+    // Helper function to parse CSV line properly (handles quoted fields)
+    const parseCSVLine = (line: string): string[] => {
+      const result: string[] = [];
+      let current = '';
+      let inQuotes = false;
+      
+      for (let i = 0; i < line.length; i++) {
+        const char = line[i];
+        
+        if (char === '"') {
+          inQuotes = !inQuotes;
+        } else if (char === ',' && !inQuotes) {
+          result.push(current.trim());
+          current = '';
+        } else {
+          current += char;
+        }
+      }
+      result.push(current.trim());
+      return result;
+    };
+    
     const lines = csvContent.split('\n');
-    const headers = lines[0].split(',');
+    const headers = parseCSVLine(lines[0]);
     const results: any[] = [];
     
     for (let i = 1; i < lines.length; i++) {
       if (lines[i].trim()) {
-        const values = lines[i].split(',');
+        const values = parseCSVLine(lines[i]);
         const data: any = {};
         
         headers.forEach((header, index) => {
@@ -46,7 +74,9 @@ export async function GET(request: Request) {
             street_address_1: data.street_address_1,
             street_address_2: data.street_address_2,
             city_town: data.city_town,
-            state: data.state
+            state: data.state,
+            latitude: data.latitude ? parseFloat(data.latitude) : undefined,
+            longitude: data.longitude ? parseFloat(data.longitude) : undefined
           });
         }
       }
