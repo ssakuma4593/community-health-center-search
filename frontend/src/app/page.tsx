@@ -142,8 +142,10 @@ export default function Home() {
             <div className="bg-white rounded-lg shadow-lg p-4">
               <div className="flex justify-between items-center">
                 <h2 className="text-2xl font-semibold text-gray-800">
-                  {zipcode && filteredHealthCenters.length > 0
-                    ? `Health Centers in ${zipcode} (${filteredHealthCenters.length} found)`
+                  {zipcode
+                    ? filteredHealthCenters.length > 0
+                      ? `Health Centers in ${zipcode} (${filteredHealthCenters.length} found)`
+                      : `No Health Centers in ${zipcode}`
                     : `All Health Centers (${allHealthCenters.length} total)`}
                 </h2>
                 <div className="flex gap-2">
