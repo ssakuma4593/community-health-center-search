@@ -89,9 +89,9 @@ export default function HealthCenterMap({
         <Map
           center={displayCenter}
           zoom={mapZoom}
-          mapId="health-centers-map"
           gestureHandling="greedy"
           disableDefaultUI={false}
+          mapTypeId="roadmap"
         >
           {centersWithCoordinates.map((healthCenter, index) => {
             const highlighted = isHighlighted(healthCenter);
