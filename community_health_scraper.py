@@ -247,24 +247,26 @@ class TargetedStructureScraper:
         logger.info(f"Total unique centers found: {len(unique_centers)}")
         return unique_centers
     
-    def save_to_json(self, filename: str = "community_health_centers_targeted.json"):
+    def save_to_json(self, filename: str = "community_health_centers_scraped_fresh.json"):
         """Save to JSON"""
         with open(filename, 'w', encoding='utf-8') as f:
             json.dump(self.centers, f, indent=2, ensure_ascii=False)
         logger.info(f"Data saved to {filename}")
     
-    def save_to_csv(self, filename: str = "community_health_centers_targeted.csv"):
+    def save_to_csv(self, filename: str = "community_health_centers_scraped_fresh.csv"):
         """Save to CSV"""
         if not self.centers:
             logger.warning("No data to save")
             return
         
         with open(filename, 'w', newline='', encoding='utf-8') as f:
-            writer = csv.DictWriter(f, fieldnames=['name', 'address', 'phone', 'types', 'website'])
+            fieldnames = ['name', 'address', 'phone', 'types', 'website', 'source']
+            writer = csv.DictWriter(f, fieldnames=fieldnames)
             writer.writeheader()
             for center in self.centers:
                 center_copy = center.copy()
                 center_copy['types'] = ', '.join(center['types'])
+                center_copy['source'] = 'massleague_scraped'
                 writer.writerow(center_copy)
         logger.info(f"Data saved to {filename}")
     
