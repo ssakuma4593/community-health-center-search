@@ -4,8 +4,6 @@
 
 Community Health Center Search is a comprehensive healthcare platform that helps patients locate community health centers by zipcode. The application features an interactive Google Maps integration, showing health centers with detailed information including services offered, contact details, and locations.
 
-![Community Health Center Search Interface](https://github.com/user-attachments/assets/d9f4fe37-3eb2-4937-ae07-cec0ccafa356)
-
 ## Features
 
 ### 🗺️ Interactive Map
