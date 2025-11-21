@@ -5,13 +5,37 @@ How to add or update community health centers in the application.
 ## 🔄 Data Pipeline Overview
 
 ```
-1. Web Scraper                    2. Geocoding                    3. Application
-   ↓                                ↓                               ↓
-community_health_scraper.py  →  add_geocoding.py  →  frontend/api reads
-   ↓                                ↓                               ↓
-community_health_centers_    →  community_health_centers_   →  Displays on map
-final.csv                        with_coords.csv                 and list
+1. Web Scraper          2. DOCX Scraper          3. Geocoding          4. Application
+   ↓                        ↓                       ↓                      ↓
+community_health_    →  scrape_docx.py    →  add_geocoding.py  →  frontend/api reads
+scraper.py                                       ↓                      ↓
+   ↓                        ↓                   community_health_  →  Displays on map
+community_health_          hsn_active_         centers_with_         and list
+centers_scraped_           health_centers_     coords.csv
+fresh.csv                  scraped.csv
 ```
+
+---
+
+## 📍 Data Sources
+
+The official list of community health centers comes from the Massachusetts state government:
+
+**Official Source:** [Mass.gov - Information for Patients](https://www.mass.gov/info-details/information-for-patients)
+
+This page provides links to Health Safety Net (HSN) provider listings, including community health centers and acute care hospitals in Massachusetts. It includes a downloadable DOCX file (`hsn-active-health-center-listings.docx`) that contains the official list.
+
+**Data Collection Methods:**
+
+1. **Mass League Website Scraper** (`community_health_scraper.py`)
+   - Source: [Mass League of Community Health Centers - Find a Community Health Center](https://www.massleague.org/public-resources/about-community-health-centers/find-a-community-health-center/)
+   - Output: `community_health_centers_scraped_fresh.csv`
+   - The Mass League website is linked from the official Mass.gov page and provides a searchable directory.
+
+2. **Official DOCX Scraper** (`scrape_docx.py`)
+   - Source: Official DOCX file from Mass.gov (`data/official_documents/hsn-active-health-center-listings.docx`)
+   - Output: `hsn_active_health_centers_scraped.csv`
+   - This pulls directly from the authoritative government document.
 
 ---
 
@@ -19,7 +43,7 @@ final.csv                        with_coords.csv                 and list
 
 ### Step 1: Run the Web Scraper
 
-The scraper pulls health center data from official Massachusetts health sources.
+The scraper pulls health center data from the [Mass League of Community Health Centers website](https://www.massleague.org/public-resources/about-community-health-centers/find-a-community-health-center/), which is the searchable directory of community health centers. 
 
 ```bash
 # Install dependencies (first time only)
@@ -32,20 +56,52 @@ python community_health_scraper.py
 **What it does:**
 - Scrapes health center listings from official websites
 - Extracts: name, address, phone, services, website
-- Outputs: `community_health_centers_final.csv`
+- Outputs: `community_health_centers_scraped_fresh.csv`
 
 **Expected output:**
 ```
 🌐 Starting scraper...
-[1/276] Scraping Community Health Center...
+[1/123] Scraping Community Health Center...
   ✅ Success
 ...
-✨ Done! Saved 276 health centers to community_health_centers_final.csv
+✨ Done! Saved 123 health centers to community_health_centers_scraped_fresh.csv
 ```
 
-**Output file:** `community_health_centers_final.csv`
+**Output file:** `community_health_centers_scraped_fresh.csv`
 
-### Step 2: Add Geocoding
+### Step 2: Scrape Official DOCX File
+
+The official Mass.gov page provides a DOCX file listing all Health Safety Net (HSN) community health centers. This script extracts data from that official document.
+
+```bash
+# Install dependencies (first time only)
+pip install python-docx
+
+# Run the DOCX scraper
+python scrape_docx.py
+```
+
+**What it does:**
+- Reads the official DOCX file from `data/official_documents/hsn-active-health-center-listings.docx`
+- Extracts: name, address, phone, services
+- Outputs: `hsn_active_health_centers_scraped.csv`
+
+**Expected output:**
+```
+Reading DOCX file: data/official_documents/hsn-active-health-center-listings.docx
+Processing table 1 with 112 rows
+  Headers: [...]
+...
+Extracted 111 unique health centers
+✅ Successfully saved 111 centers to hsn_active_health_centers_scraped.csv
+✅ Done! CSV saved to hsn_active_health_centers_scraped.csv
+```
+
+**Output file:** `hsn_active_health_centers_scraped.csv`
+
+**Note:** This pulls from the official Mass.gov source file, which provides authoritative Health Safety Net provider listings.
+
+### Step 3: Add Geocoding
 
 Convert addresses to latitude/longitude coordinates for map display.
 
@@ -58,29 +114,31 @@ python add_geocoding.py YOUR_GOOGLE_MAPS_API_KEY
 ```
 
 **What it does:**
-- Reads `community_health_centers_final.csv` (or `community_health_centers_parsed.csv`)
+- Reads `community_health_centers_parsed.csv` (or you can modify the script to read other CSV files)
 - Validates each address
 - Calls Google Maps Geocoding API
 - Adds latitude/longitude columns
 - Outputs: `community_health_centers_with_coords.csv`
 
+**Note:** The `add_geocoding.py` script currently reads from `community_health_centers_parsed.csv` by default. If you have a different CSV file, you can modify the script or ensure your CSV matches the expected format with columns: `name`, `street_address_1`, `street_address_2`, `city_town`, `state`, `zipcode`, `phone`, `types`, `website`.
+
 **Expected output:**
 ```
-🌍 Starting geocoding for 276 health centers...
-[1/276] Community Health Center
+🌍 Starting geocoding for 273 health centers...
+[1/273] Community Health Center
   📍 Address: 130 Water Street, Fitchburg, MA, 01420
   ✅ Success: 42.583542, -71.802345
 ...
 📊 Geocoding Summary:
-  ✅ Successful: 260/276 (94.2%)
-  ❌ Failed: 8/276 (2.9%)
-  ⏭️  Skipped (no address): 8/276 (2.9%)
-  📞 API calls made: 268 (saved 8 calls)
+  ✅ Successful: 260/273 (95.2%)
+  ❌ Failed: 5/273 (1.8%)
+  ⏭️  Skipped (no address): 8/273 (2.9%)
+  📞 API calls made: 265 (saved 8 calls)
 ```
 
 **Output file:** `community_health_centers_with_coords.csv`
 
-### Step 3: Verify & Deploy
+### Step 4: Verify & Deploy
 
 ```bash
 # Test locally
@@ -101,7 +159,7 @@ If you need to add health centers manually:
 
 ### 1. Edit the CSV
 
-Open `community_health_centers_final.csv` and add a new row:
+Open `community_health_centers_with_coords.csv` (production file) or create a new CSV with the correct format. Add a new row:
 
 ```csv
 name,street_address_1,street_address_2,city_town,state,zipcode,phone,types,website,source
@@ -151,19 +209,28 @@ This will add coordinates for the new entry.
 
 ## 🔄 Updating Existing Data
 
-### Option 1: Re-run the Scraper
+### Option 1: Re-run Both Scrapers
 
 ```bash
 # This will fetch the latest data from official sources
-python community_health_scraper.py
 
-# Then re-geocode
+# Step 1: Scrape Mass League website
+python community_health_scraper.py
+# or
+python run_scraper.py
+# This generates: community_health_centers_scraped_fresh.csv
+
+# Step 2: Scrape official DOCX file
+python scrape_docx.py
+# This generates: hsn_active_health_centers_scraped.csv
+
+# Step 3: Then re-geocode (make sure add_geocoding.py is configured to read the correct input file)
 python add_geocoding.py YOUR_GOOGLE_MAPS_API_KEY
 ```
 
 ### Option 2: Manual Edit
 
-1. Open `community_health_centers_final.csv`
+1. Open `community_health_centers_with_coords.csv` (production file) or the source CSV file you're working with
 2. Edit the specific row(s)
 3. Save the file
 4. Re-run geocoding: `python add_geocoding.py YOUR_API_KEY`
@@ -172,14 +239,16 @@ python add_geocoding.py YOUR_GOOGLE_MAPS_API_KEY
 
 ## 🗑️ Deprecated Scripts
 
-These scripts are **no longer needed** with the current workflow:
+These scripts are **archived** and no longer used in the current workflow:
 
-- ❌ `final_merge_script.py` - Was used to merge multiple data sources (now handled by scraper)
-- ❌ `final_document_parser.py` - Was used to parse Word documents (now handled by scraper)
+- ❌ `archive/final_merge_script.py` - Was used to merge multiple data sources
+- ❌ `archive/final_document_parser.py` - Was used to parse Word documents
+- ❌ `archive/community_health_centers_final.csv` - Old scraped data (replaced by `community_health_centers_scraped_fresh.csv`)
+- ❌ `archive/community_health_centers_parsed.csv` - Old parsed data
 
-You can safely ignore these files. The current workflow is:
-1. **Scraper** → pulls all data
-2. **Geocoding** → adds coordinates
+You can safely ignore these archived files. The current workflow is:
+1. **Scraper** (`community_health_scraper.py` or `run_scraper.py`) → generates `community_health_centers_scraped_fresh.csv`
+2. **Geocoding** (`add_geocoding.py`) → adds coordinates → generates `community_health_centers_with_coords.csv` (production file)
 
 ---
 
@@ -331,13 +400,13 @@ NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=your_production_api_key
 
 ### Frequency
 
-- **Monthly**: Run scraper to check for new health centers
+- **Monthly**: Run both scrapers (Mass League website and official DOCX) to check for new health centers
 - **Quarterly**: Verify existing data is still accurate
 - **As Needed**: When notified of new centers or closures
 
 ### Process
 
-1. Run scraper on first of the month
+1. Run both scrapers on first of the month (Mass League and DOCX)
 2. Compare with previous data
 3. If changes detected, run geocoding
 4. Test locally
@@ -368,16 +437,25 @@ Include:
 
 **Quick Workflow:**
 ```bash
-# 1. Get latest data
+# 1. Scrape Mass League website
 python community_health_scraper.py
+# or
+python run_scraper.py
+# Generates: community_health_centers_scraped_fresh.csv
 
-# 2. Add coordinates
+# 2. Scrape official DOCX file
+python scrape_docx.py
+# Generates: hsn_active_health_centers_scraped.csv
+
+# 3. Add coordinates
+# Note: Make sure add_geocoding.py is configured to read your source CSV file
 python add_geocoding.py YOUR_API_KEY
+# Generates: community_health_centers_with_coords.csv (production file)
 
-# 3. Test
+# 4. Test
 cd frontend && npm run dev
 
-# 4. Deploy
+# 5. Deploy
 git add community_health_centers_with_coords.csv
 git commit -m "Update health center data"
 git push
