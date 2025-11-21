@@ -8,7 +8,7 @@ export default function Navigation() {
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           <Link href="/" className="text-2xl font-bold text-gray-900">
-            Sphere AI
+            Community Health Center Search
           </Link>
           <div className="space-x-4">
             <Link 

@@ -4,7 +4,7 @@ from typing import List
 import json
 import os
 
-app = FastAPI(title="Sphere AI Backend", version="1.0.0")
+app = FastAPI(title="Community Health Center Search Backend", version="1.0.0")
 
 class ProviderSearchRequest(BaseModel):
     language: str

@@ -1,10 +1,10 @@
-# Sphere AI - Community Health Centers Finder
+# Community Health Center Search
 
 **Find community health centers in Massachusetts with interactive maps**
 
-Sphere AI is a comprehensive healthcare platform that helps patients locate community health centers by zipcode. The application features an interactive Google Maps integration, showing health centers with detailed information including services offered, contact details, and locations.
+Community Health Center Search is a comprehensive healthcare platform that helps patients locate community health centers by zipcode. The application features an interactive Google Maps integration, showing health centers with detailed information including services offered, contact details, and locations.
 
-![Sphere AI Interface](https://github.com/user-attachments/assets/d9f4fe37-3eb2-4937-ae07-cec0ccafa356)
+![Community Health Center Search Interface](https://github.com/user-attachments/assets/d9f4fe37-3eb2-4937-ae07-cec0ccafa356)
 
 ## Features
 
@@ -53,7 +53,7 @@ Sphere AI is a comprehensive healthcare platform that helps patients locate comm
 ## Project Structure
 
 ```
-sphere-ai/
+community-health-center-search/
 ├── frontend/                              # Next.js application
 │   ├── src/app/
 │   │   ├── components/

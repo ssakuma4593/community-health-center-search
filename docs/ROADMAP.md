@@ -1,4 +1,4 @@
-# Sphere AI Roadmap
+# Community Health Center Search Roadmap
 
 ## Sprint 1: Foundation (Weeks 1-2)
 - [x] Set up monorepo structure

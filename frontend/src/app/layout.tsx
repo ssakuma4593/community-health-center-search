@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Sphere AI - Healthcare Providers in Your Language",
+  title: "Community Health Center Search - Healthcare Providers in Your Language",
   description: "Find and book appointments with healthcare providers who speak your native language",
 };
 
