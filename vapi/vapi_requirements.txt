@@ -1,0 +1,5 @@
+# Requirements for Vapi.ai integration
+requests>=2.31.0
+
+
+

@@ -15,6 +15,14 @@ interface HealthCenter {
   website?: string;
   latitude?: number;
   longitude?: number;
+  // Call data fields (optional for map component)
+  accepting_new_patients?: string;
+  has_waiting_list?: string;
+  waiting_list_availability_date?: string;
+  languages_supported?: string;
+  call_notes?: string;
+  last_called_date?: string;
+  call_status?: string;
 }
 
 interface HealthCenterMapProps {
@@ -162,6 +170,25 @@ export default function HealthCenterMap({
                     >
                       Visit Website
                     </a>
+                  )}
+                  {/* Call Information in InfoWindow */}
+                  {(selectedCenter.accepting_new_patients || selectedCenter.has_waiting_list || selectedCenter.languages_supported) && (
+                    <div className="mt-2 pt-2 border-t border-gray-200">
+                      {selectedCenter.accepting_new_patients && (
+                        <p className="text-xs">
+                          <span className="font-medium">New Patients: </span>
+                          <span className={selectedCenter.accepting_new_patients.toLowerCase() === 'yes' ? 'text-green-600' : 'text-red-600'}>
+                            {selectedCenter.accepting_new_patients}
+                          </span>
+                        </p>
+                      )}
+                      {selectedCenter.languages_supported && (
+                        <p className="text-xs">
+                          <span className="font-medium">Languages: </span>
+                          {selectedCenter.languages_supported}
+                        </p>
+                      )}
+                    </div>
                   )}
                 </div>
               </div>
