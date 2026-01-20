@@ -38,7 +38,7 @@ Community Health Center Search is a comprehensive healthcare platform that helps
 - **Deployment**: GitHub Pages via GitHub Actions
 
 ### Data Processing
-- **Web Scraping**: Python with Selenium, BeautifulSoup
+- **Document Parsing**: Python with python-docx for parsing official Word documents
 - **Data Parsing**: pandas for CSV processing
 - **Geocoding Script**: Automated address-to-coordinate conversion
 
@@ -75,7 +75,7 @@ community-health-center-search/
 │   └── workflows/
 │       └── deploy-pages.yml               # GitHub Pages deployment
 ├── community_health_centers_with_coords.csv  # Geocoded data (source)
-├── community_health_scraper.py            # Web scraper
+├── scrape_docx.py                         # Document parser
 ├── add_geocoding.py                       # Geocoding script
 └── README.md                              # This file
 ```
@@ -218,12 +218,12 @@ The app uses **Leaflet** with **OpenStreetMap** tiles for a free, open-source ma
 
 The project uses a simple two-step pipeline to onboard health centers:
 
-**Pipeline:** `Scraper → Geocoding → Application`
+**Pipeline:** `Document Parser → Geocoding → Application`
 
-1. **Web Scraper** (`community_health_scraper.py`)
-   - Scrapes health center data from official Massachusetts sources
+1. **Document Parser** (`scrape_docx.py`)
+   - Parses health center data from official Massachusetts Word documents
    - Extracts: name, address, phone, services, websites
-   - Output: `community_health_centers_final.csv`
+   - Output: `hsn_active_health_centers_scraped.csv`
 
 2. **Geocoding Script** (`add_geocoding.py`)
    - Converts addresses to latitude/longitude coordinates
@@ -233,8 +233,8 @@ The project uses a simple two-step pipeline to onboard health centers:
 
 **To add new health centers:**
 ```bash
-# 1. Run scraper
-python community_health_scraper.py
+# 1. Parse official document
+python scrape_docx.py
 
 # 2. Add coordinates
 python add_geocoding.py YOUR_GOOGLE_MAPS_API_KEY

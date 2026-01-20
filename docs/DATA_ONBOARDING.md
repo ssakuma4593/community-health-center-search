@@ -5,45 +5,44 @@ How to add or update community health centers in the application.
 ## 🔄 Data Pipeline Overview
 
 ```
-1. Web Scraper                    2. Geocoding                    3. Application
+1. Parse Official Document        2. Geocoding                    3. Application
    ↓                                ↓                               ↓
-community_health_scraper.py  →  add_geocoding.py  →  frontend/api reads
+scrape_docx.py              →  add_geocoding.py  →  frontend/api reads
    ↓                                ↓                               ↓
-community_health_centers_    →  community_health_centers_   →  Displays on map
-final.csv                        with_coords.csv                 and list
+hsn_active_health_centers_   →  community_health_centers_   →  Displays on map
+scraped.csv                      with_coords.csv                 and list
 ```
 
 ---
 
 ## 📥 Adding New Health Centers
 
-### Step 1: Run the Web Scraper
+### Step 1: Parse Official Document
 
-The scraper pulls health center data from official Massachusetts health sources.
+The parser extracts health center data from official Massachusetts health center documents.
 
 ```bash
 # Install dependencies (first time only)
-pip install -r scraper_requirements.txt
+pip install python-docx
 
-# Run the scraper
-python community_health_scraper.py
+# Run the parser
+python scrape_docx.py
 ```
 
 **What it does:**
-- Scrapes health center listings from official websites
+- Parses health center listings from official Word documents
 - Extracts: name, address, phone, services, website
-- Outputs: `community_health_centers_final.csv`
+- Outputs: `hsn_active_health_centers_scraped.csv`
 
 **Expected output:**
 ```
-🌐 Starting scraper...
-[1/276] Scraping Community Health Center...
-  ✅ Success
-...
-✨ Done! Saved 276 health centers to community_health_centers_final.csv
+Reading DOCX file: data/official_documents/hsn-active-health-center-listings.docx
+Processing table 1 with 112 rows
+Extracted 111 unique health centers
+✅ Successfully saved 111 centers to hsn_active_health_centers_scraped.csv
 ```
 
-**Output file:** `community_health_centers_final.csv`
+**Output file:** `hsn_active_health_centers_scraped.csv`
 
 ### Step 2: Add Geocoding
 
@@ -58,7 +57,7 @@ python add_geocoding.py YOUR_GOOGLE_MAPS_API_KEY
 ```
 
 **What it does:**
-- Reads `community_health_centers_final.csv` (or `community_health_centers_parsed.csv`)
+- Reads parsed CSV file (e.g., `hsn_active_health_centers_scraped.csv` or `community_health_centers_parsed.csv`)
 - Validates each address
 - Calls Google Maps Geocoding API
 - Adds latitude/longitude columns
@@ -101,7 +100,7 @@ If you need to add health centers manually:
 
 ### 1. Edit the CSV
 
-Open `community_health_centers_final.csv` and add a new row:
+Open the parsed CSV file (e.g., `hsn_active_health_centers_scraped.csv`) and add a new row:
 
 ```csv
 name,street_address_1,street_address_2,city_town,state,zipcode,phone,types,website,source
@@ -151,11 +150,11 @@ This will add coordinates for the new entry.
 
 ## 🔄 Updating Existing Data
 
-### Option 1: Re-run the Scraper
+### Option 1: Re-run the Parser
 
 ```bash
-# This will fetch the latest data from official sources
-python community_health_scraper.py
+# This will parse the latest data from official documents
+python scrape_docx.py
 
 # Then re-geocode
 python add_geocoding.py YOUR_GOOGLE_MAPS_API_KEY
@@ -163,7 +162,7 @@ python add_geocoding.py YOUR_GOOGLE_MAPS_API_KEY
 
 ### Option 2: Manual Edit
 
-1. Open `community_health_centers_final.csv`
+1. Open the parsed CSV file (e.g., `hsn_active_health_centers_scraped.csv`)
 2. Edit the specific row(s)
 3. Save the file
 4. Re-run geocoding: `python add_geocoding.py YOUR_API_KEY`
@@ -174,12 +173,14 @@ python add_geocoding.py YOUR_GOOGLE_MAPS_API_KEY
 
 These scripts are **no longer needed** with the current workflow:
 
-- ❌ `final_merge_script.py` - Was used to merge multiple data sources (now handled by scraper)
-- ❌ `final_document_parser.py` - Was used to parse Word documents (now handled by scraper)
+- ❌ `final_merge_script.py` - Was used to merge multiple data sources
+- ❌ `final_document_parser.py` - Was replaced by `scrape_docx.py`
+- ❌ `community_health_scraper.py` - Web scraper (removed, using official documents only)
+- ❌ `run_scraper.py` - Web scraper runner (removed, using official documents only)
 
 You can safely ignore these files. The current workflow is:
-1. **Scraper** → pulls all data
-2. **Geocoding** → adds coordinates
+1. **Document Parser** (`scrape_docx.py`) → extracts data from official documents
+2. **Geocoding** (`add_geocoding.py`) → adds coordinates
 
 ---
 
@@ -294,15 +295,15 @@ NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=your_production_api_key
 
 ## 📞 Troubleshooting
 
-### Scraper Issues
+### Parser Issues
 
-**Problem:** Scraper fails or returns no data
+**Problem:** Parser fails or returns no data
 
 **Solutions:**
-- Check internet connection
-- Verify source website is accessible
-- Update scraper if website structure changed
-- Check Chrome/ChromeDriver compatibility
+- Verify the DOCX file exists in `data/official_documents/`
+- Check that `python-docx` is installed: `pip install python-docx`
+- Verify the document structure matches expected format
+- Check file permissions
 
 ### Geocoding Issues
 
@@ -368,8 +369,8 @@ Include:
 
 **Quick Workflow:**
 ```bash
-# 1. Get latest data
-python community_health_scraper.py
+# 1. Parse official document
+python scrape_docx.py
 
 # 2. Add coordinates
 python add_geocoding.py YOUR_API_KEY
