@@ -17,7 +17,7 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [searching, setSearching] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [radius, setRadius] = useState(10);
+  const [radius, setRadius] = useState(3);
 
   useEffect(() => {
     loadHealthCenters()
