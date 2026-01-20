@@ -4,7 +4,8 @@ import type { HealthCenter } from '../types';
 export async function loadHealthCenters(): Promise<HealthCenter[]> {
   try {
     // Use base URL for GitHub Pages compatibility
-    const baseUrl = import.meta.env.BASE_URL;
+    // @ts-ignore - BASE_URL is provided by Vite
+    const baseUrl = import.meta.env.BASE_URL || '/';
     const csvPath = `${baseUrl}data/centers.csv`;
     console.log('Loading CSV from:', csvPath);
     const response = await fetch(csvPath);
