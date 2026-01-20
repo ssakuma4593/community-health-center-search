@@ -1,0 +1,41 @@
+import Papa from 'papaparse';
+import type { HealthCenter } from '../types';
+
+export async function loadHealthCenters(): Promise<HealthCenter[]> {
+  try {
+    const response = await fetch('/data/centers.csv');
+    const text = await response.text();
+    
+    return new Promise((resolve, reject) => {
+      Papa.parse<HealthCenter>(text, {
+        header: true,
+        skipEmptyLines: true,
+        transformHeader: (header) => {
+          // Normalize header names
+          return header.trim().toLowerCase().replace(/\s+/g, '_');
+        },
+        transform: (value, field) => {
+          // Convert numeric fields
+          if (field === 'latitude' || field === 'longitude') {
+            const num = parseFloat(value);
+            return isNaN(num) ? 0 : num;
+          }
+          return value || '';
+        },
+        complete: (results) => {
+          const centers = results.data.filter(
+            (center) => center.latitude && center.longitude && center.latitude !== 0 && center.longitude !== 0
+          ) as HealthCenter[];
+          console.log(`Loaded ${centers.length} health centers from CSV`);
+          resolve(centers);
+        },
+        error: (error: Error) => {
+          reject(error);
+        },
+      });
+    });
+  } catch (error) {
+    console.error('Error loading health centers:', error);
+    return [];
+  }
+}

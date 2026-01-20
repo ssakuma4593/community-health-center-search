@@ -2,23 +2,20 @@
 
 **Find community health centers in Massachusetts with interactive maps**
 
-Community Health Center Search is a comprehensive healthcare platform that helps patients locate community health centers by zipcode. The application features an interactive Google Maps integration, showing health centers with detailed information including services offered, contact details, and locations.
+Community Health Center Search is a comprehensive healthcare platform that helps patients locate community health centers by zipcode. The application features an interactive map with Leaflet/OpenStreetMap, showing health centers with detailed information including services offered, contact details, and locations.
 
 ## Features
 
 ### 🗺️ Interactive Map
-- **Google Maps Integration**: View health centers on an interactive map
+- **Leaflet/OpenStreetMap Integration**: View health centers on an interactive map (free, no API key required)
 - **Custom Markers**: Click markers to see detailed information
 - **Auto-Centering**: Map automatically centers on search results
-- **Info Windows**: Detailed health center information in popups
+- **Distance Calculation**: Haversine formula for accurate distance calculations
 
-### 📋 Multiple View Modes
-- **List View**: Traditional card-based list with full details
-- **Map View**: Full-screen interactive map
-- **Both View**: Split view showing both list and map (default)
-
-### 🔍 Search & Filter
-- **Zipcode Search**: Find health centers in specific zipcodes
+### 📋 Search & Results
+- **Zipcode Search**: Find health centers by zipcode with radius filtering (10/25/50/100 miles)
+- **Results List**: Sorted by distance, displayed in cards
+- **Detail View**: Modal with markdown rendering for patient instructions
 - **Service Types**: View available services (Primary Care, Dental, Eye Care)
 - **Contact Information**: Phone numbers and website links
 - **Address Details**: Complete address with coordinates
@@ -32,16 +29,13 @@ Community Health Center Search is a comprehensive healthcare platform that helps
 ## Tech Stack
 
 ### Frontend
-- **Framework**: Next.js 15 with App Router
+- **Framework**: Vite + React 19
 - **Language**: TypeScript
-- **Styling**: Tailwind CSS
-- **Maps**: @vis.gl/react-google-maps
-- **UI**: React 19 with modern hooks
-
-### Backend
-- **API**: FastAPI (Python)
-- **Data Source**: CSV files with geocoded addresses
-- **Geocoding**: Google Maps Geocoding API
+- **Maps**: Leaflet + react-leaflet (OpenStreetMap tiles)
+- **Markdown**: react-markdown for patient instructions
+- **CSV Parsing**: PapaParse
+- **Geocoding**: Nominatim (OpenStreetMap, free, no API key)
+- **Deployment**: GitHub Pages via GitHub Actions
 
 ### Data Processing
 - **Web Scraping**: Python with Selenium, BeautifulSoup
@@ -52,26 +46,35 @@ Community Health Center Search is a comprehensive healthcare platform that helps
 
 ```
 community-health-center-search/
-├── frontend/                              # Next.js application
-│   ├── src/app/
+├── frontend/                              # Vite + React application
+│   ├── src/
 │   │   ├── components/
-│   │   │   ├── HealthCenterMap.tsx       # Interactive map component
-│   │   │   ├── HealthCenterList.tsx      # List view component
-│   │   │   └── Navigation.tsx            # Navigation bar
-│   │   ├── api/health-centers/
-│   │   │   └── route.ts                  # API endpoint for health centers
-│   │   └── page.tsx                      # Main search page
-│   ├── package.json
-│   └── .env.local                         # Google Maps API key (create this)
-├── backend/                               # FastAPI backend
+│   │   │   ├── HealthCenterMap.tsx       # Leaflet map component
+│   │   │   ├── HealthCenterList.tsx      # Results list component
+│   │   │   └── HealthCenterDetail.tsx    # Detail modal with markdown
+│   │   ├── utils/
+│   │   │   ├── csvLoader.ts              # CSV parsing
+│   │   │   ├── geocoding.ts              # Zipcode geocoding
+│   │   │   └── distance.ts               # Haversine distance
+│   │   ├── types.ts                       # TypeScript types
+│   │   ├── App.tsx                        # Main app component
+│   │   └── main.tsx                       # Entry point
+│   ├── public/
+│   │   └── data/
+│   │       └── centers.csv                # Health center data
+│   ├── vite.config.ts                     # Vite config with base path
+│   └── package.json
+├── backend/                               # FastAPI backend (optional)
 │   └── app/main.py
 ├── data/                                  # Source documents and data
 ├── docs/                                  # All documentation
-│   ├── MAPS_SETUP.md                     # Google Maps setup
+│   ├── MAPS_SETUP.md                     # Maps setup (legacy)
 │   ├── DATA_ONBOARDING.md                # Add/update health centers
 │   └── ROADMAP.md                        # Development roadmap
-├── community_health_centers_final.csv     # Scraped data
-├── community_health_centers_with_coords.csv  # Geocoded data (used by app)
+├── .github/
+│   └── workflows/
+│       └── deploy-pages.yml               # GitHub Pages deployment
+├── community_health_centers_with_coords.csv  # Geocoded data (source)
 ├── community_health_scraper.py            # Web scraper
 ├── add_geocoding.py                       # Geocoding script
 └── README.md                              # This file
@@ -82,122 +85,96 @@ community-health-center-search/
 ### Prerequisites
 
 - **Node.js 18+** and npm
-- **Python 3.8+** and pip
-- **Google Maps API Key** (see setup guide below)
+- **Python 3.8+** and pip (for data processing scripts)
 
 ### Setup (First Time)
 
-#### 1. Get Google Maps API Key
-
-1. Go to [Google Cloud Console](https://console.cloud.google.com/)
-2. Create a project and enable:
-   - Maps JavaScript API
-   - Geocoding API
-3. Create an API key under Credentials
-
-#### 2. Configure Environment
+#### 1. Install Dependencies
 
 ```bash
 cd frontend
-echo "NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=your_api_key_here" > .env.local
+npm install
 ```
 
-Replace `your_api_key_here` with your actual API key.
+**No API keys required!** The app uses free services:
+- OpenStreetMap/Nominatim for geocoding (no API key)
+- OpenStreetMap tiles for maps (no API key)
 
-#### 3. Add Geocoding (One-Time)
+#### 2. Data Setup
 
-If `community_health_centers_with_coords.csv` doesn't exist:
+The health center data is already included in `frontend/public/data/centers.csv`. If you need to update it:
 
 ```bash
-# Install dependencies
-pip install requests pandas
-
-# Run geocoding script
-python add_geocoding.py YOUR_GOOGLE_MAPS_API_KEY
+# Copy the geocoded CSV to the frontend public directory
+cp community_health_centers_with_coords.csv frontend/public/data/centers.csv
 ```
-
-This converts addresses to coordinates for map display.
 
 ### Running the Application
 
-#### Option 1: Frontend Only (Recommended)
+#### Local Development
 
 ```bash
 cd frontend
-npm install
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000)
+Open [http://localhost:5173](http://localhost:5173)
 
-#### Option 2: Full Stack
+#### Build for Production
 
-**Terminal 1 - Backend:**
-```bash
-cd backend
-pip install -r requirements.txt
-uvicorn app.main:app --reload
-```
-
-**Terminal 2 - Frontend:**
 ```bash
 cd frontend
-npm install
-npm run dev
+npm run build
 ```
+
+Output will be in `frontend/dist/` directory.
+
+#### Preview Production Build
+
+```bash
+cd frontend
+npm run preview
+```
+
+### GitHub Pages Deployment
+
+The app automatically deploys to GitHub Pages when you push to `main` or `feature/github-pages-deployment` branch.
+
+**Deployment URL:** `https://<org>.github.io/community-health-center-search/`
+
+**To enable:**
+1. Go to repository Settings → Pages
+2. Source: GitHub Actions
+3. The workflow (`.github/workflows/deploy-pages.yml`) will deploy automatically
+
+See [README_GITHUB_PAGES.md](README_GITHUB_PAGES.md) for detailed deployment instructions.
 
 ### Usage
 
 1. Enter a zipcode (e.g., `02138` for Cambridge, MA)
-2. Click **Search Health Centers**
-3. Toggle between views:
-   - **📋 List** - Card-based list view
-   - **🗺️ Map** - Interactive map view
-   - **📍 Both** - Split view (default)
-4. Click markers or list items for details
+2. Select a search radius (10/25/50/100 miles)
+3. Click **Search**
+4. View results:
+   - **🗺️ Map** - Interactive map with markers
+   - **📋 List** - Results sorted by distance
+5. Click a center to see detailed information including "How to become a new patient" instructions
 
-## API Endpoints
+## Data Source
 
-### Frontend API Routes
+Health center data is loaded client-side from `/public/data/centers.csv`. The CSV includes:
 
-- `GET /api/health` - Health check endpoint
-- `GET /api/health-centers?zipcode=XXXXX` - Search health centers by zipcode
-  - Returns: Array of health centers with coordinates
-  - Example response:
-    ```json
-    [
-      {
-        "name": "Community Health Center",
-        "street_address_1": "123 Main St",
-        "city_town": "Boston",
-        "state": "MA",
-        "zipcode": "02118",
-        "phone": "(617) 555-0100",
-        "types": "Primary Care, Dental Care",
-        "website": "https://example.com",
-        "latitude": 42.3601,
-        "longitude": -71.0589
-      }
-    ]
-    ```
+**Required fields:**
+- `name`, `street_address_1`, `city_town`, `state`, `zipcode`, `phone`
+- `latitude`, `longitude` (for mapping)
 
-### Backend (FastAPI) - Optional
+**Optional fields:**
+- `street_address_2`, `types`, `website`, `source`
 
-- `GET /` - Health check endpoint
+**OpenAI enrichment fields (optional):**
+- `openai_phone`, `openai_address`, `openai_new_patient_md`, `openai_other_notes_md`
+- `openai_source_urls`, `openai_last_checked_utc`, `openai_confidence`
 
-## Example API Usage
-
-Search for health centers in Cambridge:
-
-```bash
-curl "http://localhost:3000/api/health-centers?zipcode=02138"
-```
-
-Search for health centers in Boston:
-
-```bash
-curl "http://localhost:3000/api/health-centers?zipcode=02118"
-```
+See [README_GITHUB_PAGES.md](README_GITHUB_PAGES.md) for CSV schema details.
 
 ## Documentation
 
@@ -209,35 +186,33 @@ All documentation is in the [`docs/`](docs/) folder:
 
 ## Features in Detail
 
-### Google Maps Integration
+### Map Integration
 
-The app uses `@vis.gl/react-google-maps` for a modern, React-friendly maps experience:
+The app uses **Leaflet** with **OpenStreetMap** tiles for a free, open-source mapping solution:
 
-- **Dynamic Loading**: Map loads only when needed (performance optimization)
-- **Custom Markers**: Blue pins with white icons for health centers
-- **Info Windows**: Click markers to see detailed information
-- **Responsive**: Works on mobile, tablet, and desktop
+- **No API Key Required**: Uses free OpenStreetMap services
+- **Interactive Map**: Zoom, pan, and explore
+- **Custom Markers**: Click markers to see detailed information
 - **Auto-Fit Bounds**: Map automatically adjusts to show all results
+- **Responsive**: Works on mobile, tablet, and desktop
 
-### View Modes
+### Search & Results
 
-**List View**
+**Zipcode Search**
+- Enter a 5-digit zipcode
+- Select search radius (10/25/50/100 miles)
+- Results sorted by distance using Haversine formula
+
+**Results List**
 - Card-based layout with hover effects
 - Full address and contact information
 - Clickable website links
-- Shows coordinates when available
+- Distance displayed for each center
 
-**Map View**
-- Full-screen interactive Google Map
-- Zoom, pan, and explore
-- Marker clustering for better performance (coming soon)
-- Street view integration (planned)
-
-**Both View (Default)**
-- Map displayed at the top
-- List shown below
-- Synchronized data between views
-- Best of both worlds
+**Detail View**
+- Modal popup with full center information
+- Markdown rendering for patient instructions
+- Contact details and services offered
 
 ### Data Processing
 
@@ -300,49 +275,45 @@ npm run lint
 
 ### Environment Variables
 
-Create `frontend/.env.local`:
-```env
-NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=your_api_key_here
-```
-
-**Important**: Never commit `.env.local` to version control.
+**None required!** The app uses free services:
+- OpenStreetMap/Nominatim for geocoding (no API key, max 1 request/second)
+- OpenStreetMap tiles for maps (no API key)
 
 ## Cost Information
 
-### Google Maps API Pricing
+### Free Services
 
-- **Free Tier**: $200/month credit
-- **Geocoding**: $5 per 1,000 requests (one-time: 276 requests = FREE)
-- **Map Loads**: $7 per 1,000 loads
-- **Break-even**: ~28,000 map loads/month
+- **OpenStreetMap**: Completely free, no API key required
+- **Nominatim Geocoding**: Free, no API key (please use responsibly - max 1 request/second)
+- **GitHub Pages**: Free hosting for public repositories
 
-For typical usage, the app stays within the free tier.
-
-### Monitoring Usage
-
-1. Go to [Google Cloud Console](https://console.cloud.google.com/)
-2. Navigate to **APIs & Services** → **Dashboard**
-3. View usage statistics
-4. Set up billing alerts
+No costs associated with running this application!
 
 ## Troubleshooting
 
 ### Map Not Showing
-- Verify `.env.local` exists with correct API key
-- Restart dev server after adding environment variable
 - Check browser console for errors
+- Verify Leaflet CSS is loading (should be automatic)
+- Check that `centers.csv` has valid latitude/longitude values
 
-### No Markers on Map
-- Run geocoding script: `python add_geocoding.py YOUR_API_KEY`
-- Verify `community_health_centers_with_coords.csv` exists
-- Check that CSV has latitude/longitude columns
+### No Results Found
+- Verify zipcode is valid (5 digits)
+- Try expanding the radius
+- Check browser console for geocoding errors
+- Verify CSV file exists at `frontend/public/data/centers.csv`
 
-### Geocoding Script Issues
-- Install dependencies: `pip install requests pandas`
-- Verify Geocoding API is enabled in Google Cloud
-- Check API key permissions
+### Build Fails
+- Run `npm install` in `frontend/`
+- Check TypeScript errors: `npm run build`
+- Verify all dependencies are installed
 
-See [docs/MAPS_SETUP.md](docs/MAPS_SETUP.md) for detailed troubleshooting.
+### GitHub Pages Not Updating
+- Check GitHub Actions tab for workflow status
+- Verify Pages is enabled in repository Settings → Pages
+- Ensure workflow file is in `.github/workflows/deploy-pages.yml`
+- Check that you're pushing to `main` or `feature/github-pages-deployment` branch
+
+See [README_GITHUB_PAGES.md](README_GITHUB_PAGES.md) for detailed troubleshooting.
 
 ## Contributing
 
@@ -371,9 +342,9 @@ MIT License - see [LICENSE](LICENSE) file for details.
 ## Acknowledgments
 
 - Health center data sourced from official Massachusetts health department listings
-- Google Maps Platform for mapping services
-- @vis.gl/react-google-maps for React integration
-- Next.js and React teams for excellent frameworks
+- OpenStreetMap for free mapping tiles and geocoding services
+- Leaflet and react-leaflet for excellent mapping libraries
+- Vite and React teams for excellent frameworks
 
 ## Support
 
