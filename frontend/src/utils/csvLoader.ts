@@ -3,7 +3,16 @@ import type { HealthCenter } from '../types';
 
 export async function loadHealthCenters(): Promise<HealthCenter[]> {
   try {
-    const response = await fetch('/data/centers.csv');
+    // Use base URL for GitHub Pages compatibility
+    const baseUrl = import.meta.env.BASE_URL;
+    const csvPath = `${baseUrl}data/centers.csv`;
+    console.log('Loading CSV from:', csvPath);
+    const response = await fetch(csvPath);
+    
+    if (!response.ok) {
+      throw new Error(`Failed to load CSV: ${response.status} ${response.statusText}`);
+    }
+    
     const text = await response.text();
     
     return new Promise((resolve, reject) => {
