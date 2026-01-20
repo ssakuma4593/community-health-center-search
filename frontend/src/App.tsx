@@ -24,6 +24,8 @@ function App() {
       .then((data) => {
         console.log('Loaded centers:', data.length);
         setCenters(data);
+        // Show all centers by default
+        setFilteredCenters(data);
         setLoading(false);
       })
       .catch((err) => {
@@ -152,33 +154,30 @@ function App() {
         </div>
       )}
 
-      {!loading && (
+      {!loading && filteredCenters.length > 0 && (
         <div className="results-section">
-          {filteredCenters.length > 0 ? (
-            <>
-              <div className="map-wrapper">
-                <HealthCenterMap
-                  centers={filteredCenters}
-                  selectedCenter={selectedCenter}
-                  onCenterClick={setSelectedCenter}
-                />
-              </div>
-              <HealthCenterList
-                centers={filteredCenters}
-                selectedCenter={selectedCenter}
-                onCenterClick={setSelectedCenter}
-              />
-            </>
-          ) : searchZipcode ? (
-            <div className="no-results">
-              <p>No centers found within {radius} miles of {searchZipcode}.</p>
-              <p>Try expanding the radius or searching a different zipcode.</p>
-            </div>
-          ) : (
-            <div className="no-results">
-              <p>Enter a zipcode and click Search to find nearby health centers.</p>
-            </div>
-          )}
+          <div className="map-wrapper">
+            <HealthCenterMap
+              centers={filteredCenters}
+              selectedCenter={selectedCenter}
+              onCenterClick={setSelectedCenter}
+            />
+          </div>
+          <HealthCenterList
+            centers={filteredCenters}
+            selectedCenter={selectedCenter}
+            onCenterClick={setSelectedCenter}
+            isFiltered={!!searchZipcode}
+          />
+        </div>
+      )}
+
+      {!loading && filteredCenters.length === 0 && searchZipcode && (
+        <div className="results-section">
+          <div className="no-results">
+            <p>No centers found within {radius} miles of {searchZipcode}.</p>
+            <p>Try expanding the radius or searching a different zipcode.</p>
+          </div>
         </div>
       )}
 

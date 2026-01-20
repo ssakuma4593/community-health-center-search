@@ -224,6 +224,16 @@
   font-weight: 600;
 }
 
+.center-info .phone-link {
+  color: #667eea;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.center-info .phone-link:hover {
+  text-decoration: underline;
+}
+
 .view-details-btn {
   width: 100%;
   padding: 0.75rem;
@@ -325,6 +335,37 @@
 }
 
 .detail-section a:hover {
+  text-decoration: underline;
+}
+
+.detail-section .phone-link {
+  color: #667eea;
+  text-decoration: none;
+  font-weight: 500;
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.detail-section .phone-link:hover {
+  background-color: #f0f0f0;
+  text-decoration: underline;
+}
+
+.detail-section .address-link {
+  color: #667eea;
+  text-decoration: none;
+  font-weight: 500;
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+  word-break: break-word;
+}
+
+.detail-section .address-link:hover {
+  background-color: #f0f0f0;
   text-decoration: underline;
 }
 

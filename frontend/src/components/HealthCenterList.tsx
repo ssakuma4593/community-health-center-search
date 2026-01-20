@@ -4,12 +4,14 @@ interface HealthCenterListProps {
   centers: HealthCenter[];
   selectedCenter: HealthCenter | null;
   onCenterClick: (center: HealthCenter) => void;
+  isFiltered?: boolean;
 }
 
 export default function HealthCenterList({
   centers,
   selectedCenter,
   onCenterClick,
+  isFiltered = false,
 }: HealthCenterListProps) {
   if (centers.length === 0) {
     return (
@@ -21,7 +23,11 @@ export default function HealthCenterList({
 
   return (
     <div className="center-list">
-      <h2>Found {centers.length} center{centers.length !== 1 ? 's' : ''}</h2>
+      <h2>
+        {isFiltered 
+          ? `Found ${centers.length} center${centers.length !== 1 ? 's' : ''}`
+          : `All Health Centers (${centers.length} total)`}
+      </h2>
       <div className="center-cards">
         {centers.map((center, index) => (
           <div
@@ -39,7 +45,14 @@ export default function HealthCenterList({
               </p>
               {center.phone && (
                 <p className="phone">
-                  <strong>Phone:</strong> {center.phone}
+                  <strong>Phone:</strong>{' '}
+                  <a 
+                    href={`tel:${center.phone.replace(/\D/g, '')}`}
+                    className="phone-link"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    {center.phone}
+                  </a>
                 </p>
               )}
               {center.types && (

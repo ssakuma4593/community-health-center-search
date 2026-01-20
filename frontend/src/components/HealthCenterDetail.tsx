@@ -22,6 +22,12 @@ export default function HealthCenterDetail({
   
   const otherNotes = center.openai_other_notes_md;
 
+  // Create phone link (tel: protocol works on mobile)
+  const phoneLink = displayPhone ? `tel:${displayPhone.replace(/\D/g, '')}` : null;
+  
+  // Create maps link (Google Maps)
+  const mapsLink = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(displayAddress)}`;
+
   return (
     <div className="detail-overlay" onClick={onClose}>
       <div className="detail-modal" onClick={(e) => e.stopPropagation()}>
@@ -31,8 +37,28 @@ export default function HealthCenterDetail({
         
         <div className="detail-section">
           <h2>Contact Information</h2>
-          <p><strong>Address:</strong> {displayAddress}</p>
-          {displayPhone && <p><strong>Telephone:</strong> {displayPhone}</p>}
+          <p>
+            <strong>Address:</strong>{' '}
+            <a 
+              href={mapsLink} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="address-link"
+            >
+              {displayAddress}
+            </a>
+          </p>
+          {displayPhone && (
+            <p>
+              <strong>Telephone:</strong>{' '}
+              <a 
+                href={phoneLink || '#'} 
+                className="phone-link"
+              >
+                {displayPhone}
+              </a>
+            </p>
+          )}
           {center.website && (
             <p>
               <strong>Website:</strong>{' '}
