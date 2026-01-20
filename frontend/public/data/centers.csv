@@ -1,92 +1,112 @@
-name,street_address_1,street_address_2,city_town,state,zipcode,phone,types,website,source,latitude,longitude,accepting_new_patients,has_waiting_list,waiting_list_availability_date,languages_supported,call_notes,last_called_date,call_status
-Boston Medical Center,1 Boston Medical Center Place,,Boston,MA,02118,(617) 638-8000,,,official_document,42.3355661,-71.0724101,,,,,,,
-Dana Farber Cancer Institute,44 Binney Street,,Boston,MA,02115,(617) 632-3000,,,official_document,42.337739,-71.1072514,,,,,,,
-Massachusetts Eye and Ear Infirmary,243 Charles Street,,Boston,MA,02114,(617) 523-7900,Eye Care,,official_document,42.3627964,-71.0701368,,,,,,,
-Tufts Medical Center,800 Washington Street,,Boston,MA,02111,(617) 636-5000,,,official_document,42.3492366,-71.06277659999999,,,,,,,
-Boston Medical Center - Brighton,736 Cambridge Street,,Boston (Brighton),MA,02135,(617) 789-3000,,,official_document,42.3486191,-71.14813629999999,,,,,,,
-Boston Medical Center - South,235 North Pearl Street,,Brockton,MA,02301,(508) 427-3000,,,official_document,42.097376,-71.06091950000001,,,,,,,
-Holyoke Medical Center,575 Beech Street,,Holyoke,MA,01040,(413) 534-2500,,,official_document,42.2002198,-72.6280829,,,,,,,
-Milford Regional Medical Center,14 Prospect Street,,,,,(508) 473-1190,,,official_document,,,,,,,,,
-"Lahey Medical Center, Peabody",1 Essex Center Drive,,Peabody,MA,01960,(978) 538-4000,,,official_document,42.5374944,-70.9467852,,,,,,,
-Berkshire Medical Center,725 North Street,,Pittsfield,MA,01201,(413) 447-2000,,,official_document,42.4597763,-73.24962889999999,,,,,,,
-Quincy Medical Center,114 Whitwell Street,,Quincy,MA,02169,(617) 773-6100,,,official_document,42.25043369999999,-71.0138394,,,,,,,
-Baystate Medical Center,759 Chestnut Street,,Springfield,MA,01199,(413) 794-0000,,,official_document,42.1197606,-72.6032674,,,,,,,
-Mercy Medical Center,271 Carew Street,,Springfield,MA,01102,(413) 886-0410,,,official_document,42.1158991,-72.59360509999999,,,,,,,
-UMass Memorial Medical Center - Memorial Campus,119 Belmont Street,,Worcester,MA,01605,(508) 334-1000,,,official_document,42.2730553,-71.7922734,,,,,,,
-UMass Memorial Medical Center - University Campus,55 Lake Avenue North,,Worcester,MA,01655,(508) 334-1000,,,official_document,42.2718075,-71.75841989999999,,,,,,,
-Charles River Community Health Center - Armington Street,40 Armington Street,,,,,(617) 783-0501,Primary Care,,official_document,42.3521015,-71.1374728,,,,,,,
-Charles River Community Health Center - Athol Street,30 Athol Street,,,,,(617) 783-0502,Primary Care,,official_document,,,,,,,,,
-Charles River Community Health - Vision Center,300 Western Avenue,,,,,(617) 783-0500,Eye Care,,official_document,,,,,,,,,
-Fenway Health - South End,142 Berkley Street,,Boston,MA,02116,(617) 247-7555,,,official_document,42.3489118,-71.0720886,,,,,,,
-Fenway Health - Ansin Building,1340 Boylston Street,,Boston,MA,02215,(617) 267-0900,,,official_document,42.3441103,-71.0989696,,,,,,,
-Pine Street Inn - Men's Clinic,444 Harrison Avenue,,Boston,MA,02118,(857) 654-1850,,,official_document,42.34315900000001,-71.0644712,,,,,,,
-Pine Street Inn - Women's Clinic,363 Albany Street,,Boston,MA,02118,(857) 654-1865,,,official_document,42.34260099999999,-71.06286210000002,,,,,,,
-Boston Health Care for the Homeless Program,780 Albany Street,,Boston,MA,02118,(857) 654-1000,,,official_document,42.3336166,-71.07280709999999,,,,,,,
-South End Community Health Center,1601 Washington Street,,Boston (South End),MA,02118,(617) 425-2000,Primary Care,,official_document,42.3383369,-71.0747099,,,,,,,
-South End Associates-- Of Fenway CHC,"142 Berkley Street, 2nd Floor",,Boston (South End),MA,02116,(617) 247-7555,,,official_document,42.3489118,-71.0720886,,,,,,,
-Charles River Community Health Center,495 Western Avenue,,,,,(617) 783-0500,Primary Care,,official_document,42.361858,-71.144012,,,,,,,
-North End Waterfront Health - Charlestown,15 Tufts Street,,Charlestown,MA,02129,(857) 238-1100,,,official_document,42.3778685,-71.05678759999999,,,,,,,
-Chicopee Health Center,505 Front Street,,Chicopee,MA,01013,(413) 420-2222,Primary Care,,official_document,42.1487126,-72.59757809999999,,,,,,,
-Holyoke Health Center - Chicopee Dental Center,601 Memorial Drive,,Chicopee,MA,01020,(413) 420-2839,"Dental Care, Primary Care",,official_document,42.174291,-72.57570559999999,,,,,,,
-Edward M. Kennedy CHC at Clinton,200 High Street,,Clinton,MA,01510,(978) 368-0340,,,official_document,42.4189402,-71.6847916,,,,,,,
-Upham's Corner Health Center Dental and Eye Care Services,636 Columbia Road,,,,,(617) 825-9839,"Dental Care, Eye Care, Primary Care",,official_document,42.3184597,-71.064123,,,,,,,
-Upham's Corner Health Center Primary Care Services,415 Columbia Road,,,,,(617) 825-9839,"Primary Care, Primary Care",,official_document,42.3118214,-71.06876129999999,,,,,,,
-Neponset Health Center,398 Neponset Avenue,,,,,(617) 282-3200,Primary Care,,official_document,42.28679500000001,-71.044066,,,,,,,
-Geiger Gibson Community Health Center,250 Mount Vernon Street,,,,,(617) 288-1140,Primary Care,,official_document,42.3194686,-71.04611229999999,,,,,,,
-Harvard Street Neighborhood Health Center,632 Blue Hill Avenue,,,,,(617) 825-3400,Primary Care,,official_document,42.30249939999999,-71.08510749999999,,,,,,,
-Harvard Street Neighborhood Health Center - Behavioral Health,895 Blue Hill Avenue,,,,,(617) 822-7129,Primary Care,,official_document,42.2941665,-71.0885429,,,,,,,
-HealthFirst Family Care Center,"387 Quarry Street, Suite 100",,Fall River,MA,02723,(508) 679-8111,,,official_document,41.693479,-71.14024669999999,,,,,,,
-SSTAR South End Services,1010 South Main Street,,Fall River,MA,02724,(508) 675-1054,,,official_document,41.6907377,-71.16515849999999,,,,,,,
-Stanley Street Treatment and Resources (SSTAR),386 Stanley Street,,Fall River,MA,02720,(508) 679-5222,,,official_document,41.7151478,-71.1363484,,,,,,,
-Community Health Connections Family Health Center - Fitchburg Community Health Center,326 Nichols Road,,Fitchburg,MA,01420,(978) 878-8100,Primary Care,,official_document,42.5973818,-71.8077019,,,,,,,
-Action Community Health Center,"130 Water Street, Suite 4",,Fitchburg,MA,01420,(978) 878-8100,Primary Care,,official_document,42.5796585,-71.7922439,,,,,,,
-Edward M. Kennedy Community Health Center - Framingham Street - Waverley Street,354 Waverley Street,,Framingham,MA,01702,(508) 270-5700,Primary Care,,official_document,42.276897,-71.4138412,,,,,,,
-Edward M. Kennedy Community Health Center - Framingham Community Health Center - Concord Street,19 Concord Street,,Framingham,MA,01702,(508) 270-2635,Primary Care,,official_document,42.2772643,-71.4166307,,,,,,,
-Greater Gardner Community Health Center,175 Connors Street,,,,,(978) 410-6100,Primary Care,,official_document,42.5601384,-71.78269929999999,,,,,,,
-South Gardner Community Health & Urgent Care Center,529 Timpany Boulevard,,,,,(978) 878-8100,,,official_document,42.5533045,-71.9938657,,,,,,,
-CHP Barrington OB/GYN,780 Main Street,,Great Barrington,MA,01230,(413) 528-1470,,,official_document,42.189935,-73.36504359999999,,,,,,,
-CHP Dental Center,343 Main Street,,Great Barrington,MA,01230,(413) 528-5565,Dental Care,,official_document,42.1930232,-73.36282270000001,,,,,,,
-CHP (Community Health Programs) Health Center,444 Stockbridge Road,,,,,(413) 528-8580,Primary Care,,official_document,42.2194127,-73.3426899,,,,,,,
-Ellen Jones Community Dental Center,351 Pleasant Lake Avenue,,Harwich,MA,02645,(508) 778-5400,Dental Care,,official_document,41.7107571,-70.0754669,,,,,,,
-Holyoke Health Center Dental Clinic at Holyoke Soldiers Home,110 Cherry Street,,Holyoke,MA,01040,(413) 532-9475,"Dental Care, Primary Care",,official_document,42.1994005,-72.6395091,,,,,,,
-River Valley Counseling Center,303 Beech Street,,Holyoke,MA,01040,(413) 540-1234,,,official_document,42.2041133,-72.61910379999999,,,,,,,
-Manet Community Health Center - Hull,180 George Washington Boulevard,,,,,(781) 925-4550,Primary Care,,official_document,42.2630668,-70.8605871,,,,,,,
-Hilltown Community Health Center- Huntington,73 Russell Road,,,,,(413) 667-3009,Primary Care,,official_document,,,,,,,,,
-Duffy Health Center,94 Main Street,,,,,(508) 771-9599,Primary Care,,official_document,,,,,,,,,
-Duffy Health Center at Lewis Bay Road,3 Lewis Bay Road,,,,,(508) 771-9599,Primary Care,,official_document,41.65511739999999,-70.2755141,,,,,,,
-Duffy Mobile Health Clinic,105 Park Street,,,,,(508) 771-9599,,,official_document,,,,,,,,,
-Harbor Community Health Center - Hyannis,735 Attucks Lane,,,,,(508) 778-5420,Primary Care,,official_document,41.6747364,-70.29770289999999,,,,,,,
-Greater Lawrence Family Health Center - Winthrop Avenue,73D Winthrop Avenue,,Lawrence,MA,01841,(978) 686-3017,Primary Care,,official_document,42.6895562,-71.1507507,,,,,,,
-Greater Lawrence Family Health Center - Essex Street,700 Essex Street,,Lawrence,MA,01841,(978) 689-2400,Primary Care,,official_document,42.7018808,-71.1720515,,,,,,,
-CHP Lee Family Practice,11 Quarry Hill Road,,Lee,MA,01238,(413) 243-0536,"Eye Care, Primary Care",https://www.chpberkshires.org,official_document,42.28167089999999,-73.2530836,,,,,,,
-Leominster Community Health and Urgent Care Center,165 Mill Street,,Leominster,MA,01453,(978) 410-6111,,,official_document,42.5321021,-71.7476154,,,,,,,
-Lowell Community Health Center--Metta Health Center,135 Jackson Street,,Lowell,MA,01852,(978) 937-9700,Primary Care,,official_document,42.6420574,-71.3108671,,,,,,,
-Lynn Community Health Center - Buffum Street,"73 Buffum Street, 2nd Floor Suite A",,Lynn,MA,01901,(781) 691-9486,Primary Care,,official_document,42.4658384,-70.9449276,,,,,,,
-South Cove Community Health Center - Malden,277 Commercial Street,,Malden,MA,02148,(781) 912-2500,Primary Care,,official_document,42.4179705,-71.0762365,,,,,,,
-Island Health Care,245 Vineyard Haven Road,,,,,(508) 939-9358,,,official_document,,,,,,,,,
-Community Health Center of Cape Cod,107 Commercial Street,,,,,(508) 477-7090,Primary Care,,official_document,,,,,,,,,
-Harbor Health Services,1135 Morton Street,,,,,(617) 533-2300,,,official_document,42.2756291,-71.0747834,,,,,,,
-Mattapan Community Health Center,1575 Blue Hill Avenue,,,,,(617) 296-0061,Primary Care,,official_document,42.2697831,-71.0940152,,,,,,,
-Edward M. Kennedy Community Health Center - Milford,"42 Cape Road, Suite 107",,,,,(800) 853-2288,Primary Care,,official_document,,,,,,,,,
-CHP Berkshire Pediatrics,777 North Street,,Pittsfield,MA,01201,(413) 499-8531,Pediatric Care,,official_document,42.4605533,-73.2487712,,,,,,,
-South Cove Community Health Center- Holmes Street,88 Holmes Street,,,,,(617) 318-3200,Primary Care,,official_document,,,,,,,,,
-Manet Community Health Center - Snug Harbor,9 Bicknell Street,,Quincy,MA,02171,(617) 471-4715,Primary Care,,official_document,42.2522173,-70.9658639,,,,,,,
-Dimock Community Health Center,45 Dimock Street,,,,,(617) 442-8800,Primary Care,,official_document,42.3202885,-71.0972811,,,,,,,
-Whittier Street Health Center,1125 Tremont Street,,,,,(617) 427-1000,Primary Care,,official_document,42.3353473,-71.088117,,,,,,,
-Ellen Jones Community Dental Center,516 Route 134 Suite 12,,South Dennis,MA,02660,(508) 778-5400,Dental Care,,official_document,41.6945235,-70.1511621,,,,,,,
-Caring Health Center in the South End,1040 Main Street,,Springfield,MA,01103,(413) 739-1100,Primary Care,,official_document,42.0994018,-72.585224,,,,,,,
-Springfield Health Services for the Homeless,311 State Street,,Springfield,MA,01103,(413) 750-2067,,,official_document,42.1050276,-72.5812713,,,,,,,
-Charles River Community Health Center - Waltham,43 Foundry Street,,Waltham,MA,02452,(781) 693-3800,Primary Care,,official_document,42.3705091,-71.2189125,,,,,,,
-Greater New Bedford Community Health Center - Wareham,127 Marion Road,,Wareham,MA,02571,(774) 678-4673,Primary Care,,official_document,41.7596904,-70.72883449999999,,,,,,,
-Wellfleet Health Center,"3130 State Highway, Route 6",,,,,(508) 349-3131,Primary Care,,official_document,,,,,,,,,
-"Outer Cape Health Services, Inc. - Wellfleet Health Center","3173 State Highway, Route 6",,,,,(508) 349-1311,Primary Care,,official_document,,,,,,,,,
-Worcester Lincoln Street,585 Lincoln Street,,Worcester,MA,01605,(508) 854-2122,,,official_document,42.2963128,-71.7688826,,,,,,,
-Edward M. Kennedy Community Health Center - 631 Lincoln Street,631 Lincoln Street,,Worcester,MA,01605,(508) 854-3260,Primary Care,,official_document,42.2975743,-71.7654763,,,,,,,
-Edward M. Kennedy Community Health Center - Norwich Street,11 Norwich Street,,Worcester,MA,01608,(800) 853-2288,Primary Care,,official_document,42.2641176,-71.80069940000001,,,,,,,
-Family Health Center of Worcester,26 Queen Street,,Worcester,MA,01610,(508) 860-7700,Primary Care,,official_document,42.2591769,-71.8146751,,,,,,,
-Family Health Center of Worcester at Webster Square,645 Park Street,,Worcester,MA,01603,(508) 792-7580,Primary Care,,official_document,42.5977066,-71.9971218,,,,,,,
-Community HealthLink,72 Jaques Avenue,,Worcester,MA,01603,(508) 792-7580,,,official_document,42.2598298,-71.81450749999999,,,,,,,
-Community HealthLink-Chandler St,162 Chandler Street,,Worcester,MA,01603,(508) 792-7580,,,official_document,42.2603557,-71.8144753,,,,,,,
-Community HealthLink-Queen St,12 Queen Street,,Worcester,MA,01603,(508) 792-7580,,,official_document,42.25978250000001,-71.8138,,,,,,,
-Community HealthLink-Spruce St,40 Spruce Street,,Worcester,MA,01603,(508) 792-7580,,,official_document,42.2832963,-71.7195297,,,,,,,
-Hilltown Community Health Center/Worthington Health Center,58 Old North Road,,,,,(413) 238-5511,Primary Care,,official_document,41.48161109999999,-71.5222264,,,,,,,
+name,street_address_1,street_address_2,city_town,state,zipcode,phone,types,website,source,latitude,longitude
+CHP Adams Internists,19 Depot Street,,Adams,MA,1220,(413) 743-1080,,,docx_scraped,42.6236477,-73.1184595
+Charles River Community Health Center - Armington Street,40 Armington Street,,Allston,MA,2134,(617) 783-0501,,,docx_scraped,42.3521015,-71.1374728
+Charles River Community Health Center - Athol Street,30 Athol Street,,Allston,MA,2134,(617) 783-0502,,,docx_scraped,42.3607846,-71.13396949999999
+Charles River Community Health - Vision Center,300 Western Avenue,,Allston,MA,2134,(617) 783-0500,,,docx_scraped,42.3629314,-71.1350587
+John P Mussante Health Center,70 Boltwood Walk,,Amherst,MA,1002,(413) 835-4980,,,docx_scraped,42.3769044,-72.5183937
+Manet Community Health Center at Attleboro,8 North Main Street,,Attleboro,MA,2703,(508) 205-4600,,,docx_scraped,41.9445632,-71.2844506
+Fenway Health - South End,142 Berkley Street,,Boston,MA,2116,(617) 247-7555,,,docx_scraped,42.3489118,-71.0720886
+Fenway Health - Ansin Building,1340 Boylston Street,,Boston,MA,2215,(617) 267-0900,,,docx_scraped,42.3441103,-71.0989696
+Pine Street Inn - Men's Clinic,444 Harrison Avenue,,Boston,MA,2118,(857) 654-1850,,,docx_scraped,42.34315900000001,-71.0644712
+Pine Street Inn - Women's Clinic,363 Albany Street,,Boston,MA,2118,(857) 654-1865,,,docx_scraped,42.34260099999999,-71.06286210000002
+South Cove Community Health Center,885 Washington Street,,Boston,MA,2111,(617) 482-7555,,,docx_scraped,42.3479563,-71.0647414
+South Cove Community Health Center - South Street Clinic,145 South Street,,Boston,MA,2111,(617) 521-6713,,,docx_scraped,42.3509176,-71.05762310000001
+The Barbara McInnis House Medical Respite Care Program,Jean Yawkey Place,,Boston,MA,2118,(857) 564-1000,,,docx_scraped,42.3334901,-71.07304719999999
+North End Waterfront Health,332 Hanover Street,,Boston,MA,2113,(617) 643-8000,,,docx_scraped,42.3648007,-71.0537232
+Boston Health Care for the Homeless Program,780 Albany Street,,Boston,MA,2118,(857) 654-1000,,,docx_scraped,42.3336166,-71.07280709999999
+South End Community Health Center,1601 Washington Street,,Boston (South End),MA,2118,(617) 425-2000,,,docx_scraped,42.3383369,-71.0747099
+South End Associates-- Of Fenway CHC,142 Berkley Street,,"2nd Floor, Boston (South End)",MA,2116,(617) 247-7555,,,docx_scraped,42.3489118,-71.0720886
+Charles River Community Health Center,495 Western Avenue,,Brighton,MA,2135,(617) 783-0500,,,docx_scraped,42.361858,-71.144012
+Brockton Neighborhood Health Center,63 Main Street,,Brockton,MA,2301,(508) 559-6699,,,docx_scraped,42.0845166,-71.0201542
+North End Waterfront Health - Charlestown,15 Tufts Street,,Charlestown,MA,2129,(857) 238-1100,,,docx_scraped,42.3778685,-71.05678759999999
+Chicopee Health Center,505 Front Street,,Chicopee,MA,1013,(413) 420-2222,,,docx_scraped,42.1487126,-72.59757809999999
+Holyoke Health Center - Chicopee Dental Center,601 Memorial Drive,,Chicopee,MA,1020,(413) 420-2839,,,docx_scraped,42.174291,-72.57570559999999
+Edward M. Kennedy CHC at Clinton,200 High Street,,Clinton,MA,1510,(978) 368-0340,,,docx_scraped,42.4189402,-71.6847916
+Upham's Corner Health Center Dental and Eye Care Services,636 Columbia Road,,Dorchester,MA,2125,(617) 825-9839,,,docx_scraped,42.3184597,-71.064123
+Upham's Corner Health Center Primary Care Services,415 Columbia Road,,Dorchester,MA,2125,(617) 825-9839,,,docx_scraped,42.3118214,-71.06876129999999
+Neponset Health Center,398 Neponset Avenue,,Dorchester,MA,2122,(617) 282-3200,,,docx_scraped,42.28679500000001,-71.044066
+Geiger Gibson Community Health Center,250 Mount Vernon Street,,Dorchester,MA,2125,(617) 288-1140,,,docx_scraped,42.3194686,-71.04611229999999
+Harvard Street Neighborhood Health Center,632 Blue Hill Avenue,,Dorchester,MA,2121,(617) 825-3400,,,docx_scraped,42.30249939999999,-71.08510749999999
+Harvard Street Neighborhood Health Center - Behavioral Health,895 Blue Hill Avenue,,Dorchester,MA,2121,(617) 822-7129,,,docx_scraped,42.2941665,-71.0885429
+HealthFirst Family Care Center,387 Quarry Street,,"Suite 100, Fall River",MA,2723,(508) 679-8111,,,docx_scraped,41.693479,-71.14024669999999
+SSTAR South End Services,1010 South Main Street,,Fall River,MA,2724,(508) 675-1054,,,docx_scraped,41.6907377,-71.16515849999999
+Stanley Street Treatment and Resources (SSTAR),386 Stanley Street,,Fall River,MA,2720,(508) 679-5222,,,docx_scraped,41.7151478,-71.1363484
+Community Health Connections Family Health Center - Fitchburg Community Health Center,326 Nichols Road,,Fitchburg,MA,1420,(978) 878-8100,,,docx_scraped,42.5973818,-71.8077019
+Action Community Health Center,130 Water Street,,"Suite 4, Fitchburg",MA,1420,(978) 878-8100,,,docx_scraped,42.5796585,-71.7922439
+Edward M. Kennedy Community Health Center - Framingham Street - Waverley Street,354 Waverley Street,,Framingham,MA,1702,(508) 270-5700,,,docx_scraped,42.276897,-71.4138412
+Edward M. Kennedy Community Health Center - Framingham Community Health Center - Concord Street,19 Concord Street,,Framingham,MA,1702,(508) 270-2635,,,docx_scraped,42.2772643,-71.4166307
+Greater Gardner Community Health Center,175 Connors Street,,Gardner,MA,1440,(978) 410-6100,,,docx_scraped,42.5601384,-71.78269929999999
+South Gardner Community Health & Urgent Care Center,529 Timpany Boulevard,,Gardner,MA,1440,(978) 878-8100,,,docx_scraped,42.5533045,-71.9938657
+Gloucester Family Health Center,302 Washington Street,,Gloucester,MA,1930,(978) 282-8899,,,docx_scraped,42.6264427,-70.6806269
+CHP Barrington OB/GYN,780 Main Street,,Great Barrington,MA,1230,(413) 528-1470,,,docx_scraped,42.189935,-73.36504359999999
+CHP Dental Center,343 Main Street,,Great Barrington,MA,1230,(413) 528-5565,,,docx_scraped,42.1930232,-73.36282270000001
+CHP (Community Health Programs) Health Center,444 Stockbridge Road,,Great Barrington,MA,1230,(413) 528-8580,,,docx_scraped,42.2194127,-73.3426899
+Community Health Center of Franklin County,102 Main Street,,Greenfield,MA,1301,(413) 325-8500,,,docx_scraped,42.5878394,-72.6054085
+Ellen Jones Community Dental Center,351 Pleasant Lake Avenue,,Harwich,MA,2645,(508) 778-5400,,,docx_scraped,41.7107571,-70.0754669
+Holyoke Health Center,230 Maple Street,,Holyoke,MA,1040,(413) 420-2222,,,docx_scraped,42.2071888,-72.6083931
+Holyoke Health Center Dental Clinic at Holyoke Soldiers Home,110 Cherry Street,,Holyoke,MA,1040,(413) 532-9475,,,docx_scraped,42.1994005,-72.6395091
+River Valley Counseling Center,303 Beech Street,,Holyoke,MA,1040,(413) 540-1234,,,docx_scraped,42.2041133,-72.61910379999999
+Manet Community Health Center - Hull,180 George Washington Boulevard,,Hull,MA,2045,(781) 925-4550,,,docx_scraped,42.2630668,-70.8605871
+Hilltown Community Health Center- Huntington,73 Russell Road,,Huntington,MA,1050,(413) 667-3009,,,docx_scraped,42.2244087,-72.8709788
+Duffy Health Center,94 Main Street,,Hyannis,MA,2601,(508) 771-9599,,,docx_scraped,41.65629819999999,-70.27444489999999
+Duffy Health Center at Lewis Bay Road,3 Lewis Bay Road,,Hyannis,MA,2601,(508) 771-9599,,,docx_scraped,41.65511739999999,-70.2755141
+Duffy Mobile Health Clinic,105 Park Street,,Hyannis,MA,2601,(508) 771-9599,,,docx_scraped,41.65502619999999,-70.2748785
+Harbor Community Health Center - Hyannis,735 Attucks Lane,,Hyannis,MA,2601,(508) 778-5420,,,docx_scraped,41.6747364,-70.29770289999999
+Greater Lawrence Family Health Center - Park Street,150 Park Street,,Lawrence,MA,1841,(978) 685-1770,,,docx_scraped,42.715907,-71.1662496
+Greater Lawrence Family Health Center,34 Haverhill Street,,Lawrence,MA,1841,(978) 686-0090,,,docx_scraped,42.71185819999999,-71.1519933
+Greater Lawrence Family Health Center - Winthrop Avenue,73D Winthrop Avenue,,Lawrence,MA,1841,(978) 686-3017,,,docx_scraped,42.6895562,-71.1507507
+Greater Lawrence Family Health Center - Lawrence General Hospital,1 General Street,,"Lamprey Building, 4th floor, Lawrence",MA,1841,(978) 686-3017,,,docx_scraped,42.70975869999999,-71.1507002
+Greater Lawrence Family Health Center - Essex Street,700 Essex Street,,Lawrence,MA,1841,(978) 689-2400,,,docx_scraped,42.7018808,-71.1720515
+CHP Lee Family Practice,11 Quarry Hill Road,,Lee,MA,1238,(413) 243-0536,,,docx_scraped,42.28167089999999,-73.2530836
+Leominster Community Health and Urgent Care Center,165 Mill Street,,Leominster,MA,1453,(978) 410-6111,,,docx_scraped,42.5321021,-71.7476154
+Lowell Community Health Center--Metta Health Center,135 Jackson Street,,Lowell,MA,1852,(978) 937-9700,,,docx_scraped,42.6420574,-71.3108671
+Lowell Community Health Center,161 Jackson Street,,Lowell,MA,1852,(978) 937-9700,,,docx_scraped,42.6418133,-71.31151849999999
+Lynn Community Health Center,269 Union Street,,Lynn,MA,1901,(781) 581-3900,,,docx_scraped,42.4650471,-70.9438909
+Lynn Community Health Center  - Market Square Family Health Services at Western Avenue,694 Western Avenue,,Lynn,MA,1905,(781) 595-7348,,,docx_scraped,42.4634837,-70.9641032
+Market Square Family Health,29 Market Square,,Lynn,MA,1905,(781) 596-3500,,,docx_scraped,42.4629684,-70.9641999
+Lynn Community Health Center - Buffum Street,73 Buffum Street,,"2nd Floor Suite A, Lynn",MA,1901,(781) 691-9486,,,docx_scraped,42.4658384,-70.9449276
+Lynn Community Health Center Behavioral Health Center,280 Union Street,,Lynn,MA,1901,(781) 780-4984,,,docx_scraped,42.46496390000001,-70.94324999999999
+South Cove Community Health Center - Malden,277 Commercial Street,,Malden,MA,2148,(781) 912-2500,,,docx_scraped,42.4179705,-71.0762365
+Island Health Care,245 Vineyard Haven Road,,Martha's Vineyard (Edgartown),MA,2539,(508) 939-9358,,,docx_scraped,41.4539711,-70.5737108
+Community Health Center of Cape Cod,107 Commercial Street,,Mashpee,MA,2649,(508) 477-7090,,,docx_scraped,41.6073704,-70.4908473
+Harbor Health Services,1135 Morton Street,,Mattapan,MA,2126,(617) 533-2300,,,docx_scraped,42.2756291,-71.0747834
+Mattapan Community Health Center,1575 Blue Hill Avenue,,Mattapan,MA,2126,(617) 296-0061,,,docx_scraped,42.2697831,-71.0940152
+Edward M. Kennedy Community Health Center - Milford,42 Cape Road,,"Suite 107, Milford",MA,1757,(800) 853-2288,,,docx_scraped,42.1272624,-71.5196292
+Greater New Bedford Community Health Center,874 Purchase Street,,New Bedford,MA,2740,(508) 992-6553,,,docx_scraped,41.6362235,-70.9257469
+CHP North Adams Family Medicine,71 Hospital Avenue,,North Adams,MA,1247,(413) 664-4088,,,docx_scraped,42.7080089,-73.1100996
+Peabody Family Health Center,89 Foster Street,,Peabody,MA,1960,(978) 532-4903,,,docx_scraped,42.5229307,-70.9304605
+CHP Berkshire Pediatrics,777 North Street,,Pittsfield,MA,1201,(413) 499-8531,,,docx_scraped,42.4605533,-73.2487712
+CHP Neighborhood Health Center,510 North Street,,Pittsfield,MA,1201,(413) 447-2351,,,docx_scraped,42.4555476,-73.2510573
+Harbor Community Health Center - Plymouth,10 Cordage Park Circle,,Plymouth,MA,2360,(508) 778-4570,,,docx_scraped,41.9784575,-70.6858724
+Provincetown Health Center,49 Harry Kemp Way,,Provincetown,MA,2657,(508) 487-9395,,,docx_scraped,42.0580976,-70.1836273
+South Cove Community Health Center - at Quincy,435 Hancock Street,,Quincy,MA,2171,(617) 318-3200,,,docx_scraped,42.2726534,-71.0244634
+South Cove Community Health Center- Holmes Street,88 Holmes Street,,Qunicy,MA,2171,(617) 318-3200,,,docx_scraped,42.2724361,-71.0253081
+Manet Community Health Center - North Quincy,110 West Squantum Street,,Quincy,MA,2171,(617) 376-3000,,,docx_scraped,42.2726013,-71.03084830000002
+Manet Community Health Center - Snug Harbor,9 Bicknell Street,,Quincy,MA,2171,(617) 471-4715,,,docx_scraped,42.2522173,-70.9658639
+Manet Community Health Center - Houghs Neck,1193 Sea Street,,Quincy,MA,2169,(617) 471-8683,,,docx_scraped,42.2688116,-70.9525902
+Dimock Community Health Center,45 Dimock Street,,Roxbury,MA,2119,(617) 442-8800,,,docx_scraped,42.3202885,-71.0972811
+Whittier Street Health Center,1125 Tremont Street,,Roxbury,MA,2120,(617) 427-1000,,,docx_scraped,42.3353473,-71.088117
+North Shore Community Health,47 Congress Street,,Salem,MA,1970,(978) 744-8388,,,docx_scraped,42.5176762,-70.8890749
+Ellen Jones Community Dental Center,516 Route 134 Suite 12,,South Dennis,MA,2660,(508) 778-5400,,,docx_scraped,41.6945235,-70.1511621
+Springfield Adolescent Health Center,11 Wilbraham Road,,Springfield,MA,1109,(413) 794-3710,,,docx_scraped,42.111011,-72.5632757
+"Caring Health Center, Richard E. Neal Complex",1049 Main Street,,Springfield,MA,1103,(413) 739-1100,,,docx_scraped,42.09980820000001,-72.58485639999999
+Caring Health Center in the South End,1040 Main Street,,Springfield,MA,1103,(413) 739-1100,,,docx_scraped,42.0994018,-72.585224
+"Caring Health Center, Forest Park at the ""X""",532 Sumner Avenue,,Springfield,MA,1108,(413) 739-1100,,,docx_scraped,42.0866136,-72.5571298
+Springfield Health Services for the Homeless,311 State Street,,Springfield,MA,1103,(413) 750-2067,,,docx_scraped,42.1050276,-72.5812713
+Manet Community Health Center - Taunton,1 Washington Street,,Taunton,MA,2780,(508) 822-5500,,,docx_scraped,41.9006623,-71.098632
+Charles River Community Health Center - Waltham,43 Foundry Street,,Waltham,MA,2452,(781) 693-3800,,,docx_scraped,42.3705091,-71.2189125
+Greater New Bedford Community Health Center - Wareham,127 Marion Road,,Wareham,MA,2571,(774) 678-4673,,,docx_scraped,41.7596904,-70.72883449999999
+Wellfleet Health Center,3130 State Highway,,"Route 6, Wellfleet",MA,2667,(508) 349-3131,,,docx_scraped,41.838763,-69.9765396
+"Outer Cape Health Services, Inc. - Wellfleet Health Center",3173 State Highway,,"Route 6, Wellfleet",MA,2667,(508) 349-1311,,,docx_scraped,41.8393802,-69.9787328
+Holyoke Health Center - Western MA State Hospital,91 East Mountain Road,,Westfield,MA,1085,(413) 420-220,,,docx_scraped,42.1103479,-72.7012184
+Worcester Lincoln Street,585 Lincoln Street,,Worcester,MA,1605,(508) 854-2122,,,docx_scraped,42.2963128,-71.7688826
+Edward M. Kennedy Community Health Center - 631 Lincoln Street,631 Lincoln Street,,Worcester,MA,1605,(508) 854-3260,,,docx_scraped,42.2975743,-71.7654763
+Edward M. Kennedy Community Health Center,19 Tacoma Street,,Worcester,MA,1605,(508) 852-1805,,,docx_scraped,42.3023112,-71.7661296
+Edward M. Kennedy Community Health Center - Norwich Street,11 Norwich Street,,Worcester,MA,1608,(800) 853-2288,,,docx_scraped,42.2641176,-71.80069940000001
+Family Health Center of Worcester,26 Queen Street,,Worcester,MA,1610,(508) 860-7700,,,docx_scraped,42.2591769,-71.8146751
+Family Health Center of Worcester at Webster Square,645 Park Street,,Worcester,MA,1603,(508) 792-7580,,,docx_scraped,42.5977066,-71.9971218
+Community HealthLink,72 Jaques Avenue,,Worcester,MA,1603,(508) 792-7580,,,docx_scraped,42.2598298,-71.81450749999999
+Community HealthLink-Chandler St,162 Chandler Street,,Worcester,MA,1603,(508) 792-7580,,,docx_scraped,42.2603557,-71.8144753
+Community HealthLink-Queen St,12 Queen Street,,Worcester,MA,1603,(508) 792-7580,,,docx_scraped,42.25978250000001,-71.8138
+Community HealthLink-Spruce St,40 Spruce Street,,Worcester,MA,1603,(508) 792-7580,,,docx_scraped,42.2832963,-71.7195297
+Hilltown Community Health Center/Worthington Health Center,58 Old North Road,,Worthington,MA,1098,(413) 238-5511,,,docx_scraped,41.48161109999999,-71.5222264

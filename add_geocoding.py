@@ -84,6 +84,7 @@ def geocode_address(address: str, api_key: str) -> Optional[Tuple[float, float]]
 def add_geocoding_to_csv(input_file: str, output_file: str, api_key: str):
     """
     Read CSV, add geocoding, and write to new CSV.
+    Only geocodes entries that don't already have coordinates.
     
     Args:
         input_file: Path to input CSV file
@@ -93,9 +94,40 @@ def add_geocoding_to_csv(input_file: str, output_file: str, api_key: str):
     print(f"📖 Reading {input_file}...")
     df = pd.read_csv(input_file)
     
-    # Add new columns for coordinates
-    df['latitude'] = None
-    df['longitude'] = None
+    # Check if output file exists and has coordinates
+    try:
+        existing_df = pd.read_csv(output_file)
+        # Create lookup for existing coordinates
+        coord_lookup = {}
+        for idx, row in existing_df.iterrows():
+            name = str(row.get('name', '')).lower().strip()
+            street = str(row.get('street_address_1', '')).lower().strip()
+            key = (name, street)
+            lat = row.get('latitude')
+            lng = row.get('longitude')
+            if pd.notna(lat) and pd.notna(lng) and lat != '' and lng != '':
+                coord_lookup[key] = {'latitude': lat, 'longitude': lng}
+        
+        print(f"📋 Found {len(coord_lookup)} entries with existing coordinates")
+        
+        # Merge existing coordinates
+        for idx, row in df.iterrows():
+            name = str(row.get('name', '')).lower().strip()
+            street = str(row.get('street_address_1', '')).lower().strip()
+            key = (name, street)
+            if key in coord_lookup:
+                df.at[idx, 'latitude'] = coord_lookup[key]['latitude']
+                df.at[idx, 'longitude'] = coord_lookup[key]['longitude']
+    except FileNotFoundError:
+        print("📋 No existing coordinates file found, will geocode all entries")
+        df['latitude'] = None
+        df['longitude'] = None
+    
+    # Ensure coordinate columns exist
+    if 'latitude' not in df.columns:
+        df['latitude'] = None
+    if 'longitude' not in df.columns:
+        df['longitude'] = None
     
     total = len(df)
     success_count = 0
@@ -106,6 +138,14 @@ def add_geocoding_to_csv(input_file: str, output_file: str, api_key: str):
     print("=" * 80)
     
     for idx, row in df.iterrows():
+        # Skip if already has coordinates
+        lat = row.get('latitude')
+        lng = row.get('longitude')
+        if pd.notna(lat) and pd.notna(lng) and lat != '' and lng != '' and lat != 0 and lng != 0:
+            print(f"\n[{idx + 1}/{total}] {row.get('name', 'Unknown')}")
+            print(f"  ⏭️  Skipping: Already has coordinates ({lat}, {lng})")
+            continue
+        
         print(f"\n[{idx + 1}/{total}] {row.get('name', 'Unknown')}")
         
         # Check if the address is valid before making API call
@@ -164,7 +204,7 @@ def main():
         sys.exit(1)
     
     api_key = sys.argv[1]
-    input_file = "community_health_centers_parsed.csv"
+    input_file = "hsn_active_health_centers_parsed.csv"
     output_file = "community_health_centers_with_coords.csv"
     
     try:
