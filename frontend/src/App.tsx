@@ -61,21 +61,36 @@ function App() {
       setSearchZipcode(zipcode);
 
       // Calculate distances and filter
-      const centersWithDistance = centers
-        .filter((center) => center.latitude && center.longitude) // Only centers with valid coordinates
-        .map((center) => ({
-          ...center,
-          distance: calculateDistance(
+      const validCenters = centers.filter((center) => center.latitude && center.longitude);
+      console.log(`Total centers: ${centers.length}, Valid coordinates: ${validCenters.length}`);
+      
+      const centersWithDistance = validCenters
+        .map((center) => {
+          const distance = calculateDistance(
             location.latitude,
             location.longitude,
             center.latitude,
             center.longitude
-          ),
-        }))
-        .filter((center) => center.distance <= radius)
+          );
+          return {
+            ...center,
+            distance,
+          };
+        })
+        .filter((center) => {
+          const withinRadius = center.distance <= radius;
+          if (!withinRadius && center.distance <= radius + 1) {
+            console.log(`Center "${center.name}" is ${center.distance.toFixed(2)} miles away (just outside ${radius} mile radius)`);
+          }
+          return withinRadius;
+        })
         .sort((a, b) => (a.distance || 0) - (b.distance || 0));
 
       console.log(`Found ${centersWithDistance.length} centers within ${radius} miles`);
+      console.log(`Search location: ${location.latitude}, ${location.longitude}`);
+      if (centersWithDistance.length > 0) {
+        console.log('Closest centers:', centersWithDistance.slice(0, 3).map(c => `${c.name}: ${c.distance.toFixed(2)} miles`));
+      }
       setFilteredCenters(centersWithDistance);
 
       if (centersWithDistance.length === 0) {
