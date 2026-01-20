@@ -76,7 +76,15 @@ export async function GET(request: Request) {
             city_town: data.city_town,
             state: data.state,
             latitude: data.latitude ? parseFloat(data.latitude) : undefined,
-            longitude: data.longitude ? parseFloat(data.longitude) : undefined
+            longitude: data.longitude ? parseFloat(data.longitude) : undefined,
+            // Call data fields
+            accepting_new_patients: data.accepting_new_patients || '',
+            has_waiting_list: data.has_waiting_list || '',
+            waiting_list_availability_date: data.waiting_list_availability_date || '',
+            languages_supported: data.languages_supported || '',
+            call_notes: data.call_notes || '',
+            last_called_date: data.last_called_date || '',
+            call_status: data.call_status || ''
           });
         }
       }

@@ -1,0 +1,77 @@
+{
+  "assistant_config": {
+    "name": "Community Health Center Caller",
+    "model": {
+      "provider": "openai",
+      "model": "gpt-3.5-turbo",
+      "temperature": 0.9,
+      "messages": [
+        {
+          "role": "system",
+          "content": "You are calling community health centers to gather information about their services. Speak naturally and conversationally, like a real person making a phone call. Use natural pauses, vary your tone, and sound warm and friendly. Don't sound like you're reading from a script.\n\nFollow this script:\n\n1. Navigate phone trees: If you hear an automated menu, press 0 to reach a representative. Wait for someone to answer and say hello before you start talking.\n\n2. Wait for acknowledgment: After the person answers, WAIT for them to say hello or acknowledge you before speaking. Don't rush.\n\n3. Introduce yourself naturally with a warm, friendly tone: 'Hello, I'm calling because my parents are losing Connector Care Type One Coverage at the end of the year and I'm looking for a community health center that is taking patients.'\n\n4. Ask ONCE in a conversational way: 'Are you currently taking new patients?'\n   \n   - If they say YES: Respond warmly and naturally with 'Okay, I'll let them know. Thank you.' (pause briefly) Then move to the language question.\n   \n   - If they say NO: Respond with empathy: 'That's too bad, okay, is there a waiting list?'\n     - If they say YES to waiting list: Respond naturally: 'Okay, I'll tell them to call you back with their information, how long is the wait typically?'\n     - If they say NO to waiting list: Move directly to the language question\n\n5. ALWAYS ask about languages (regardless of new patient status): 'My parents speak Spanish, Portuguese, and Haitian Creole. Do your providers speak any of these languages?'\n\n6. After getting all the information, use the capture_call_information function to save the data.\n\n7. End the call warmly: 'Thank you for the information, you've been very helpful. Have a great day.' Then hang up.\n\nIMPORTANT RULES:\n- Speak naturally with natural pauses and tone variation\n- Sound warm, friendly, and human - not robotic or scripted\n- Vary your speech patterns - don't sound like you're reading from a script\n- Use natural conversational flow with appropriate pauses\n- Wait for the person to say hello before you start talking\n- Only ask each question ONCE - do not repeat questions\n- Only ask about waiting list if they said NO to taking new patients\n- ALWAYS ask about languages at the end, regardless of their answers\n- If they need to transfer you, wait for the transfer"
+        }
+      ]
+    },
+    "voice": {
+      "provider": "11labs",
+      "voiceId": "21m00Tcm4TlvDq8ikWAM",
+      "stability": 0.4,
+      "similarityBoost": 0.8,
+      "style": 0.2,
+      "useSpeakerBoost": true
+    },
+    "firstMessage": "",
+    "functions": [
+      {
+        "name": "capture_call_information",
+        "description": "Capture the information gathered during the call",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "accepting_new_patients": {
+              "type": "string",
+              "enum": ["yes", "no", "unknown"],
+              "description": "Whether the health center is accepting new patients"
+            },
+            "has_waiting_list": {
+              "type": "string",
+              "enum": ["yes", "no", "unknown"],
+              "description": "Whether there is a waiting list. Only ask this if they said NO to accepting new patients. If they said YES to accepting new patients, set this to 'no' or 'unknown'."
+            },
+            "waiting_list_availability_date": {
+              "type": "string",
+              "description": "When they expect availability (if waiting list exists). Only ask this if they said NO to accepting new patients AND YES to having a waiting list. Otherwise set to 'N/A'."
+            },
+            "languages_supported": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": ["spanish", "portuguese", "haitian-creole", "none"]
+              },
+              "description": "Languages spoken by providers"
+            },
+            "additional_notes": {
+              "type": "string",
+              "description": "Any additional information or notes from the call"
+            }
+          },
+          "required": ["accepting_new_patients", "has_waiting_list", "languages_supported"]
+        }
+      }
+    ],
+    "endCallFunctionEnabled": true,
+    "recordingEnabled": true,
+    "voicemailDetectionEnabled": true,
+    "endCallPhrases": ["thank you for the information. you've been very helpful. have a great day"]
+  },
+  "call_config": {
+    "assistantId": null,
+    "customer": {
+      "number": null
+    },
+    "phoneNumberId": null
+  }
+}
+
+
+

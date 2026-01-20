@@ -27,6 +27,14 @@ interface HealthCenter {
   state: string;
   latitude?: number;
   longitude?: number;
+  // Call data fields
+  accepting_new_patients?: string;
+  has_waiting_list?: string;
+  waiting_list_availability_date?: string;
+  languages_supported?: string;
+  call_notes?: string;
+  last_called_date?: string;
+  call_status?: string;
 }
 
 export default function Home() {
