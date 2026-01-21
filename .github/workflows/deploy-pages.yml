@@ -3,6 +3,7 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches:
+      - feature/openai-enrichment
       - feature/github-pages-deployment
       - main
   workflow_dispatch:
