@@ -15,6 +15,7 @@ import csv
 import time
 import requests
 import pandas as pd
+from pathlib import Path
 from typing import Optional, Tuple
 
 def is_valid_address(row) -> bool:
@@ -204,8 +205,12 @@ def main():
         sys.exit(1)
     
     api_key = sys.argv[1]
-    input_file = "hsn_active_health_centers_parsed.csv"
-    output_file = "community_health_centers_with_coords.csv"
+    # Try parsed first, fall back to scraped for backwards compatibility
+    input_file = "data/raw/hsn_active_health_centers_parsed.csv"
+    if not Path(input_file).exists():
+        input_file = "data/raw/hsn_active_health_centers_scraped.csv"
+        print(f"⚠️  Note: Using {input_file} (parsed format preferred)")
+    output_file = "data/processed/community_health_centers_with_coords.csv"
     
     try:
         add_geocoding_to_csv(input_file, output_file, api_key)

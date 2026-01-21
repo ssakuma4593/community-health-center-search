@@ -220,7 +220,12 @@
 }
 
 .center-info .distance {
-  color: #667eea;
+  color: #666;
+  font-weight: 500;
+}
+
+.center-info .distance strong {
+  color: #333;
   font-weight: 600;
 }
 
@@ -399,9 +404,65 @@
   border-top: 1px solid #eee;
 }
 
+.metadata-title {
+  margin: 0 0 0.5rem 0;
+  font-size: 1rem;
+  color: #666;
+  font-weight: 600;
+}
+
 .metadata-text {
   font-size: 0.875rem;
   color: #999;
+  margin: 0.5rem 0;
+}
+
+.book-appointment-btn {
+  width: 100%;
+  padding: 1rem;
+  background: #667eea;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s;
+  margin-top: 1rem;
+}
+
+.book-appointment-btn:hover {
+  background: #5568d3;
+}
+
+.confidence-level {
+  padding: 0.75rem;
+  background: #f8f9fa;
+  border-radius: 6px;
+  margin: 0;
+}
+
+.confidence-level strong {
+  color: #667eea;
+  font-size: 1.1rem;
+}
+
+.source-urls {
+  margin-top: 0.5rem;
+}
+
+.source-urls p {
+  margin: 0.5rem 0;
+}
+
+.source-urls a {
+  color: #667eea;
+  text-decoration: none;
+  word-break: break-all;
+}
+
+.source-urls a:hover {
+  text-decoration: underline;
 }
 
 .no-results {

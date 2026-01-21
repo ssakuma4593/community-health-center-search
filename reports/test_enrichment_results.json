@@ -1,0 +1,67 @@
+{
+  "test_date": "2026-01-20T18:22:49.201851",
+  "total_tested": 3,
+  "successful": 3,
+  "results": [
+    {
+      "original": {
+        "name": "CHP Adams Internists",
+        "address": "19 Depot Street, Adams, MA, 1220",
+        "phone": "(413) 743-1080",
+        "website": "",
+        "types": ""
+      },
+      "enriched": {
+        "openai_phone": "4137431080",
+        "openai_address": "2 Park Street, 2nd Floor, Adams, MA 01220",
+        "openai_website": "https://www.berkshirehealthsystems.org/location/adams-internists-of-bmc/",
+        "openai_types": "Primary Care",
+        "openai_new_patient_md": "1. Visit the official webpage (‘Adams Internists’ on the Berkshire Health Systems site).\n2. Call the clinic at 413‑743‑1080 to confirm they are accepting new patients and to schedule an appointment.\n3. Ask which documents to bring (e.g., photo ID, insurance card, medical history).\n4. Arrive a few minutes early for paperwork completion on the second floor at 2 Park Street, Adams.",
+        "openai_other_notes_md": "- Hours: Mon, Wed, Thurs, Fri 8:00 am–5:00 pm; Tue until 6:00 pm ([berkshirehealthsystems.org](https://www.berkshirehealthsystems.org/location/adams-internists-of-bmc/?utm_source=openai))\n- Parking: Street parking available near 2 Park Street.\n- Accessibility: Located on second floor; inquire about elevator or assistance when calling.\n- Languages: English primarily.\n- Insurance: Accepts Medicare and Medicaid (per CHP listings) ([doctor.webmd.com](https://doctor.webmd.com/practice/chp-adams-internists-304229c9-4703-e211-a42b-001f29e3eb44?utm_source=openai))",
+        "openai_source_urls": "berkshirehealthsystems.org location page, WebMD practice profile",
+        "openai_confidence": "High"
+      },
+      "timestamp": "2026-01-20T23:22:30.555996Z"
+    },
+    {
+      "original": {
+        "name": "Charles River Community Health Center - Armington Street",
+        "address": "40 Armington Street, Allston, MA, 2134",
+        "phone": "(617) 783-0501",
+        "website": "",
+        "types": ""
+      },
+      "enriched": {
+        "openai_phone": "6177830500",
+        "openai_address": "40 Armington Street, Allston, MA 02134",
+        "openai_website": "https://www.charlesriverhealth.org/",
+        "openai_types": "Primary Care, Medical Services",
+        "openai_new_patient_md": "1. Call the Charles River Community Health main number for Allston–Brighton (617‑783‑0500) to express interest in becoming a new patient and schedule an Initial Health Assessment (IHA) ([charlesriverhealth.org](https://www.charlesriverhealth.org/patients-visitors/request-an-appointment-2/?utm_source=openai))\n2. Arrive 15 minutes early for registration and bring your insurance card (if you have one), co‑payment, list of medications, and photo ID ([charlesriverhealth.org](https://www.charlesriverhealth.org/patients-visitors/first-visit/?utm_source=openai))\n3. If transferring from another provider, have medical records faxed to 617‑783‑5514 ([charlesriverhealth.org](https://www.charlesriverhealth.org/patients-visitors/first-visit/?utm_source=openai))\n4. Attend your IHA; after this visit, you can schedule routine follow‑up appointments, see a nurse, or consult an on‑call provider ([charlesriverhealth.org](https://www.charlesriverhealth.org/patients-visitors/first-visit/?utm_source=openai))\n5. To reschedule or cancel, call the Brighton location (617‑783‑0500) the day before your appointment ([charlesriverhealth.org](https://www.charlesriverhealth.org/patients-visitors/first-visit/?utm_source=openai))",
+        "openai_other_notes_md": "- Clinic at Jackson Mann (40 Armington St) is a school‑based, part‑time site open limited hours (e.g., Mondays 9:00 am–11:30 am) ([freeclinicdirectory.org](https://freeclinicdirectory.org/detail/joseph_m_smith_community_health_center_at_jackson_mann_school8_allston_ma.html?utm_source=openai))\n- Full services are provided at the main Joseph M. Smith Building: 495 Western Avenue, Brighton, MA 02135, phone 617‑783‑0500 ([charlesriverhealth.org](https://www.charlesriverhealth.org/patients-visitors/locations/?utm_source=openai))\n- Sliding fee scale and multiple insurance plans accepted, including Medicaid, Medicare, and commercial plans ([freeclinicdirectory.org](https://freeclinicdirectory.org/detail/joseph_m_smith_community_health_center_at_jackson_mann_school8_allston_ma.html?utm_source=openai))\n- Arrive early, bring IDs and insurance, and note that the school‑based site may offer limited services on specific days only ([freeclinicdirectory.org](https://freeclinicdirectory.org/detail/joseph_m_smith_community_health_center_at_jackson_mann_school8_allston_ma.html?utm_source=openai))",
+        "openai_source_urls": "https://www.charlesriverhealth.org/patients-visitors/locations/, https://freeclinicdirectory.org/detail/joseph_m_smith_community_health_center_at_jackson_mann_school8_allston_ma.html, https://www.charlesriverhealth.org/patients-visitors/first-visit/, https://www.charlesriverhealth.org/patients-visitors/request-an-appointment-2/",
+        "openai_confidence": "High"
+      },
+      "timestamp": "2026-01-20T23:22:37.280255Z"
+    },
+    {
+      "original": {
+        "name": "Charles River Community Health Center - Athol Street",
+        "address": "30 Athol Street, Allston, MA, 2134",
+        "phone": "(617) 783-0502",
+        "website": "",
+        "types": ""
+      },
+      "enriched": {
+        "openai_phone": "617-783-0500",
+        "openai_address": "495 Western Avenue, Brighton, MA 02135",
+        "openai_website": "https://www.charlesriverhealth.org",
+        "openai_types": "Primary Care, Dental Care, Eye Care, Behavioral Health, Pharmacy",
+        "openai_new_patient_md": "1. Visit the Charles River Community Health “Patients & Visitors” page on their official website ([charlesriverhealth.org](https://www.charlesriverhealth.org/patients-visitors/?utm_source=openai))\n2. Click on “Become a patient” or “Request a call back” and submit your contact information ([charlesriverhealth.org](https://www.charlesriverhealth.org/patients-visitors/?utm_source=openai))\n3. Their team will call you to schedule your first appointment – plan to arrive 15 minutes early for registration ([charlesriverhealth.org](https://www.charlesriverhealth.org/patients-visitors/?utm_source=openai))",
+        "openai_other_notes_md": "**Hours (Allston‑Brighton)**\n- Monday–Wednesday & Thursday (most): 8:30 am–7:00 pm\n- Friday: 8:30 am–5:00 pm\n- Select Saturdays (1st, 3rd, 5th): 8:30 am–1:00 pm (call to confirm) ([charlesriverhealth.org](https://www.charlesriverhealth.org/patients-visitors/locations/?utm_source=openai))\n\n**Languages & Accessibility**\n- Interpreting services available for non-English speakers ([charlesriverhealth.org](https://www.charlesriverhealth.org/services/?utm_source=openai))\n\n**Insurance & Payment**\n- Accepts Medicare, Medicaid, sliding-scale fees, and most insurance plans ([npin.cdc.gov](https://npin.cdc.gov/organization/charles-river-community-health?utm_source=openai))\n\n**Parking & Location**\n- Located in the Joseph M. Smith Building at 495 Western Avenue, Brighton—accessible via public transit; parking details available on-site or via contact.\n\n**Other Services**\n- Pharmacy and Vision Center available on-site (pharmacy phone: 617‑208‑1656) ([charlesriverhealth.org](https://www.charlesriverhealth.org/patients-visitors/locations/?utm_source=openai))",
+        "openai_source_urls": "https://www.charlesriverhealth.org/patients-visitors/locations/, https://www.charlesriverhealth.org/services/",
+        "openai_confidence": "High"
+      },
+      "timestamp": "2026-01-20T23:22:49.201834Z"
+    }
+  ]
+}

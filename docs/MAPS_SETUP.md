@@ -1,59 +1,55 @@
-# Google Maps Setup Guide
+# Maps Setup Guide
 
-Complete guide to set up and use the Google Maps integration for the Community Health Centers finder.
+Complete guide to set up and use the Leaflet/OpenStreetMap integration for the Community Health Centers finder.
 
 ## 🚀 Quick Setup (5 Minutes)
 
-### 1. Get Google Maps API Key
-
-1. Go to [Google Cloud Console](https://console.cloud.google.com/)
-2. Create a new project
-3. Enable these APIs:
-   - **Maps JavaScript API**
-   - **Geocoding API**
-4. Go to **Credentials** → **Create Credentials** → **API Key**
-5. Copy your API key
-
-### 2. Add API Key to Frontend
+### 1. Install Dependencies
 
 ```bash
 cd frontend
-echo "NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=your_api_key_here" > .env.local
+npm install
 ```
 
-Replace `your_api_key_here` with your actual API key.
+**No API keys required!** The app uses free services:
+- OpenStreetMap tiles for maps (no API key)
+- Nominatim for zipcode geocoding (free, no API key, max 1 request/second)
 
-### 3. Run Geocoding (One-Time)
+### 2. Run Geocoding (One-Time, Optional)
+
+If you need to geocode health center addresses, you can use the Google Maps Geocoding API script (one-time data processing):
 
 ```bash
 # Install Python dependencies
 pip install requests pandas
 
-# Run geocoding script
-python add_geocoding.py YOUR_API_KEY
+# Run geocoding script (requires Google Maps API key for one-time geocoding)
+python scripts/add_geocoding.py YOUR_GOOGLE_MAPS_API_KEY
 ```
 
-This creates `community_health_centers_with_coords.csv` with coordinates.
+This creates `data/processed/community_health_centers_with_coords.csv` with coordinates.
 
-### 4. Start the App
+**Note:** This is only needed if you're adding new health centers. The app itself doesn't require Google Maps API.
+
+### 3. Start the App
 
 ```bash
 cd frontend
-npm install
 npm run dev
 ```
 
-Open http://localhost:3000 and search by zipcode!
+Open http://localhost:5173 and search by zipcode!
 
 ---
 
 ## 📋 Features
 
 ### Interactive Map
-- Custom markers for each health center
-- Click markers to see details
-- Auto-centers on search results
-- Zoom, pan, and explore
+- **Leaflet/OpenStreetMap Integration**: Free, open-source mapping solution
+- **Custom Markers**: Click markers to see detailed information
+- **Auto-Centering**: Map automatically centers on search results
+- **Zoom & Pan**: Interactive map controls
+- **Responsive Design**: Works on mobile, tablet, and desktop
 
 ### View Modes
 - **📋 List** - Card-based list view
@@ -70,36 +66,32 @@ Open http://localhost:3000 and search by zipcode!
 
 ## 🔧 Detailed Setup
 
-### API Key Security (Recommended)
+### Map Library: Leaflet
 
-1. In Google Cloud Console, click your API key to edit
-2. Under **Application restrictions**, select **HTTP referrers**
-3. Add your domains:
-   ```
-   localhost:3000/*
-   yourdomain.com/*
-   ```
-4. Under **API restrictions**, select **Restrict key**
-5. Choose only:
-   - Maps JavaScript API
-   - Geocoding API
-6. Click **Save**
+The app uses **Leaflet** with **react-leaflet** for React integration:
+
+- **Leaflet**: Open-source JavaScript library for mobile-friendly interactive maps
+- **react-leaflet**: React components for Leaflet
+- **OpenStreetMap Tiles**: Free map tiles (no API key required)
+
+### Geocoding: Nominatim
+
+Zipcode geocoding uses **Nominatim** (OpenStreetMap's free geocoding service):
+
+- **No API Key Required**: Completely free
+- **Rate Limiting**: Max 1 request per second (please use responsibly)
+- **User-Agent Required**: The app includes a proper User-Agent header
 
 ### Environment Variables
 
-Create `frontend/.env.local`:
-```env
-NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=your_api_key_here
-```
-
-**Important:**
-- Must start with `NEXT_PUBLIC_` for client-side access
-- Never commit `.env.local` to version control
-- Restart dev server after creating this file
+**None required for map display!** The app uses free services:
+- OpenStreetMap tiles (no API key)
+- Nominatim geocoding (no API key)
 
 ### Geocoding Script Details
 
-The `add_geocoding.py` script:
+The `scripts/add_geocoding.py` script (optional, for one-time data processing):
+- Uses Google Maps Geocoding API to geocode health center addresses
 - Validates addresses before making API calls
 - Shows progress for each health center
 - Skips entries without valid addresses
@@ -126,25 +118,26 @@ The `add_geocoding.py` script:
   📞 API calls made: 268 (saved 8 calls)
 ```
 
+**Note:** This script is only needed when adding new health centers. The frontend app uses Nominatim for zipcode geocoding, not Google Maps.
+
 ---
 
 ## 💰 Cost Information
 
-### Google Maps Pricing
+### Free Services
 
+- **OpenStreetMap**: Completely free, no API key required
+- **Nominatim Geocoding**: Free, no API key (please use responsibly - max 1 request/second)
+- **GitHub Pages**: Free hosting for public repositories
+
+### Optional: Google Maps Geocoding (One-Time)
+
+If you use the `scripts/add_geocoding.py` script for one-time geocoding:
 - **Free Tier**: $200/month credit (automatically applied)
 - **Geocoding**: $5 per 1,000 requests
-  - One-time: 276 requests = **$0.00**
-- **Map Loads**: $7 per 1,000 loads
-  - Typical usage: **$0.00** (within free tier)
-  - Break-even: ~28,000 map loads/month
+  - One-time: 276 requests = **$0.00** (within free tier)
 
-### Monitoring Usage
-
-1. Go to [Google Cloud Console](https://console.cloud.google.com/)
-2. Navigate to **APIs & Services** → **Dashboard**
-3. View usage statistics
-4. Set up billing alerts to avoid surprises
+**Note:** The frontend app itself doesn't use Google Maps, so there are no ongoing costs for map display.
 
 ---
 
@@ -152,28 +145,39 @@ The `add_geocoding.py` script:
 
 ### Map Not Showing
 
-**Problem**: Gray box or "API Key Required" message
+**Problem**: Gray box or map not loading
 
 **Solutions:**
-- Check that `frontend/.env.local` exists
-- Verify API key is correct (no extra spaces)
-- Ensure key starts with `NEXT_PUBLIC_`
-- Restart dev server: `Ctrl+C` then `npm run dev`
 - Check browser console for errors
+- Verify Leaflet CSS is loading (should be automatic)
+- Check that `centers.csv` has valid latitude/longitude values
+- Ensure you're running from the correct port (http://localhost:5173)
+- Try clearing browser cache
 
 ### No Markers on Map
 
 **Problem**: Map displays but no markers
 
 **Solutions:**
-- Run geocoding script: `python add_geocoding.py YOUR_API_KEY`
-- Verify `community_health_centers_with_coords.csv` exists
+- Verify `frontend/public/data/centers.csv` exists
 - Check CSV has `latitude` and `longitude` columns
 - Try a different zipcode with known health centers
+- Check browser console for data loading errors
 
-### Geocoding Script Fails
+### Geocoding Fails (Zipcode Search)
 
-**Problem**: Script errors or API failures
+**Problem**: Zipcode search doesn't work
+
+**Solutions:**
+- Check browser console for errors
+- Verify zipcode is valid (5 digits)
+- Nominatim may be rate-limited (max 1 request/second)
+- Check network connectivity
+- The app includes a fallback for common MA zipcodes
+
+### Geocoding Script Fails (One-Time Processing)
+
+**Problem**: `scripts/add_geocoding.py` errors or API failures
 
 **Solutions:**
 - Install dependencies: `pip install requests pandas`
@@ -184,11 +188,11 @@ The `add_geocoding.py` script:
 
 ### Build Errors
 
-**Problem**: TypeScript or Next.js errors
+**Problem**: TypeScript or Vite errors
 
 **Solutions:**
 - Delete `node_modules`: `rm -rf node_modules && npm install`
-- Clear Next.js cache: `rm -rf .next`
+- Clear Vite cache: `rm -rf node_modules/.vite`
 - Check TypeScript version: `npm list typescript`
 - Restart dev server
 
@@ -197,36 +201,34 @@ The `add_geocoding.py` script:
 ## 📁 File Structure
 
 ```
-frontend/src/app/
+frontend/src/
 ├── components/
-│   ├── HealthCenterMap.tsx      # Map with markers
-│   ├── HealthCenterList.tsx     # List view
-│   └── Navigation.tsx
-├── api/health-centers/
-│   └── route.ts                 # Data endpoint
-└── page.tsx                     # Main search page
+│   ├── HealthCenterMap.tsx      # Leaflet map component
+│   ├── HealthCenterList.tsx     # List view component
+│   └── HealthCenterDetail.tsx   # Detail modal
+├── utils/
+│   ├── csvLoader.ts             # CSV parsing
+│   ├── geocoding.ts             # Zipcode geocoding (Nominatim)
+│   └── distance.ts              # Haversine distance calculation
+├── types.ts                      # TypeScript types
+├── App.tsx                       # Main app component
+└── main.tsx                      # Entry point
 ```
 
 ### Component Details
 
 **HealthCenterMap.tsx**
-- Uses @vis.gl/react-google-maps
-- Custom blue markers
-- Info windows on click
-- Auto-centering
+- Uses `react-leaflet` with Leaflet
+- OpenStreetMap tiles
+- Custom markers with popups
+- Auto-centering on results
 - Responsive design
 
-**HealthCenterList.tsx**
-- Card-based layout
-- Full address and contact info
-- Clickable website links
-- Shows coordinates
-
-**page.tsx**
-- Search form
-- View mode toggle
-- State management
-- Integrates map and list
+**geocoding.ts**
+- Uses Nominatim (OpenStreetMap's geocoding service)
+- Includes fallback for common MA zipcodes
+- No API key required
+- Rate-limited to 1 request/second
 
 ---
 
@@ -235,8 +237,9 @@ frontend/src/app/
 ### Basic Search
 
 1. Enter a zipcode (e.g., `02138`)
-2. Click **Search Health Centers**
-3. Results appear in your selected view
+2. Select a search radius (10/25/50/100 miles)
+3. Click **Search**
+4. Results appear in your selected view
 
 ### View Modes
 
@@ -248,7 +251,7 @@ Click the buttons to toggle:
 ### Interacting with Results
 
 **Map View:**
-- Click markers to see info windows
+- Click markers to see popups with center information
 - Zoom with mouse wheel or +/- buttons
 - Pan by dragging
 - Click website links to visit health centers
@@ -263,88 +266,60 @@ Click the buttons to toggle:
 
 ## 🚀 Deployment
 
-### Environment Variables
+### No Configuration Needed!
 
-Set in your hosting platform (Vercel, Netlify, etc.):
-```
-NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=your_production_api_key
-```
-
-### API Key Configuration
-
-1. Update API key restrictions in Google Cloud Console
-2. Add production domain to HTTP referrers
-3. Keep API restrictions (Maps JavaScript API, Geocoding API)
+Since the app uses free services (OpenStreetMap and Nominatim), no environment variables or API keys are needed for deployment.
 
 ### Build & Deploy
 
 ```bash
 cd frontend
 npm run build
-npm start  # or deploy to your platform
 ```
+
+The build output will be in `frontend/dist/` directory.
+
+### GitHub Pages Deployment
+
+The app is configured for GitHub Pages deployment:
+- Base path is set in `vite.config.ts`
+- GitHub Actions workflow handles deployment automatically
+- See [docs/DEPLOYMENT.md](DEPLOYMENT.md) for details
 
 ### Checklist
 
-- [ ] Add API key to hosting platform
-- [ ] Update API key domain restrictions
-- [ ] Upload `community_health_centers_with_coords.csv`
+- [ ] Verify `frontend/public/data/centers.csv` exists
+- [ ] Test locally: `npm run dev`
+- [ ] Build for production: `npm run build`
+- [ ] Deploy to GitHub Pages (automatic via GitHub Actions)
 - [ ] Test in production
-- [ ] Set up error monitoring
-- [ ] Configure billing alerts
-
----
-
-## 🔌 API Endpoint
-
-### GET /api/health-centers
-
-**Query Parameters:**
-- `zipcode` (optional): Filter by zipcode
-
-**Example:**
-```bash
-curl "http://localhost:3000/api/health-centers?zipcode=02138"
-```
-
-**Response:**
-```json
-[
-  {
-    "name": "Community Health Center",
-    "street_address_1": "123 Main St",
-    "city_town": "Boston",
-    "state": "MA",
-    "zipcode": "02118",
-    "phone": "(617) 555-0100",
-    "types": "Primary Care, Dental Care",
-    "website": "https://example.com",
-    "latitude": 42.3601,
-    "longitude": -71.0589
-  }
-]
-```
 
 ---
 
 ## 📝 Additional Resources
 
-- [Google Maps Platform Documentation](https://developers.google.com/maps/documentation)
-- [@vis.gl/react-google-maps Docs](https://visgl.github.io/react-google-maps/)
-- [Next.js Environment Variables](https://nextjs.org/docs/basic-features/environment-variables)
-- [Google Cloud Console](https://console.cloud.google.com/)
+- [Leaflet Documentation](https://leafletjs.com/)
+- [react-leaflet Documentation](https://react-leaflet.js.org/)
+- [OpenStreetMap](https://www.openstreetmap.org/)
+- [Nominatim Usage Policy](https://operations.osmfoundation.org/policies/nominatim/)
+- [Vite Documentation](https://vitejs.dev/)
 
 ---
 
 ## ✨ Summary
 
 You now have:
-- ✅ Interactive Google Maps with health center markers
+- ✅ Interactive Leaflet maps with OpenStreetMap tiles (free, no API key)
 - ✅ Multiple view modes (List/Map/Both)
-- ✅ Zipcode search functionality
+- ✅ Zipcode search functionality with Nominatim geocoding (free)
 - ✅ 276+ health centers with geocoded addresses
 - ✅ Mobile-responsive design
-- ✅ Cost-effective (free tier)
+- ✅ **Zero ongoing costs** for map display
+
+**Key Benefits:**
+- No API keys required for map display
+- Completely free mapping solution
+- Open-source and community-driven
+- No usage limits (except Nominatim rate limiting: 1 req/sec)
 
 **Need help?** Check the troubleshooting section above or open an issue on GitHub.
-

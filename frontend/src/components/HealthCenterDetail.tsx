@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import type { HealthCenter } from '../types';
 
@@ -10,17 +11,23 @@ export default function HealthCenterDetail({
   center,
   onClose,
 }: HealthCenterDetailProps) {
+  const [showAppointmentInfo, setShowAppointmentInfo] = useState(false);
+
   if (!center) return null;
 
-  // Use OpenAI enriched data if available, otherwise fall back to original data
-  const displayPhone = center.openai_phone || center.phone;
-  const displayAddress = center.openai_address || 
-    `${center.street_address_1}${center.street_address_2 ? `, ${center.street_address_2}` : ''}, ${center.city_town}, ${center.state} ${center.zipcode}`;
+  // Use original address fields for display
+  const displayPhone = center.phone;
+  const displayAddress = `${center.street_address_1 || ''}${center.street_address_2 ? `, ${center.street_address_2}` : ''}${center.city_town ? `, ${center.city_town}` : ''}${center.state ? `, ${center.state}` : ''}${center.zipcode ? ` ${center.zipcode}` : ''}`.trim();
   
-  const newPatientInstructions = center.openai_new_patient_md || 
-    'Contact information is available above. Please call or visit the center for details on becoming a new patient.';
+  // Use OpenAI data for website and types (with final_* fallback)
+  const displayWebsite = (center as any).final_website || center.openai_website || center.website;
+  const displayTypes = (center as any).final_types || center.openai_types || center.types;
   
+  // Appointment information from OpenAI (with final_* fallback)
+  const newPatientInstructions = (center as any).final_new_patient_md || center.openai_new_patient_md;
   const otherNotes = center.openai_other_notes_md;
+  const sourceUrls = center.openai_source_urls;
+  const confidence = center.openai_confidence;
 
   // Create phone link (tel: protocol works on mobile)
   const phoneLink = displayPhone ? `tel:${displayPhone.replace(/\D/g, '')}` : null;
@@ -59,20 +66,20 @@ export default function HealthCenterDetail({
               </a>
             </p>
           )}
-          {center.website && (
+          {displayWebsite && (
             <p>
               <strong>Website:</strong>{' '}
-              <a href={center.website} target="_blank" rel="noopener noreferrer">
-                {center.website}
+              <a href={displayWebsite} target="_blank" rel="noopener noreferrer">
+                {displayWebsite}
               </a>
             </p>
           )}
         </div>
 
-        {center.types && (
+        {displayTypes && (
           <div className="detail-section">
             <h2>Services</h2>
-            <p>{center.types}</p>
+            <p>{displayTypes}</p>
           </div>
         )}
 
@@ -83,32 +90,69 @@ export default function HealthCenterDetail({
           </div>
         )}
 
+        {showAppointmentInfo && (
+          <>
+            {newPatientInstructions && (
+              <div className="detail-section">
+                <h2>How to Become a New Patient</h2>
+                <div className="markdown-content">
+                  <ReactMarkdown>{newPatientInstructions}</ReactMarkdown>
+                </div>
+              </div>
+            )}
+
+            {otherNotes && (
+              <div className="detail-section">
+                <h2>Other Helpful Notes</h2>
+                <div className="markdown-content">
+                  <ReactMarkdown>{otherNotes}</ReactMarkdown>
+                </div>
+              </div>
+            )}
+
+            {sourceUrls && (
+              <div className="detail-section">
+                <h2>Source URLs</h2>
+                <div className="source-urls">
+                  {sourceUrls.split(',').map((url: string, index: number) => {
+                    const trimmedUrl = url.trim();
+                    // Check if it's a full URL or just a reference
+                    const isUrl = trimmedUrl.startsWith('http://') || trimmedUrl.startsWith('https://');
+                    return (
+                      <p key={index}>
+                        {isUrl ? (
+                          <a href={trimmedUrl} target="_blank" rel="noopener noreferrer">
+                            {trimmedUrl}
+                          </a>
+                        ) : (
+                          <span>{trimmedUrl}</span>
+                        )}
+                      </p>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            {confidence && (
+              <div className="detail-section">
+                <h2>Confidence Level of Information</h2>
+                <p className="confidence-level">
+                  <strong>{confidence}</strong>
+                </p>
+              </div>
+            )}
+          </>
+        )}
+
         <div className="detail-section">
-          <h2>How to Become a New Patient</h2>
-          <div className="markdown-content">
-            <ReactMarkdown>{newPatientInstructions}</ReactMarkdown>
-          </div>
+          <button 
+            className="book-appointment-btn" 
+            onClick={() => setShowAppointmentInfo(!showAppointmentInfo)}
+          >
+            {showAppointmentInfo ? 'Hide Appointment Information' : 'Book Appointment'}
+          </button>
         </div>
-
-        {otherNotes && (
-          <div className="detail-section">
-            <h2>Additional Notes</h2>
-            <div className="markdown-content">
-              <ReactMarkdown>{otherNotes}</ReactMarkdown>
-            </div>
-          </div>
-        )}
-
-        {center.openai_confidence && (
-          <div className="detail-section metadata">
-            <p className="metadata-text">
-              <small>Information confidence: {center.openai_confidence}</small>
-              {center.openai_last_checked_utc && (
-                <small> • Last checked: {new Date(center.openai_last_checked_utc).toLocaleDateString()}</small>
-              )}
-            </p>
-          </div>
-        )}
       </div>
     </div>
   );

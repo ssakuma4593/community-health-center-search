@@ -7,10 +7,11 @@ How to add or update community health centers in the application.
 ```
 1. Parse Official Document        2. Geocoding                    3. Application
    ↓                                ↓                               ↓
-scrape_docx.py              →  add_geocoding.py  →  frontend/api reads
+scripts/scrape_docx.py      →  scripts/add_geocoding.py  →  frontend/api reads
    ↓                                ↓                               ↓
-hsn_active_health_centers_   →  community_health_centers_   →  Displays on map
-scraped.csv                      with_coords.csv                 and list
+data/raw/hsn_active_health_  →  data/processed/community_  →  Displays on map
+centers_parsed.csv                health_centers_with_          and list
+                                 coords.csv
 ```
 
 ---
@@ -26,23 +27,23 @@ The parser extracts health center data from official Massachusetts health center
 pip install python-docx
 
 # Run the parser
-python scrape_docx.py
+python scripts/scrape_docx.py
 ```
 
 **What it does:**
 - Parses health center listings from official Word documents
 - Extracts: name, address, phone, services, website
-- Outputs: `hsn_active_health_centers_scraped.csv`
+- Outputs: `data/raw/hsn_active_health_centers_parsed.csv` (with separate address columns)
 
 **Expected output:**
 ```
 Reading DOCX file: data/official_documents/hsn-active-health-center-listings.docx
 Processing table 1 with 112 rows
 Extracted 111 unique health centers
-✅ Successfully saved 111 centers to hsn_active_health_centers_scraped.csv
+✅ Successfully saved 111 centers to data/raw/hsn_active_health_centers_parsed.csv
 ```
 
-**Output file:** `hsn_active_health_centers_scraped.csv`
+**Output file:** `data/raw/hsn_active_health_centers_parsed.csv`
 
 ### Step 2: Add Geocoding
 
@@ -53,15 +54,17 @@ Convert addresses to latitude/longitude coordinates for map display.
 pip install requests pandas
 
 # Run geocoding
-python add_geocoding.py YOUR_GOOGLE_MAPS_API_KEY
+python scripts/add_geocoding.py YOUR_GOOGLE_MAPS_API_KEY
 ```
 
 **What it does:**
-- Reads parsed CSV file (e.g., `hsn_active_health_centers_scraped.csv` or `community_health_centers_parsed.csv`)
+- Reads parsed CSV file: `data/raw/hsn_active_health_centers_parsed.csv`
 - Validates each address
-- Calls Google Maps Geocoding API
+- Calls Google Maps Geocoding API (one-time data processing)
 - Adds latitude/longitude columns
-- Outputs: `community_health_centers_with_coords.csv`
+- Outputs: `data/processed/community_health_centers_with_coords.csv`
+
+**Note:** This script uses Google Maps API for one-time geocoding. The frontend app uses free Leaflet/OpenStreetMap and doesn't require any API keys.
 
 **Expected output:**
 ```
@@ -77,7 +80,7 @@ python add_geocoding.py YOUR_GOOGLE_MAPS_API_KEY
   📞 API calls made: 268 (saved 8 calls)
 ```
 
-**Output file:** `community_health_centers_with_coords.csv`
+**Output file:** `data/processed/community_health_centers_with_coords.csv`
 
 ### Step 3: Verify & Deploy
 
@@ -90,7 +93,7 @@ npm run dev
 # e.g., search for 02138
 ```
 
-The application automatically reads `community_health_centers_with_coords.csv`.
+The application automatically reads `data/processed/community_health_centers_with_coords.csv` (or the CSV copied to `frontend/public/data/centers.csv`).
 
 ---
 
@@ -100,7 +103,7 @@ If you need to add health centers manually:
 
 ### 1. Edit the CSV
 
-Open the parsed CSV file (e.g., `hsn_active_health_centers_scraped.csv`) and add a new row:
+Open the parsed CSV file (`data/raw/hsn_active_health_centers_parsed.csv`) and add a new row:
 
 ```csv
 name,street_address_1,street_address_2,city_town,state,zipcode,phone,types,website,source
@@ -110,7 +113,7 @@ name,street_address_1,street_address_2,city_town,state,zipcode,phone,types,websi
 ### 2. Run Geocoding
 
 ```bash
-python add_geocoding.py YOUR_GOOGLE_MAPS_API_KEY
+python scripts/add_geocoding.py YOUR_GOOGLE_MAPS_API_KEY
 ```
 
 This will add coordinates for the new entry.
@@ -154,18 +157,18 @@ This will add coordinates for the new entry.
 
 ```bash
 # This will parse the latest data from official documents
-python scrape_docx.py
+python scripts/scrape_docx.py
 
 # Then re-geocode
-python add_geocoding.py YOUR_GOOGLE_MAPS_API_KEY
+python scripts/add_geocoding.py YOUR_GOOGLE_MAPS_API_KEY
 ```
 
 ### Option 2: Manual Edit
 
-1. Open the parsed CSV file (e.g., `hsn_active_health_centers_scraped.csv`)
+1. Open the parsed CSV file (`data/raw/hsn_active_health_centers_parsed.csv`)
 2. Edit the specific row(s)
 3. Save the file
-4. Re-run geocoding: `python add_geocoding.py YOUR_API_KEY`
+4. Re-run geocoding: `python scripts/add_geocoding.py YOUR_API_KEY`
 
 ---
 
@@ -174,13 +177,13 @@ python add_geocoding.py YOUR_GOOGLE_MAPS_API_KEY
 These scripts are **no longer needed** with the current workflow:
 
 - ❌ `final_merge_script.py` - Was used to merge multiple data sources
-- ❌ `final_document_parser.py` - Was replaced by `scrape_docx.py`
+- ❌ `final_document_parser.py` - Was replaced by `scripts/scrape_docx.py`
 - ❌ `community_health_scraper.py` - Web scraper (removed, using official documents only)
 - ❌ `run_scraper.py` - Web scraper runner (removed, using official documents only)
 
 You can safely ignore these files. The current workflow is:
-1. **Document Parser** (`scrape_docx.py`) → extracts data from official documents
-2. **Geocoding** (`add_geocoding.py`) → adds coordinates
+1. **Document Parser** (`scripts/scrape_docx.py`) → extracts data from official documents, outputs parsed format
+2. **Geocoding** (`scripts/add_geocoding.py`) → adds coordinates
 
 ---
 
@@ -190,10 +193,10 @@ You can safely ignore these files. The current workflow is:
 
 ```bash
 # View the first few lines
-head -n 5 community_health_centers_with_coords.csv
+head -n 5 data/processed/community_health_centers_with_coords.csv
 
 # Count total entries
-wc -l community_health_centers_with_coords.csv
+wc -l data/processed/community_health_centers_with_coords.csv
 ```
 
 ### 2. Test Locally
@@ -214,7 +217,7 @@ Open http://localhost:3000 and:
 Check that new entries have coordinates:
 ```bash
 # Look for entries with coordinates
-grep "42\." community_health_centers_with_coords.csv | head -n 3
+grep "42\." data/processed/community_health_centers_with_coords.csv | head -n 3
 ```
 
 ---
@@ -253,7 +256,7 @@ grep "42\." community_health_centers_with_coords.csv | head -n 3
 
 1. **Commit changes:**
    ```bash
-   git add community_health_centers_with_coords.csv
+   git add data/processed/community_health_centers_with_coords.csv
    git commit -m "Update health center data"
    ```
 
@@ -271,25 +274,25 @@ grep "42\." community_health_centers_with_coords.csv | head -n 3
 
 ## 🔑 API Key Management
 
-### Development
+### Google Maps API Key (Optional - One-Time Geocoding Only)
 
-Store in `frontend/.env.local`:
-```env
-NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=your_dev_api_key
-```
+The Google Maps API key is **only needed** for the one-time geocoding script (`scripts/add_geocoding.py`) when adding new health centers. The frontend app itself uses free services (Leaflet/OpenStreetMap) and doesn't require any API keys.
 
-### Production
+### For One-Time Geocoding Script
 
-Add to your hosting platform (Vercel, Netlify, etc.):
-```env
-NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=your_production_api_key
-```
+If you need to geocode new health center addresses:
+
+1. Get a Google Maps Geocoding API key from [Google Cloud Console](https://console.cloud.google.com/)
+2. Run the geocoding script:
+   ```bash
+   python scripts/add_geocoding.py YOUR_GOOGLE_MAPS_API_KEY
+   ```
 
 ### API Usage
 
-- **Geocoding**: Only needed when adding/updating data (not on every deployment)
-- **Maps Display**: Used by users viewing the map
-- **Free Tier**: $200/month credit covers typical usage
+- **Geocoding Script**: Only needed when adding/updating data (one-time process)
+- **Frontend App**: Uses free Leaflet/OpenStreetMap (no API key needed)
+- **Free Tier**: Google Maps $200/month credit covers typical geocoding usage
 
 ---
 
@@ -320,8 +323,9 @@ NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=your_production_api_key
 **Problem:** New data doesn't appear in the app
 
 **Solutions:**
-- Verify `community_health_centers_with_coords.csv` exists
+- Verify `data/processed/community_health_centers_with_coords.csv` exists
 - Check file has latitude/longitude columns
+- Copy CSV to `frontend/public/data/centers.csv` if needed
 - Restart dev server
 - Clear browser cache
 - Check API endpoint: `http://localhost:3000/api/health-centers`
@@ -370,16 +374,16 @@ Include:
 **Quick Workflow:**
 ```bash
 # 1. Parse official document
-python scrape_docx.py
+python scripts/scrape_docx.py
 
 # 2. Add coordinates
-python add_geocoding.py YOUR_API_KEY
+python scripts/add_geocoding.py YOUR_API_KEY
 
 # 3. Test
 cd frontend && npm run dev
 
 # 4. Deploy
-git add community_health_centers_with_coords.csv
+git add data/processed/community_health_centers_with_coords.csv
 git commit -m "Update health center data"
 git push
 ```

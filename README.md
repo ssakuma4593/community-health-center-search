@@ -67,16 +67,26 @@ community-health-center-search/
 ├── backend/                               # FastAPI backend (optional)
 │   └── app/main.py
 ├── data/                                  # Source documents and data
+│   ├── official_documents/               # Original source documents
+│   ├── raw/                              # Raw/scraped CSV files
+│   └── processed/                        # Processed CSV files with coordinates
 ├── docs/                                  # All documentation
 │   ├── MAPS_SETUP.md                     # Maps setup (legacy)
 │   ├── DATA_ONBOARDING.md                # Add/update health centers
+│   ├── DEPLOYMENT.md                     # Deployment guide
+│   ├── OPENAI_ENRICHMENT.md              # OpenAI enrichment pipeline
 │   └── ROADMAP.md                        # Development roadmap
+├── scripts/                               # Data processing scripts
+│   ├── scrape_docx.py                    # Document parser
+│   ├── add_geocoding.py                  # Geocoding script
+│   ├── enrich_csv.py                     # OpenAI enrichment script
+│   └── merge_enriched_data.py            # Merge enriched data
+├── reports/                               # Reports and test results
+│   ├── enrichment_comparison_report.txt  # Enrichment comparison report
+│   └── test_enrichment_results.json      # Test enrichment results
 ├── .github/
 │   └── workflows/
 │       └── deploy-pages.yml               # GitHub Pages deployment
-├── community_health_centers_with_coords.csv  # Geocoded data (source)
-├── scrape_docx.py                         # Document parser
-├── add_geocoding.py                       # Geocoding script
 └── README.md                              # This file
 ```
 
@@ -147,7 +157,7 @@ The app automatically deploys to GitHub Pages when you push to `main` or `featur
 2. Source: GitHub Actions
 3. The workflow (`.github/workflows/deploy-pages.yml`) will deploy automatically
 
-See [README_GITHUB_PAGES.md](README_GITHUB_PAGES.md) for detailed deployment instructions.
+See [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) for detailed deployment instructions.
 
 ### Usage
 
@@ -174,15 +184,28 @@ Health center data is loaded client-side from `/public/data/centers.csv`. The CS
 - `openai_phone`, `openai_address`, `openai_new_patient_md`, `openai_other_notes_md`
 - `openai_source_urls`, `openai_last_checked_utc`, `openai_confidence`
 
-See [README_GITHUB_PAGES.md](README_GITHUB_PAGES.md) for CSV schema details.
+See [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) for CSV schema details.
 
 ## Documentation
 
 All documentation is in the [`docs/`](docs/) folder:
 
-- **[docs/MAPS_SETUP.md](docs/MAPS_SETUP.md)** - Complete Google Maps setup guide
+- **[docs/MAPS_SETUP.md](docs/MAPS_SETUP.md)** - Complete Leaflet/OpenStreetMap setup guide
 - **[docs/DATA_ONBOARDING.md](docs/DATA_ONBOARDING.md)** - How to add/update health centers (includes scraper workflow)
+- **[docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)** - Deployment guide for GitHub Pages
+- **[docs/OPENAI_ENRICHMENT.md](docs/OPENAI_ENRICHMENT.md)** - OpenAI enrichment pipeline documentation
+- **[docs/REPO_ORGANIZATION.md](docs/REPO_ORGANIZATION.md)** - Repository structure and organization
 - **[docs/ROADMAP.md](docs/ROADMAP.md)** - Development roadmap
+
+## 🎬 Demo Scripts
+
+Easy-to-run demo scripts for showcasing features:
+
+- **[scripts/demos/README.md](scripts/demos/README.md)** - Demo scripts guide
+- **OpenAI Enrichment Demo:** `python scripts/demos/demo_openai_enrichment.py`
+- **VAPI Call Demo:** `python scripts/demos/demo_vapi_call.py`
+
+Perfect for presentations and testing individual features!
 
 ## Features in Detail
 
@@ -223,21 +246,24 @@ The project uses a simple two-step pipeline to onboard health centers:
 1. **Document Parser** (`scrape_docx.py`)
    - Parses health center data from official Massachusetts Word documents
    - Extracts: name, address, phone, services, websites
-   - Output: `hsn_active_health_centers_scraped.csv`
+   - Output: `data/raw/hsn_active_health_centers_parsed.csv` (with separate address columns)
 
-2. **Geocoding Script** (`add_geocoding.py`)
-   - Converts addresses to latitude/longitude coordinates
+2. **Geocoding Script** (`scripts/add_geocoding.py`)
+   - Converts addresses to latitude/longitude coordinates (one-time data processing)
+   - Uses Google Maps Geocoding API for batch geocoding
    - Validates addresses before making API calls (saves quota!)
    - Shows progress and statistics
-   - Output: `community_health_centers_with_coords.csv` (used by app)
+   - Output: `data/processed/community_health_centers_with_coords.csv` (used by app)
+   
+   **Note:** The frontend app uses free Leaflet/OpenStreetMap for maps and Nominatim for zipcode geocoding (no API keys needed).
 
 **To add new health centers:**
 ```bash
 # 1. Parse official document
-python scrape_docx.py
+python scripts/scrape_docx.py
 
 # 2. Add coordinates
-python add_geocoding.py YOUR_GOOGLE_MAPS_API_KEY
+python scripts/add_geocoding.py YOUR_GOOGLE_MAPS_API_KEY
 
 # 3. Test
 cd frontend && npm run dev
@@ -247,14 +273,12 @@ See [docs/DATA_ONBOARDING.md](docs/DATA_ONBOARDING.md) for complete details.
 
 ## Development
 
-### Current Branch: `feature/google-maps-integration`
+### Current Branch: `organize-repo-structure`
 
-All Google Maps features are in this branch. Key changes:
-- Added interactive map component
-- Created list view component
-- Implemented view mode toggle
-- Added geocoding script
-- Comprehensive documentation
+Repository organization improvements. Key changes:
+- Organized scripts, data, and documentation into logical directories
+- Merged related documentation files
+- Updated all file paths and references
 
 ### Local Development
 
@@ -313,7 +337,7 @@ No costs associated with running this application!
 - Ensure workflow file is in `.github/workflows/deploy-pages.yml`
 - Check that you're pushing to `main` or `feature/github-pages-deployment` branch
 
-See [README_GITHUB_PAGES.md](README_GITHUB_PAGES.md) for detailed troubleshooting.
+See [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) for detailed troubleshooting.
 
 ## Contributing
 

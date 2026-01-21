@@ -58,12 +58,23 @@ def parse_docx_to_csv(docx_path: str, output_csv_path: str):
     # Save to CSV
     print(f"Saving to CSV: {output_csv_path}")
     with open(output_csv_path, 'w', newline='', encoding='utf-8') as f:
-        fieldnames = ['name', 'address', 'phone', 'types', 'website', 'source']
+        fieldnames = ['name', 'street_address_1', 'street_address_2', 'city_town', 'state', 'zipcode', 'phone', 'types', 'website', 'source']
         writer = csv.DictWriter(f, fieldnames=fieldnames)
         writer.writeheader()
         
         for center in unique_centers:
             center_copy = center.copy()
+            # Ensure all address fields exist
+            if 'street_address_1' not in center_copy:
+                center_copy['street_address_1'] = ''
+            if 'street_address_2' not in center_copy:
+                center_copy['street_address_2'] = ''
+            if 'city_town' not in center_copy:
+                center_copy['city_town'] = ''
+            if 'state' not in center_copy:
+                center_copy['state'] = 'MA'
+            if 'zipcode' not in center_copy:
+                center_copy['zipcode'] = ''
             # Convert types list to string
             if isinstance(center_copy.get('types'), list):
                 center_copy['types'] = ', '.join(center_copy['types'])
@@ -72,11 +83,72 @@ def parse_docx_to_csv(docx_path: str, output_csv_path: str):
     print(f"✅ Successfully saved {len(unique_centers)} centers to {output_csv_path}")
     return unique_centers
 
+def parse_address(address_str: str) -> Dict[str, str]:
+    """Parse a full address string into separate components"""
+    if not address_str:
+        return {
+            'street_address_1': '',
+            'street_address_2': '',
+            'city_town': '',
+            'state': 'MA',
+            'zipcode': ''
+        }
+    
+    # Try to parse address components
+    # Common format: "Street Address, City, State ZIPCODE"
+    parts = [p.strip() for p in address_str.split(',')]
+    
+    street_address_1 = ''
+    street_address_2 = ''
+    city_town = ''
+    state = 'MA'
+    zipcode = ''
+    
+    if len(parts) >= 3:
+        # Format: "Street, City, State ZIP"
+        street_address_1 = parts[0]
+        city_town = parts[1]
+        last_part = parts[-1].strip()
+        # Extract state and zipcode from last part (e.g., "MA 01220")
+        state_zip_match = re.match(r'([A-Z]{2})\s+(\d{5})', last_part)
+        if state_zip_match:
+            state = state_zip_match.group(1)
+            zipcode = state_zip_match.group(2)
+        elif last_part.isdigit() and len(last_part) == 5:
+            zipcode = last_part
+    elif len(parts) == 2:
+        # Format: "Street, City State ZIP" or "Street, City"
+        street_address_1 = parts[0]
+        last_part = parts[1].strip()
+        # Try to extract city, state, zip
+        state_zip_match = re.match(r'(.+?)\s+([A-Z]{2})\s+(\d{5})', last_part)
+        if state_zip_match:
+            city_town = state_zip_match.group(1)
+            state = state_zip_match.group(2)
+            zipcode = state_zip_match.group(3)
+        else:
+            city_town = last_part
+    elif len(parts) == 1:
+        # Single part - could be just street or full address
+        street_address_1 = parts[0]
+    
+    return {
+        'street_address_1': street_address_1,
+        'street_address_2': street_address_2,
+        'city_town': city_town,
+        'state': state,
+        'zipcode': zipcode
+    }
+
 def parse_table_row(cells: List[str], headers: List[str]) -> Optional[Dict]:
     """Parse a single table row to extract health center information"""
     center_info = {
         'name': '',
-        'address': '',
+        'street_address_1': '',
+        'street_address_2': '',
+        'city_town': '',
+        'state': 'MA',
+        'zipcode': '',
         'phone': '',
         'types': '',
         'website': '',
@@ -102,13 +174,21 @@ def parse_table_row(cells: List[str], headers: List[str]) -> Optional[Dict]:
     if 'name' in header_map and header_map['name'] < len(cells):
         center_info['name'] = cells[header_map['name']]
     
+    # Extract address components
     if 'address' in header_map and header_map['address'] < len(cells):
-        address_parts = [cells[header_map['address']]]
-        if 'city' in header_map and header_map['city'] < len(cells):
-            address_parts.append(cells[header_map['city']])
-        if 'zip' in header_map and header_map['zip'] < len(cells):
-            address_parts.append(f"MA {cells[header_map['zip']]}")
-        center_info['address'] = ', '.join(filter(None, address_parts))
+        street = cells[header_map['address']]
+        if street:
+            center_info['street_address_1'] = street
+    
+    if 'city' in header_map and header_map['city'] < len(cells):
+        city = cells[header_map['city']]
+        if city:
+            center_info['city_town'] = city
+    
+    if 'zip' in header_map and header_map['zip'] < len(cells):
+        zipcode = cells[header_map['zip']]
+        if zipcode:
+            center_info['zipcode'] = zipcode.strip()
     
     if 'phone' in header_map and header_map['phone'] < len(cells):
         center_info['phone'] = cells[header_map['phone']]
@@ -119,32 +199,51 @@ def parse_table_row(cells: List[str], headers: List[str]) -> Optional[Dict]:
         if len(cells) >= 5:
             # Pattern: City, Name, Address, Zip, Phone
             center_info['name'] = cells[1] if not center_info['name'] else center_info['name']
-            if not center_info['address']:
-                address_parts = [cells[2], cells[0]]
-                if cells[3]:
-                    address_parts.append(f"MA {cells[3]}")
-                center_info['address'] = ', '.join(filter(None, address_parts))
+            if not center_info['street_address_1']:
+                center_info['street_address_1'] = cells[2]
+            if not center_info['city_town']:
+                center_info['city_town'] = cells[0]
+            if not center_info['zipcode'] and cells[3]:
+                center_info['zipcode'] = cells[3].strip()
             if not center_info['phone']:
                 center_info['phone'] = cells[4]
         elif len(cells) >= 4:
             # Pattern: City, Name, Address, Phone
             center_info['name'] = cells[1] if not center_info['name'] else center_info['name']
-            if not center_info['address']:
-                center_info['address'] = f"{cells[2]}, {cells[0]}, MA"
+            if not center_info['street_address_1']:
+                center_info['street_address_1'] = cells[2]
+            if not center_info['city_town']:
+                center_info['city_town'] = cells[0]
             if not center_info['phone']:
                 center_info['phone'] = cells[3]
         elif len(cells) >= 3:
             # Pattern: Name, Address, Phone
             center_info['name'] = cells[0] if not center_info['name'] else center_info['name']
-            if not center_info['address']:
-                center_info['address'] = cells[1]
+            if not center_info['street_address_1']:
+                # Try to parse address if it contains city/state/zip
+                address_str = cells[1]
+                parsed_addr = parse_address(address_str)
+                if parsed_addr['street_address_1']:
+                    center_info['street_address_1'] = parsed_addr['street_address_1']
+                if parsed_addr['city_town']:
+                    center_info['city_town'] = parsed_addr['city_town']
+                if parsed_addr['zipcode']:
+                    center_info['zipcode'] = parsed_addr['zipcode']
             if not center_info['phone']:
                 center_info['phone'] = cells[2]
         elif len(cells) >= 2:
             # Pattern: Name, Address
             center_info['name'] = cells[0] if not center_info['name'] else center_info['name']
-            if not center_info['address']:
-                center_info['address'] = cells[1]
+            if not center_info['street_address_1']:
+                # Try to parse address
+                address_str = cells[1]
+                parsed_addr = parse_address(address_str)
+                if parsed_addr['street_address_1']:
+                    center_info['street_address_1'] = parsed_addr['street_address_1']
+                if parsed_addr['city_town']:
+                    center_info['city_town'] = parsed_addr['city_town']
+                if parsed_addr['zipcode']:
+                    center_info['zipcode'] = parsed_addr['zipcode']
         elif len(cells) >= 1:
             center_info['name'] = cells[0] if not center_info['name'] else center_info['name']
     
@@ -184,7 +283,7 @@ def remove_duplicates(centers: List[Dict]) -> List[Dict]:
 
 def main():
     docx_path = "data/official_documents/hsn-active-health-center-listings.docx"
-    output_csv_path = "hsn_active_health_centers_scraped.csv"
+    output_csv_path = "data/raw/hsn_active_health_centers_parsed.csv"
     
     if not Path(docx_path).exists():
         print(f"❌ Error: DOCX file not found at {docx_path}")
