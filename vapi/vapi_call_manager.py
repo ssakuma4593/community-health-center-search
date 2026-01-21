@@ -14,6 +14,7 @@ import os
 import sys
 import time
 import requests
+from pathlib import Path
 from typing import Dict, List, Optional
 from datetime import datetime
 
@@ -39,18 +40,30 @@ class VapiCallManager:
         }
         self.assistant_id = None
         self.phone_number_id = None
+        # Get the directory where this module is located (vapi/)
+        self.vapi_dir = Path(__file__).parent
         
-    def create_assistant(self, config_file: str = "vapi_config.json") -> Optional[str]:
+    def create_assistant(self, config_file: Optional[str] = None) -> Optional[str]:
         """
         Create or get an assistant using the configuration file.
         
         Args:
-            config_file: Path to assistant configuration JSON file
+            config_file: Path to assistant configuration JSON file.
+                        If None, uses vapi/vapi_config.json relative to this module.
             
         Returns:
             Assistant ID if successful, None otherwise
         """
         try:
+            # Resolve config file path relative to vapi directory if not absolute
+            if config_file is None:
+                config_file = str(self.vapi_dir / "vapi_config.json")
+            elif not os.path.isabs(config_file):
+                # If relative path, try relative to vapi directory first
+                vapi_config_path = self.vapi_dir / config_file
+                if vapi_config_path.exists():
+                    config_file = str(vapi_config_path)
+            
             with open(config_file, 'r') as f:
                 config = json.load(f)
             
