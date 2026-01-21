@@ -6,6 +6,7 @@ import type { HealthCenter } from '../types';
 
 // Fix for default marker icons in Leaflet with Vite
 // Use direct paths since Vite handles these assets
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 delete (L.Icon.Default.prototype as any)._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',

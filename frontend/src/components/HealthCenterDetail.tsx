@@ -20,11 +20,11 @@ export default function HealthCenterDetail({
   const displayAddress = `${center.street_address_1 || ''}${center.street_address_2 ? `, ${center.street_address_2}` : ''}${center.city_town ? `, ${center.city_town}` : ''}${center.state ? `, ${center.state}` : ''}${center.zipcode ? ` ${center.zipcode}` : ''}`.trim();
   
   // Use OpenAI data for website and types (with final_* fallback)
-  const displayWebsite = (center as any).final_website || center.openai_website || center.website;
-  const displayTypes = (center as any).final_types || center.openai_types || center.types;
+  const displayWebsite = center.final_website || center.openai_website || center.website;
+  const displayTypes = center.final_types || center.openai_types || center.types;
   
   // Appointment information from OpenAI (with final_* fallback)
-  const newPatientInstructions = (center as any).final_new_patient_md || center.openai_new_patient_md;
+  const newPatientInstructions = center.final_new_patient_md || center.openai_new_patient_md;
   const otherNotes = center.openai_other_notes_md;
   const sourceUrls = center.openai_source_urls;
   const confidence = center.openai_confidence;
