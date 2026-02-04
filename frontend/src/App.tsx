@@ -26,6 +26,7 @@ function App() {
   const [filterDentalCare, setFilterDentalCare] = useState(false);
   const [filterVision, setFilterVision] = useState(false);
   const [filterBehavioralHealth, setFilterBehavioralHealth] = useState(false);
+  const [filterPharmacy, setFilterPharmacy] = useState(false);
 
   useEffect(() => {
     console.log('useEffect running - about to call loadHealthCenters()');
@@ -72,7 +73,7 @@ function App() {
     });
 
     setFilteredCenters(filtered);
-  }, [centers, filterPrimaryCare, filterDentalCare, filterVision, filterBehavioralHealth, searchZipcode, loading]);
+  }, [centers, filterPrimaryCare, filterDentalCare, filterVision, filterBehavioralHealth, filterPharmacy, searchZipcode, loading]);
 
   const handleSearch = async () => {
     if (!zipcode.trim()) {
@@ -126,15 +127,23 @@ function App() {
         .sort((a, b) => (a.distance || 0) - (b.distance || 0));
 
       // Apply service type filters to distance-filtered results
-      const hasAnyFilter = filterPrimaryCare || filterDentalCare || filterVision || filterBehavioralHealth;
+      const hasAnyFilter = filterPrimaryCare || filterDentalCare || filterVision || filterBehavioralHealth || filterPharmacy;
       let finalFiltered = centersWithDistance;
       if (hasAnyFilter) {
         finalFiltered = centersWithDistance.filter((center) => {
+          // If center has no service type data, always include it
+          const hasNoServiceData = !center.all_services && !center.final_types && !center.openai_types && !center.types;
+          if (hasNoServiceData) {
+            return true;
+          }
+          
+          // Otherwise, check if it matches any selected filter
           const matches = [];
           if (filterPrimaryCare && center.has_primary_care) matches.push(true);
           if (filterDentalCare && center.has_dental_care) matches.push(true);
           if (filterVision && center.has_vision) matches.push(true);
           if (filterBehavioralHealth && center.has_behavioral_health) matches.push(true);
+          if (filterPharmacy && center.has_pharmacy) matches.push(true);
           return matches.length > 0;
         });
       }
@@ -185,8 +194,37 @@ function App() {
       </header>
 
       <div className="search-section">
-        <div className="service-filters">
-          <label className="filters-label">Filter by Service Type:</label>
+        <div className="search-controls-row">
+          <div className="search-input-group">
+            <label htmlFor="zipcode">Enter Zipcode:</label>
+            <input
+              id="zipcode"
+              type="text"
+              value={zipcode}
+              onChange={(e) => setZipcode(e.target.value)}
+              onKeyPress={handleKeyPress}
+              placeholder="e.g., 02138"
+              maxLength={5}
+              disabled={loading || searching}
+            />
+          </div>
+          <div className="radius-control">
+            <label htmlFor="radius">Radius (miles):</label>
+            <select
+              id="radius"
+              value={radius}
+              onChange={(e) => setRadius(Number(e.target.value))}
+              disabled={loading || searching}
+            >
+              <option value={3}>3</option>
+              <option value={5}>5</option>
+              <option value={10}>10</option>
+              <option value={50}>50</option>
+            </select>
+          </div>
+        </div>
+
+        <div className="search-controls-row">
           <div className="filter-checkboxes">
             <label className="filter-checkbox">
               <input
@@ -240,43 +278,27 @@ function App() {
               />
               <span>Behavioral Health</span>
             </label>
-          </div>
-        </div>
-        <div className="search-controls">
-          <div className="search-input-group">
-            <label htmlFor="zipcode">Enter Zipcode:</label>
-            <input
-              id="zipcode"
-              type="text"
-              value={zipcode}
-              onChange={(e) => setZipcode(e.target.value)}
-              onKeyPress={handleKeyPress}
-              placeholder="e.g., 02138"
-              maxLength={5}
-              disabled={loading || searching}
-            />
-          </div>
-          <div className="radius-control">
-            <label htmlFor="radius">Radius (miles):</label>
-            <select
-              id="radius"
-              value={radius}
-              onChange={(e) => setRadius(Number(e.target.value))}
-              disabled={loading || searching}
-            >
-              <option value={3}>3</option>
-              <option value={5}>5</option>
-              <option value={10}>10</option>
-              <option value={50}>50</option>
-            </select>
+            <label className="filter-checkbox">
+              <input
+                type="checkbox"
+                checked={filterPharmacy}
+                onChange={(e) => {
+                  const enabled = e.target.checked;
+                  setFilterPharmacy(enabled);
+                  trackServiceFilterToggle('pharmacy', enabled);
+                }}
+                disabled={loading}
+              />
+              <span>Pharmacy</span>
+            </label>
           </div>
           <button
             onClick={handleSearch}
             disabled={loading || searching || !zipcode.trim()}
             className="search-btn"
           >
-            {searching ? 'Searching...' : 'Search'}
-        </button>
+            {searching ? 'Searching' : 'Search'}
+          </button>
         </div>
 
         {error && <div className="error-message">{error}</div>}

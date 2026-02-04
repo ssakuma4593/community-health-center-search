@@ -17,6 +17,7 @@ export interface HealthCenter {
   has_dental_care?: boolean;
   has_vision?: boolean;
   has_behavioral_health?: boolean;
+  has_pharmacy?: boolean;
   all_services?: string; // Complete comma-separated list of all services for display
   // OpenAI enrichment fields (optional)
   openai_phone?: string;

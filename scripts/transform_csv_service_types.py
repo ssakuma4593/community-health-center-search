@@ -32,6 +32,7 @@ NEW_COLUMNS = [
     "has_dental_care",
     "has_vision",
     "has_behavioral_health",
+    "has_pharmacy",
     "all_services"
 ]
 
@@ -82,6 +83,7 @@ def transform_row(row: dict) -> dict:
     row['has_dental_care'] = 'true' if parsed['has_dental_care'] else 'false'
     row['has_vision'] = 'true' if parsed['has_vision'] else 'false'
     row['has_behavioral_health'] = 'true' if parsed['has_behavioral_health'] else 'false'
+    row['has_pharmacy'] = 'true' if parsed['has_pharmacy'] else 'false'
     row['all_services'] = parsed['all_services']
     
     return row
@@ -137,6 +139,7 @@ def main():
         'has_dental_care': 0,
         'has_vision': 0,
         'has_behavioral_health': 0,
+        'has_pharmacy': 0,
         'has_all_services': 0
     }
     
@@ -155,6 +158,8 @@ def main():
             stats['has_vision'] += 1
         if row.get('has_behavioral_health') == 'true':
             stats['has_behavioral_health'] += 1
+        if row.get('has_pharmacy') == 'true':
+            stats['has_pharmacy'] += 1
         if row.get('all_services'):
             stats['has_all_services'] += 1
     
@@ -167,6 +172,7 @@ def main():
     print(f"  Centers with Dental Care: {stats['has_dental_care']}")
     print(f"  Centers with Vision: {stats['has_vision']}")
     print(f"  Centers with Behavioral Health: {stats['has_behavioral_health']}")
+    print(f"  Centers with Pharmacy: {stats['has_pharmacy']}")
     print(f"  Centers with any services listed: {stats['has_all_services']}")
     print()
     

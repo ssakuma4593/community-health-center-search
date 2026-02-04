@@ -44,6 +44,7 @@ OPENAI_COLUMNS = [
     "openai_has_dental_care",
     "openai_has_vision",
     "openai_has_behavioral_health",
+    "openai_has_pharmacy",
     "openai_all_services",
 ]
 
@@ -125,6 +126,7 @@ def enrich_center(row: Dict[str, str]) -> Dict[str, str]:
             enriched_data['openai_has_dental_care'] = 'true' if parsed_types['has_dental_care'] else 'false'
             enriched_data['openai_has_vision'] = 'true' if parsed_types['has_vision'] else 'false'
             enriched_data['openai_has_behavioral_health'] = 'true' if parsed_types['has_behavioral_health'] else 'false'
+            enriched_data['openai_has_pharmacy'] = 'true' if parsed_types['has_pharmacy'] else 'false'
             enriched_data['openai_all_services'] = parsed_types['all_services']
         else:
             # Set defaults if no types
@@ -132,6 +134,7 @@ def enrich_center(row: Dict[str, str]) -> Dict[str, str]:
             enriched_data['openai_has_dental_care'] = 'false'
             enriched_data['openai_has_vision'] = 'false'
             enriched_data['openai_has_behavioral_health'] = 'false'
+            enriched_data['openai_has_pharmacy'] = 'false'
             enriched_data['openai_all_services'] = ''
         
         return enriched_data

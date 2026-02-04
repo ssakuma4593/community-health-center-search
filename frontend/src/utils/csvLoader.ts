@@ -35,7 +35,8 @@ export async function loadHealthCenters(): Promise<HealthCenter[]> {
           }
           // Convert boolean fields (CSV stores as 'true'/'false' strings)
           if (field === 'has_primary_care' || field === 'has_dental_care' || 
-              field === 'has_vision' || field === 'has_behavioral_health') {
+              field === 'has_vision' || field === 'has_behavioral_health' || 
+              field === 'has_pharmacy') {
             return value?.toLowerCase() === 'true';
           }
           return value || '';

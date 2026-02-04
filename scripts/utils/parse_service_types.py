@@ -24,6 +24,7 @@ def parse_service_types(types_string: Optional[str]) -> Dict[str, any]:
         - has_dental_care: bool
         - has_vision: bool
         - has_behavioral_health: bool
+        - has_pharmacy: bool
         - all_services: str (normalized, comma-separated)
     """
     if not types_string or not types_string.strip():
@@ -32,6 +33,7 @@ def parse_service_types(types_string: Optional[str]) -> Dict[str, any]:
             'has_dental_care': False,
             'has_vision': False,
             'has_behavioral_health': False,
+            'has_pharmacy': False,
             'all_services': ''
         }
     
@@ -86,24 +88,61 @@ def parse_service_types(types_string: Optional[str]) -> Dict[str, any]:
         'therapy services'
     ]
     
-    # Check for matches
+    pharmacy_patterns = [
+        'pharmacy',
+        'pharmacies',
+        'pharmaceutical',
+        'pharmaceutical services',
+        'prescription services',
+        'prescription',
+        'medication',
+        'medications'
+    ]
+    
+    # Check for matches using word boundary matching to avoid false positives
+    def matches_pattern(service: str, patterns: list) -> bool:
+        """Check if service matches any pattern, using word boundaries for better accuracy."""
+        service_lower = service.lower()
+        for pattern in patterns:
+            pattern_lower = pattern.lower()
+            # Use word boundaries for all patterns to avoid false positives
+            # Escape special regex characters in the pattern
+            escaped_pattern = re.escape(pattern_lower)
+            # For multi-word patterns, ensure each word has boundaries
+            if ' ' in pattern_lower:
+                # Multi-word pattern: ensure it appears as a complete phrase
+                # Replace spaces with word boundaries
+                word_boundary_pattern = r'\b' + escaped_pattern.replace(r'\ ', r'\b\s+\b') + r'\b'
+            else:
+                # Single word pattern: check word boundaries
+                word_boundary_pattern = r'\b' + escaped_pattern + r'\b'
+            
+            if re.search(word_boundary_pattern, service_lower):
+                return True
+        return False
+    
     has_primary_care = any(
-        any(pattern in service for pattern in primary_care_patterns)
+        matches_pattern(service, primary_care_patterns)
         for service in normalized_services
     )
     
     has_dental_care = any(
-        any(pattern in service for pattern in dental_care_patterns)
+        matches_pattern(service, dental_care_patterns)
         for service in normalized_services
     )
     
     has_vision = any(
-        any(pattern in service for pattern in vision_patterns)
+        matches_pattern(service, vision_patterns)
         for service in normalized_services
     )
     
     has_behavioral_health = any(
-        any(pattern in service for pattern in behavioral_health_patterns)
+        matches_pattern(service, behavioral_health_patterns)
+        for service in normalized_services
+    )
+    
+    has_pharmacy = any(
+        matches_pattern(service, pharmacy_patterns)
         for service in normalized_services
     )
     
@@ -116,6 +155,7 @@ def parse_service_types(types_string: Optional[str]) -> Dict[str, any]:
         'has_dental_care': has_dental_care,
         'has_vision': has_vision,
         'has_behavioral_health': has_behavioral_health,
+        'has_pharmacy': has_pharmacy,
         'all_services': all_services
     }
 
@@ -140,5 +180,6 @@ if __name__ == '__main__':
         print(f"  Dental Care: {result['has_dental_care']}")
         print(f"  Vision: {result['has_vision']}")
         print(f"  Behavioral Health: {result['has_behavioral_health']}")
+        print(f"  Pharmacy: {result['has_pharmacy']}")
         print(f"  All Services: {result['all_services']}")
         print()
