@@ -42,6 +42,7 @@ jobs:
           npm run build
         env:
           NODE_ENV: production
+          VITE_GA_MEASUREMENT_ID: ${{ secrets.VITE_GA_MEASUREMENT_ID }}
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
