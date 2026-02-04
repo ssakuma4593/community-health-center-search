@@ -8,10 +8,13 @@ export async function loadHealthCenters(): Promise<HealthCenter[]> {
     const baseUrl = import.meta.env.BASE_URL || '/';
     const csvPath = `${baseUrl}data/centers.csv`;
     console.log('Loading CSV from:', csvPath);
+    
     const response = await fetch(csvPath);
+    console.log('CSV fetch response:', response.status, response.statusText);
     
     if (!response.ok) {
-      throw new Error(`Failed to load CSV: ${response.status} ${response.statusText}`);
+      console.error('CSV fetch failed:', response.status, response.statusText, response.url);
+      throw new Error(`Failed to load CSV: ${response.status} ${response.statusText} from ${csvPath}`);
     }
     
     const text = await response.text();
@@ -30,6 +33,11 @@ export async function loadHealthCenters(): Promise<HealthCenter[]> {
             const num = parseFloat(value);
             return isNaN(num) ? 0 : num;
           }
+          // Convert boolean fields (CSV stores as 'true'/'false' strings)
+          if (field === 'has_primary_care' || field === 'has_dental_care' || 
+              field === 'has_vision' || field === 'has_behavioral_health') {
+            return value?.toLowerCase() === 'true';
+          }
           return value || '';
         },
         complete: (results) => {
@@ -46,6 +54,9 @@ export async function loadHealthCenters(): Promise<HealthCenter[]> {
     });
   } catch (error) {
     console.error('Error loading health centers:', error);
+    if (error instanceof Error) {
+      console.error('Error details:', error.message);
+    }
     return [];
   }
 }

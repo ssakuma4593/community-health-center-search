@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
+import { trackBookingInfoClick, trackContactClick, trackCenterDetailView } from '../utils/analytics';
 import type { HealthCenter } from '../types';
 
 interface HealthCenterDetailProps {
@@ -13,6 +14,13 @@ export default function HealthCenterDetail({
 }: HealthCenterDetailProps) {
   const [showAppointmentInfo, setShowAppointmentInfo] = useState(false);
 
+  // Track when center detail is viewed
+  useEffect(() => {
+    if (center) {
+      trackCenterDetailView(center.name);
+    }
+  }, [center]);
+
   if (!center) return null;
 
   // Use original address fields for display
@@ -21,7 +29,7 @@ export default function HealthCenterDetail({
   
   // Use OpenAI data for website and types (with final_* fallback)
   const displayWebsite = center.final_website || center.openai_website || center.website;
-  const displayTypes = center.final_types || center.openai_types || center.types;
+  const displayTypes = center.all_services || center.final_types || center.openai_types || center.types;
   
   // Appointment information from OpenAI (with final_* fallback)
   const newPatientInstructions = center.final_new_patient_md || center.openai_new_patient_md;
@@ -51,6 +59,7 @@ export default function HealthCenterDetail({
               target="_blank" 
               rel="noopener noreferrer"
               className="address-link"
+              onClick={() => trackContactClick('maps', center.name)}
             >
               {displayAddress}
             </a>
@@ -61,6 +70,7 @@ export default function HealthCenterDetail({
               <a 
                 href={phoneLink || '#'} 
                 className="phone-link"
+                onClick={() => trackContactClick('phone', center.name)}
               >
                 {displayPhone}
               </a>
@@ -69,7 +79,12 @@ export default function HealthCenterDetail({
           {displayWebsite && (
             <p>
               <strong>Website:</strong>{' '}
-              <a href={displayWebsite} target="_blank" rel="noopener noreferrer">
+              <a 
+                href={displayWebsite} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                onClick={() => trackContactClick('website', center.name)}
+              >
                 {displayWebsite}
               </a>
             </p>
@@ -148,7 +163,14 @@ export default function HealthCenterDetail({
         <div className="detail-section">
           <button 
             className="book-appointment-btn" 
-            onClick={() => setShowAppointmentInfo(!showAppointmentInfo)}
+            onClick={() => {
+              const newState = !showAppointmentInfo;
+              setShowAppointmentInfo(newState);
+              // Track when booking info is shown (not hidden)
+              if (newState) {
+                trackBookingInfoClick(center.name);
+              }
+            }}
           >
             {showAppointmentInfo ? 'Hide Appointment Information' : 'Booking Info'}
           </button>

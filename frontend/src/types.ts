@@ -12,6 +12,12 @@ export interface HealthCenter {
   latitude: number;
   longitude: number;
   distance?: number; // Calculated distance from search zipcode
+  // Service type filtering fields (optional)
+  has_primary_care?: boolean;
+  has_dental_care?: boolean;
+  has_vision?: boolean;
+  has_behavioral_health?: boolean;
+  all_services?: string; // Complete comma-separated list of all services for display
   // OpenAI enrichment fields (optional)
   openai_phone?: string;
   openai_address?: string;

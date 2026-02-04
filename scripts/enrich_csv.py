@@ -39,6 +39,12 @@ OPENAI_COLUMNS = [
     "openai_source_urls",
     "openai_last_checked_utc",
     "openai_confidence",
+    # Service type boolean fields (populated from openai_types)
+    "openai_has_primary_care",
+    "openai_has_dental_care",
+    "openai_has_vision",
+    "openai_has_behavioral_health",
+    "openai_all_services",
 ]
 
 # Resolved columns (for manual review)
@@ -110,6 +116,23 @@ def enrich_center(row: Dict[str, str]) -> Dict[str, str]:
         
         # Add timestamp
         enriched_data['openai_last_checked_utc'] = datetime.utcnow().isoformat() + 'Z'
+        
+        # Parse service types and populate boolean fields
+        openai_types = enriched_data.get('openai_types', '')
+        if openai_types:
+            parsed_types = parse_service_types(openai_types)
+            enriched_data['openai_has_primary_care'] = 'true' if parsed_types['has_primary_care'] else 'false'
+            enriched_data['openai_has_dental_care'] = 'true' if parsed_types['has_dental_care'] else 'false'
+            enriched_data['openai_has_vision'] = 'true' if parsed_types['has_vision'] else 'false'
+            enriched_data['openai_has_behavioral_health'] = 'true' if parsed_types['has_behavioral_health'] else 'false'
+            enriched_data['openai_all_services'] = parsed_types['all_services']
+        else:
+            # Set defaults if no types
+            enriched_data['openai_has_primary_care'] = 'false'
+            enriched_data['openai_has_dental_care'] = 'false'
+            enriched_data['openai_has_vision'] = 'false'
+            enriched_data['openai_has_behavioral_health'] = 'false'
+            enriched_data['openai_all_services'] = ''
         
         return enriched_data
         

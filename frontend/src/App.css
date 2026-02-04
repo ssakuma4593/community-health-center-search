@@ -30,6 +30,50 @@
   margin-bottom: 2rem;
 }
 
+.service-filters {
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid #eee;
+}
+
+.filters-label {
+  display: block;
+  margin-bottom: 0.75rem;
+  font-weight: 600;
+  color: #333;
+  font-size: 1rem;
+}
+
+.filter-checkboxes {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.filter-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  user-select: none;
+  font-size: 0.95rem;
+}
+
+.filter-checkbox input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: #667eea;
+}
+
+.filter-checkbox span {
+  color: #333;
+}
+
+.filter-checkbox:hover span {
+  color: #667eea;
+}
+
 .search-controls {
   display: flex;
   gap: 1rem;
