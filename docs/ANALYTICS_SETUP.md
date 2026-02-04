@@ -102,6 +102,13 @@ Triggered when a user clicks the "Booking Info" button.
 - `center_name`: Name of the health center
 - `search_zipcode`: The zip code used in current search (if any)
 
+### Service Filter Toggle (`service_filter_toggle`)
+Triggered when a user toggles a service type filter.
+
+**Parameters:**
+- `filter_type`: Type of filter (`primary_care`, `dental_care`, `vision`, `behavioral_health`)
+- `enabled`: Whether filter was enabled (`true`) or disabled (`false`)
+
 ### Center Detail View (`center_detail_view`)
 Triggered when a user opens the detail modal for a health center.
 
