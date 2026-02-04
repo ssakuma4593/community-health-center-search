@@ -5,6 +5,7 @@ import HealthCenterDetail from './components/HealthCenterDetail';
 import { loadHealthCenters } from './utils/csvLoader';
 import { geocodeZipcode } from './utils/geocoding';
 import { calculateDistance } from './utils/distance';
+import { trackZipcodeSearch, trackServiceFilterToggle } from './utils/analytics';
 import type { HealthCenter } from './types';
 import './App.css';
 
@@ -92,6 +93,9 @@ function App() {
         console.log('Closest centers:', centersWithDistance.slice(0, 3).map(c => `${c.name}: ${c.distance.toFixed(2)} miles`));
       }
       setFilteredCenters(centersWithDistance);
+
+      // Track zipcode search event
+      trackZipcodeSearch(zipcode, radius, centersWithDistance.length, []);
 
       if (centersWithDistance.length === 0) {
         setError(`No centers found within ${radius} miles. Try expanding the radius.`);
