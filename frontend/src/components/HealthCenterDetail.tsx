@@ -150,7 +150,7 @@ export default function HealthCenterDetail({
             className="book-appointment-btn" 
             onClick={() => setShowAppointmentInfo(!showAppointmentInfo)}
           >
-            {showAppointmentInfo ? 'Hide Appointment Information' : 'Book Appointment'}
+            {showAppointmentInfo ? 'Hide Appointment Information' : 'Booking Info'}
           </button>
         </div>
       </div>
