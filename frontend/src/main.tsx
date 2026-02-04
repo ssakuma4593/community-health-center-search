@@ -2,8 +2,11 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.tsx'
-import ErrorBoundary from './ErrorBoundary.tsx'
 import { initAnalytics } from './utils/analytics'
+import ErrorBoundary from './ErrorBoundary.tsx'
+
+// Initialize analytics
+initAnalytics()
 
 console.log('main.tsx loaded');
 

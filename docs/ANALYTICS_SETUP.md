@@ -56,7 +56,6 @@ Step-by-step guide to set up analytics tracking for the Community Health Center 
 3. **Perform some actions**:
    - Search for a zip code (e.g., "02138")
    - Click "Booking Info" on a health center
-   - Toggle a service filter checkbox
 4. **Check Google Analytics**:
    - Go back to Google Analytics
    - Click **"Reports"** in the left sidebar

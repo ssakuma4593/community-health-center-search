@@ -164,6 +164,11 @@ function App() {
       
       trackZipcodeSearch(zipcode, radius, finalFiltered.length, activeFilters);
 
+      // Track zipcode search event
+      trackZipcodeSearch(zipcode, radius, centersWithDistance.length, []);
+
+      if (centersWithDistance.length === 0) {
+        setError(`No centers found within ${radius} miles. Try expanding the radius.`);
       if (finalFiltered.length === 0) {
         setError(`No centers found within ${radius} miles matching the selected filters. Try expanding the radius or adjusting filters.`);
       }
