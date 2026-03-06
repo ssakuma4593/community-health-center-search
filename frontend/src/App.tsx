@@ -6,6 +6,7 @@ import { loadHealthCenters } from './utils/csvLoader';
 import { geocodeZipcode } from './utils/geocoding';
 import { calculateDistance } from './utils/distance';
 import { trackZipcodeSearch, trackServiceFilterToggle } from './utils/analytics';
+import { addZipcodeToHistory, getUniqueZipcodes } from './utils/zipcodeHistory';
 import type { HealthCenter } from './types';
 import './App.css';
 
@@ -21,6 +22,8 @@ function App() {
   const [searching, setSearching] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [radius, setRadius] = useState(3);
+  const [showRecentSearches, setShowRecentSearches] = useState(false);
+  const [recentZipcodes, setRecentZipcodes] = useState<string[]>(() => getUniqueZipcodes());
   // Service type filters
   const [filterPrimaryCare, setFilterPrimaryCare] = useState(false);
   const [filterDentalCare, setFilterDentalCare] = useState(false);
@@ -155,22 +158,21 @@ function App() {
       }
       setFilteredCenters(finalFiltered);
 
-      // Track zipcode search event
+      addZipcodeToHistory(zipcode);
+      setRecentZipcodes(getUniqueZipcodes());
+
       const activeFilters: string[] = [];
       if (filterPrimaryCare) activeFilters.push('primary_care');
       if (filterDentalCare) activeFilters.push('dental_care');
       if (filterVision) activeFilters.push('vision');
       if (filterBehavioralHealth) activeFilters.push('behavioral_health');
-      
+      if (filterPharmacy) activeFilters.push('pharmacy');
       trackZipcodeSearch(zipcode, radius, finalFiltered.length, activeFilters);
 
-      // Track zipcode search event
-      trackZipcodeSearch(zipcode, radius, centersWithDistance.length, []);
-
-      if (centersWithDistance.length === 0) {
-        setError(`No centers found within ${radius} miles. Try expanding the radius.`);
       if (finalFiltered.length === 0) {
-        setError(`No centers found within ${radius} miles matching the selected filters. Try expanding the radius or adjusting filters.`);
+        setError(hasAnyFilter
+          ? `No centers found within ${radius} miles matching the selected filters. Try expanding the radius or adjusting filters.`
+          : `No centers found within ${radius} miles. Try expanding the radius.`);
       }
     } catch (err) {
       console.error('Search error:', err);
@@ -202,16 +204,37 @@ function App() {
         <div className="search-controls-row">
           <div className="search-input-group">
             <label htmlFor="zipcode">Enter Zipcode:</label>
-            <input
-              id="zipcode"
-              type="text"
-              value={zipcode}
-              onChange={(e) => setZipcode(e.target.value)}
-              onKeyPress={handleKeyPress}
-              placeholder="e.g., 02138"
-              maxLength={5}
-              disabled={loading || searching}
-            />
+            <div style={{ position: 'relative' }}>
+              <input
+                id="zipcode"
+                type="text"
+                value={zipcode}
+                onChange={(e) => setZipcode(e.target.value)}
+                onFocus={() => setShowRecentSearches(recentZipcodes.length > 0)}
+                onBlur={() => setTimeout(() => setShowRecentSearches(false), 200)}
+                onKeyPress={handleKeyPress}
+                placeholder="e.g., 02138"
+                maxLength={5}
+                disabled={loading || searching}
+              />
+              {showRecentSearches && recentZipcodes.length > 0 && (
+                <div className="recent-searches-dropdown">
+                  <div className="recent-searches-header">Recent Searches</div>
+                  {recentZipcodes.slice(0, 5).map((z) => (
+                    <div
+                      key={z}
+                      className="recent-search-item"
+                      onClick={() => {
+                        setZipcode(z);
+                        setShowRecentSearches(false);
+                      }}
+                    >
+                      {z}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
           <div className="radius-control">
             <label htmlFor="radius">Radius (miles):</label>

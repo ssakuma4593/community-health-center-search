@@ -1,128 +1,91 @@
 /**
- * Analytics utility for tracking user interactions
- * Uses Google Analytics 4 (GA4) for event tracking
+ * Google Analytics (GA4) for Community Health Center Search.
+ * Tracks usage on both localhost and the public GitHub Pages site.
+ * Set VITE_GA_MEASUREMENT_ID (e.g. G-XXXXXXXXXX) in .env or GitHub Actions secrets.
  */
 
-// GA4 Measurement ID - Set this via environment variable or replace with your ID
-// @ts-expect-error - VITE_GA_MEASUREMENT_ID is provided by Vite
-const GA_MEASUREMENT_ID = import.meta.env.VITE_GA_MEASUREMENT_ID || '';
+const env = (import.meta as unknown as { env?: { VITE_GA_MEASUREMENT_ID?: string; DEV?: boolean } }).env;
+const MEASUREMENT_ID = env?.VITE_GA_MEASUREMENT_ID;
 
-// Initialize GA4
-export const initAnalytics = () => {
-  // Only run in browser environment
-  if (typeof window === 'undefined') {
-    return;
-  }
-
-  if (!GA_MEASUREMENT_ID) {
-    console.warn('GA4 Measurement ID not set. Analytics will not track events.');
-    return;
-  }
-
-  // Load gtag script if not already loaded
-  if (!window.gtag) {
-    const script1 = document.createElement('script');
-    script1.async = true;
-    script1.src = `https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`;
-    document.head.appendChild(script1);
-
-    const script2 = document.createElement('script');
-    script2.innerHTML = `
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', '${GA_MEASUREMENT_ID}', {
-        anonymize_ip: true,
-        allow_google_signals: false,
-        allow_ad_personalization_signals: false
-      });
-    `;
-    document.head.appendChild(script2);
-  }
-};
-
-// Track zip code search
-export const trackZipcodeSearch = (zipcode: string, radius: number, resultsCount: number, serviceFilters: string[] = []) => {
-  if (!GA_MEASUREMENT_ID || typeof window === 'undefined' || !window.gtag) {
-    return;
-  }
-
-  window.gtag('event', 'zipcode_search', {
-    zipcode: zipcode,
-    radius: radius,
-    results_count: resultsCount,
-    service_filters: serviceFilters.join(','),
-    // Don't send full zipcode to GA for privacy - hash it or use first 3 digits
-    zipcode_hash: hashZipcode(zipcode)
-  });
-};
-
-// Track booking info button click
-export const trackBookingInfoClick = (centerName: string, searchZipcode?: string) => {
-  if (!GA_MEASUREMENT_ID || typeof window === 'undefined' || !window.gtag) {
-    return;
-  }
-
-  window.gtag('event', 'booking_info_click', {
-    center_name: centerName,
-    search_zipcode: searchZipcode || 'none'
-  });
-};
-
-// Track service filter toggle
-export const trackServiceFilterToggle = (filterType: string, enabled: boolean) => {
-  if (!GA_MEASUREMENT_ID || typeof window === 'undefined' || !window.gtag) {
-    return;
-  }
-
-  window.gtag('event', 'service_filter_toggle', {
-    filter_type: filterType,
-    enabled: enabled
-  });
-};
-
-// Track center detail view
-export const trackCenterDetailView = (centerName: string) => {
-  if (!GA_MEASUREMENT_ID || typeof window === 'undefined' || !window.gtag) {
-    return;
-  }
-
-  window.gtag('event', 'center_detail_view', {
-    center_name: centerName
-  });
-};
-
-// Track contact link click (phone, website, maps)
-export const trackContactClick = (type: 'phone' | 'website' | 'maps', centerName: string) => {
-  if (!GA_MEASUREMENT_ID || typeof window === 'undefined' || !window.gtag) {
-    return;
-  }
-
-  window.gtag('event', 'contact_click', {
-    contact_type: type,
-    center_name: centerName
-  });
-};
-
-// Simple hash function for zipcode (for privacy)
-// Returns first 3 digits + hash of full zipcode
-function hashZipcode(zipcode: string): string {
-  if (zipcode.length < 3) return '***';
-  const prefix = zipcode.substring(0, 3);
-  // Simple hash of remaining digits
-  const remaining = zipcode.substring(3);
-  let hash = 0;
-  for (let i = 0; i < remaining.length; i++) {
-    hash = ((hash << 5) - hash) + remaining.charCodeAt(i);
-    hash = hash & hash; // Convert to 32bit integer
-  }
-  return `${prefix}-${Math.abs(hash).toString(36)}`;
-}
-
-// Extend Window interface for TypeScript
 declare global {
   interface Window {
-    gtag?: (...args: any[]) => void;
-    dataLayer?: any[];
+    dataLayer: unknown[];
+    gtag: (...args: unknown[]) => void;
   }
+}
+
+function getGtag(): typeof window.gtag | null {
+  if (!MEASUREMENT_ID) return null;
+  return typeof window !== 'undefined' && typeof window.gtag === 'function' ? window.gtag : null;
+}
+
+/**
+ * Initialize Google Analytics. Runs on every origin (localhost and GitHub Pages)
+ * when VITE_GA_MEASUREMENT_ID is set, so the public site is tracked.
+ */
+export function initAnalytics(): void {
+  if (!MEASUREMENT_ID) {
+    if (env?.DEV) {
+      console.debug('[Analytics] No VITE_GA_MEASUREMENT_ID; analytics disabled.');
+    }
+    return;
+  }
+
+  window.dataLayer = window.dataLayer || [];
+  window.gtag = function gtag() {
+    window.dataLayer.push(arguments);
+  };
+  window.gtag('js', new Date());
+  window.gtag('config', MEASUREMENT_ID, {
+    send_page_view: true,
+    page_path: window.location.pathname + window.location.search,
+  });
+
+  // Load gtag.js script (works on any domain, including GitHub Pages)
+  const script = document.createElement('script');
+  script.async = true;
+  script.src = `https://www.googletagmanager.com/gtag/js?id=${MEASUREMENT_ID}`;
+  document.head.appendChild(script);
+}
+
+export function trackZipcodeSearch(
+  zipcode: string,
+  radiusMiles: number,
+  resultCount: number,
+  _serviceFilters: string[]
+): void {
+  const g = getGtag();
+  if (!g) return;
+  g('event', 'zipcode_search', {
+    zipcode,
+    radius_miles: radiusMiles,
+    result_count: resultCount,
+  });
+}
+
+export function trackServiceFilterToggle(_filterName: string, _enabled: boolean): void {
+  const g = getGtag();
+  if (!g) return;
+  g('event', 'service_filter_toggle', {
+    filter_name: _filterName,
+    enabled: _enabled,
+  });
+}
+
+export function trackCenterDetailView(centerName: string): void {
+  const g = getGtag();
+  if (!g) return;
+  g('event', 'view_center_detail', { center_name: centerName });
+}
+
+export function trackContactClick(contactType: string, centerName: string): void {
+  const g = getGtag();
+  if (!g) return;
+  g('event', 'contact_click', { contact_type: contactType, center_name: centerName });
+}
+
+export function trackBookingInfoClick(centerName: string): void {
+  const g = getGtag();
+  if (!g) return;
+  g('event', 'booking_info_click', { center_name: centerName });
 }
