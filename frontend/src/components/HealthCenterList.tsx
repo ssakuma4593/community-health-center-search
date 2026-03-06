@@ -55,9 +55,9 @@ export default function HealthCenterList({
                   </a>
                 </p>
               )}
-              {center.types && (
+              {(center.all_services || center.final_types || center.openai_types || center.types) && (
                 <p className="types">
-                  <strong>Services:</strong> {center.types}
+                  <strong>Services:</strong> {center.all_services || center.final_types || center.openai_types || center.types}
                 </p>
               )}
               {center.distance !== undefined && (
